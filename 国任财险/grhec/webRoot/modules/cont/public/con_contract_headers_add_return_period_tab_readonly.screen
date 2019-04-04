@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="con_contract_headers_add_return_period_link" model="cont.con_contract_headers_add_return_period_execute" modelaction="batch_update"/>
+        <a:link id="allocation_link" url="${/request/@context_path}/modules/cont/CON5050/contract_period_allocation_readonly.screen"/>
+        <script><![CDATA[
+            function allocation_win(contract_return_period_id) {
+                var url = $('allocation_link').getUrl() + '?contract_return_period_id=' + contract_return_period_id;
+                new Aurora.Window({
+                    id: 'allocation_win',
+                    url: url,
+                    title: '分摊',
+                    height: 500,
+                    width: 900
+                });
+            }
+            
+            function allocation_fun(value, record, name) {
+                //分摊
+                if (record.isNew) {
+                    return '';
+                }
+                return '<a href="javascript:allocation_win(' + record.get('contract_return_period_id') + ')">分摊</>';
+            
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="con_contract_headers_add_return_period_tab_ds" autoQuery="true" model="cont.con_contract_return_periods" queryUrl="${/request/@context_path}/autocrud/cont.con_contract_return_periods/query?contract_header_id=${/parameter/@contract_header_id}" selectable="true">
+                <a:fields>
+                    <a:field name="contract_header_id" readOnly="true"/>
+                    <a:field name="line_num" readOnly="true" required="true"/>
+                    <a:field name="period_name" lovGridHeight="340" lovHeight="500" lovService="cont.con_contract_return_period_combo" lovWidth="250" readOnly="true" required="true" title="期间">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                            <a:map from="period_year" to="period_year"/>
+                            <a:map from="period_num" to="period_num"/>
+                            <a:map from="quarter_num" to="quarter_num"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="amount" readOnly="true" required="true"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:grid id="con_contract_headers_add_return_period_tab_ds_grid" bindTarget="con_contract_headers_add_return_period_tab_ds" height="170" width="960">
+            <a:columns>
+                <a:column name="line_num" align="center" prompt="行号"/>
+                <a:column name="period_name" align="center" prompt="期间" width="150"/>
+                <a:column name="amount" align="right" prompt="金额" renderer="Aurora.formatMoney" width="150"/>
+                <a:column name="invoice_sales_amount" align="right" prompt="不含税金额" renderer="Aurora.formatMoney" width="150"/>
+                <a:column name="contract_return_period_id" align="center" prompt="分摊" renderer="allocation_fun" width="150"/>
+                <a:column name="assigned_amount" align="center" prompt="已报销金额" renderer="Aurora.formatMoney" width="150"/>
+            </a:columns>
+        </a:grid>
+    </a:view>
+</a:screen>

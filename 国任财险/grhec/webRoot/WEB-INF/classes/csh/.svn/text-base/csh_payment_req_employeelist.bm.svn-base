@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                SELECT *
+  FROM (SELECT t2.employee_id,
+               emp.employee_code || ' - ' || emp.name EMPLOYEENAME,
+               emp.employee_code code,
+               emp.name name
+          FROM exp_document_authorities a,
+               exp_employee_assigns     t,
+               exp_employee_assigns     t2,
+               exp_org_position         p,
+               exp_org_unit             u,
+               sys_user                 su,
+               exp_employees            emp
+         WHERE p.position_id = t2.position_id
+           AND u.unit_id = p.unit_id
+           AND t2.company_id = a.company_id
+           and t2.employee_id = emp.employee_id
+              
+           AND (a.org_unit_id IS NULL OR a.org_unit_id = u.unit_id)
+           AND (a.position_id IS NULL OR a.position_id = p.position_id)
+           AND (a.employee_id IS NULL OR a.employee_id = t2.employee_id)
+           AND (nvl(a.granted_position_id,t.position_id) = t.position_id AND
+               t.enabled_flag = 'Y' AND t.company_id = a.company_id AND
+               t.employee_id = su.employee_id)
+           AND NVL(a.granted_employee_id, su.employee_id) = su.employee_id
+           AND a.start_date <= sysdate
+           AND (a.end_date IS NULL OR a.end_date + 1 >= sysdate)
+           AND a.maintenance_authority = 'Y'
+           AND a.document_type = '04'
+           AND t2.enabled_flag = 'Y'
+           AND p.enabled_flag = 'Y'
+           AND u.enabled_flag = 'Y'
+           AND su.user_id = ${/session/@user_id}
+           and t2.company_id = ${/session/@company_id}
+           GROUP BY t2.employee_id, emp.employee_code, emp.name
+        UNION
+        SELECT su2.employee_id,
+               emp.employee_code || ' - ' || emp.name EMPLOYEENAME,
+               emp.employee_code code,
+               emp.name name
+        FROM sys_user su2, exp_employee_assigns t, exp_employees emp
+         WHERE su2.employee_id = t.employee_id
+           and t.employee_id = emp.employee_id
+           and su2.user_id = ${/session/@user_id}
+           and t.company_id = ${/session/@company_id}
+           and t.enabled_flag = 'Y') x
+           #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+            <bm:parameters>
+                <bm:parameter inputPath="/session/@company_id"/>
+                <bm:parameter inputPath="/session/@user_id"/>
+            </bm:parameters>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="employee_id" databaseType="NUMBER" datatype="java.lang.Double" physicalName="EMPLOYEE_ID" required="true"/>
+        <bm:field name="employeename" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="EMPLOYEENAME"/>
+        <bm:field name="name" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+</bm:model>

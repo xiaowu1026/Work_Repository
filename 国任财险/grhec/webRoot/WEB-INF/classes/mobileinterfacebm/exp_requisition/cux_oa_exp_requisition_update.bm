@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="delete">
+            <bm:update-sql><![CDATA[
+            delete from cux_oa_exp_requisition_ref cr where cr.cux_oa_exp_requisition_ref_id = ${@cux_oa_exp_requisition_ref_id} 
+            and cr.exp_requisition_header_id = ${@exp_requisition_header_id}
+        ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

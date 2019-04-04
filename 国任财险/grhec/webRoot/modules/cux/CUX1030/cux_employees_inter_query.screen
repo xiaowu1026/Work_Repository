@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:34:26  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure/>
+    <a:view>
+        <script><![CDATA[
+			function query_cux_employees_inter_result_ds(){
+				$('cux_employees_inter_result_ds').query();
+			}
+			function resetFunction(){
+				$('cux_employees_inter_query_ds').reset();
+			}
+		]]></script>
+        <a:dataSets>
+            <a:dataSet id="process_status_ds">
+                <a:datas>
+                    <a:record process_status="Y" process_status_desc="已入正式表"/>
+                    <a:record process_status="N" process_status_desc="未处理"/>
+                    <a:record process_status="E" process_status_desc="同步出错"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="cux_employees_inter_query_ds">
+                <a:fields>
+                    <a:field name="psncode" prompt="员工代码"/>
+                    <a:field name="psnname" prompt="员工姓名"/>
+                    <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/>
+                    <a:field name="process_status"/>
+                    <a:field name="orgsapcode"/>
+                    <a:field name="orgcode"/>
+                    <a:field name="systemdate"/>
+                    <a:field name="deptcode"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_employees_inter_result_ds" autoQuery="true" model="cux.CUX1030.cux_employees_inter" pageSize="14" queryDataSet="cux_employees_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:screenTopToolbar>
+                <a:screenTitle/>
+                <a:toolbarButton click="resetFunction" text="HAP_RESET" width="80"/>
+                <a:gridButton bind="grid" type="excel" width="80"/>
+            </a:screenTopToolbar>
+            <a:queryForm bindTarget="cux_employees_inter_query_ds" resultTarget="cux_employees_inter_result_ds" style="width:100%;border:none">
+                <a:formToolBar>
+                    <a:textField name="orgsapcode" bindTarget="cux_employees_inter_query_ds" prompt="SAP机构代码"/>
+                    <a:textField name="deptcode" bindTarget="cux_employees_inter_query_ds" prompt="HR部门代码"/>
+                    <a:textField name="costcode" bindTarget="cux_employees_inter_query_ds" prompt="成本中心代码"/>
+                    <a:textField name="psncode" bindTarget="cux_employees_inter_query_ds" prompt="员工代码"/>
+                    <a:comboBox name="process_status_desc" bindTarget="cux_employees_inter_query_ds" prompt="处理状态"/>
+                </a:formToolBar>
+                <a:formBody>
+                    <a:hBox labelWidth="100">
+                        <a:textField name="orgcode" bindTarget="cux_employees_inter_query_ds" prompt="HR机构代码"/>
+                        <a:textField name="psnname" bindTarget="cux_employees_inter_query_ds" prompt="员工姓名"/>
+                        <a:datePicker name="systemdate" bindTarget="cux_employees_inter_query_ds" prompt="系统同步日期"/>
+                    </a:hBox>
+                </a:formBody>
+            </a:queryForm>
+            <a:grid id="grid" bindTarget="cux_employees_inter_result_ds" marginHeight="125" navBar="true" width="1300">
+                <a:columns>
+                    <a:column name="orgsapcode" prompt="SAP机构代码" width="100"/>
+                    <a:column name="orgcode" prompt="HR机构代码" width="100"/>
+                    <a:column name="deptcode" prompt="HR部门代码" width="100"/>
+                    <a:column name="costcode" prompt="成本中心代码" width="100"/>
+                    <a:column name="psncode" prompt="员工代码" width="100"/>
+                    <a:column name="psnname" prompt="员工姓名" width="100"/>
+                    <a:column name="email" prompt="邮箱" width="100"/>
+                    <!-- <a:column name="sex" prompt="性别" width="100"/> -->
+                    <a:column name="mobile" prompt="移动电话" width="100"/>
+                    <a:column name="disablestate" prompt="员工启用状态" width="100"/>
+                    <!-- <a:column name="showorder" prompt="展示顺序号" width="100"/> -->
+                    <a:column name="modifiedtime" prompt="人员更新日期" renderer="Aurora.formatDate" width="100"/>
+                    <a:column name="systemdate" prompt="系统同步日期" renderer="Aurora.formatDate" width="100"/>
+                    <a:column name="process_status_desc" prompt="同步状态" width="100"/>
+                    <a:column name="message" prompt="同步信息" width="100"/>
+                </a:columns>
+            </a:grid>
+            <a:hBox/>
+        </a:screenBody>
+    </a:view>
+</a:screen>

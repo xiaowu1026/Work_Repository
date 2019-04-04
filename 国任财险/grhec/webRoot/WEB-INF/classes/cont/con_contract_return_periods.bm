@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:ns2="aurora.database.local.oracle" xmlns:e="aurora.service.exception" xmlns:f="aurora.database.features" xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="CON_CONTRACT_RETURN_PERIODS" defaultOrderBy="period_name">
+    <bm:fields>
+        <bm:field name="contract_header_id" databaseType="NUMBER" datatype="java.lang.Long" insertExpression="${@contract_header_id}" physicalName="CONTRACT_HEADER_ID"/>
+        <bm:field name="contract_return_period_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="CONTRACT_RETURN_PERIOD_ID"/>
+        <bm:field name="line_num" databaseType="NUMBER" datatype="java.lang.Long" physicalName="LINE_NUM"/>
+        <bm:field name="period_year" databaseType="NUMBER" datatype="java.lang.Long" physicalName="PERIOD_YEAR"/>
+        <bm:field name="period_num" databaseType="NUMBER" datatype="java.lang.Long" physicalName="PERIOD_NUM"/>
+        <bm:field name="period_name" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="PERIOD_NAME"/>
+        <bm:field name="quarter_num" databaseType="NUMBER" datatype="java.lang.Long" physicalName="QUARTER_NUM"/>
+        <bm:field name="amount" databaseType="NUMBER" datatype="java.lang.Double" physicalName="AMOUNT"/>
+        <bm:field name="assigned_amount" expression=" (cux_exp_report_pkg.get_contract_period_exp_amount(t1.contract_header_id,t1.contract_return_period_id))" forInsert="false" forUpdate="false"/>
+        <bm:field name="invoice_sales_amount" databaseType="NUMBER" datatype="java.lang.Double" physicalName="invoice_sales_amount"/>
+        <bm:field name="head_company_id" expression="(select h.company_id from con_contract_headers h where h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="head_company_name" expression="(select (select fcv.company_short_name from fnd_companies_vl fcv where fcv.company_id  = h.company_id) from con_contract_headers h where h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="head_unit_id" expression="(select h.unit_id from con_contract_headers h where h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="head_unit_name" expression="(select (select u.DESCRIPTION from exp_org_unit_vl u where u.UNIT_ID = h.unit_id) from con_contract_headers h where h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="release_amount" expression="(nvl(t1.amount - cux_exp_report_pkg.get_contract_period_amount(t1.contract_header_id,t1.contract_return_period_id,&apos;&apos;,${/session/@session_id}),0))" forInsert="false" forUpdate="false"/>
+        <bm:field name="responsibility_center_id" expression="(select u.responsibility_center_id from exp_org_unit u,con_contract_headers h  where u.unit_id = h.unit_id and h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="responsibility_center_name" expression="(select v.responsibility_center_name from fnd_responsibility_centers_vl v, exp_org_unit u,con_contract_headers h  where v.responsibility_center_id=u.responsibility_center_id and u.unit_id = h.unit_id and h.contract_header_id = t1.contract_header_id)" forInsert="false" forUpdate="false"/>
+    </bm:fields>
+    <bm:features>
+        <ns2:sequence-pk/>
+        <f:standard-who/>
+    </bm:features>
+    <bm:primary-key>
+        <bm:pk-field name="contract_return_period_id"/>
+    </bm:primary-key>
+    <bm:query-fields>
+        <bm:query-field field="contract_header_id" queryoperator="="/>
+        <bm:query-field field="contract_return_period_id" queryOperator="="/>
+    </bm:query-fields>
+    <e:exception-descriptor-config>
+        <e:exception-descriptor exception="java.sql.SQLException" handleClass="aurora.database.SQLExceptionDescriptor">
+            <e:error-message code="1" message="期间和行号不能重复！"/>
+        </e:exception-descriptor>
+    </e:exception-descriptor-config>
+</bm:model>

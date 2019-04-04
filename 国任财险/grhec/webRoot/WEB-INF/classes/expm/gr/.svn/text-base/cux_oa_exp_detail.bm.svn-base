@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                SELECT
+                    co.exp_report_header_id,
+                    erh.exp_report_number,
+                    (SELECT
+                        tv.description
+                    FROM
+                        exp_expense_report_types_vl tv
+                    WHERE
+                        tv.expense_report_type_id = erh.exp_report_type_id
+                    ) exp_report_type_name,
+                    (SELECT
+                        SUM(t.report_amount)
+                    FROM
+                        exp_report_lines t
+                    WHERE
+                        t.exp_report_header_id = erh.exp_report_header_id
+                    ) sum_amount,
+                    (SELECT
+                        ee.employee_code
+                        || ' - '
+                        || NAME
+                    FROM
+                        exp_employees ee
+                    WHERE
+                        ee.employee_id = erh.employee_id
+                    ) exp_report_employee_name
+                FROM
+                    cux_oa_exp_ref co,
+                    exp_report_headers erh
+                WHERE
+                    co.exp_report_header_id = erh.exp_report_header_id AND
+                    erh.report_status      IN ('SUBMITTED', 'COMPLETELY_APPROVED') AND
+                    EXISTS
+                    (SELECT
+                        1
+                    FROM
+                        cux_oa_exp_ref co1
+                    WHERE
+                        co1.sign_code         = co.sign_code AND
+                        co1.cux_oa_exp_ref_id = ${@cux_oa_exp_ref_id}
+                    )
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

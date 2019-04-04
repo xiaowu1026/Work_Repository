@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2017-12-21 15:23:33 
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="cux_oa_exp_ref_detail_win_link" url="${/request/@context_path}/modules/expm/public/gr/cux_oa_exp_detail.screen"/>
+        <script><![CDATA[
+            function framework_ag_back_fun() {
+                $('framework_ag_win').close();
+            }
+            
+            function show_oa_sign_detail(value, record, name) {
+                var url = record.get('sign_url');
+                if (value) {
+                    return '<a href="javascript:show_oa_sign_detail_win(\'' + url + '\')">查看签报详细信息</a>';
+                } else {
+                    return '';
+                }
+            
+            }
+            
+            
+            function show_oa_sign_detail_win(url) {
+                window.open(url);
+            }
+            
+            function cux_oa_exp_ref_detail(value, record, name) {
+                var cux_oa_exp_ref_id = record.get('cux_oa_exp_ref_id');
+                if (value) {
+                    return '<a href="javascript:cux_oa_exp_ref_detail_win(\'' + cux_oa_exp_ref_id + '\')">查看关联的报销单</a>';
+                } else {
+                    return '';
+                }
+            
+            }
+            
+            function cux_oa_exp_ref_detail_win(cux_oa_exp_ref_id) {
+                var url = $('cux_oa_exp_ref_detail_win_link').getUrl() + '?cux_oa_exp_ref_id=' + cux_oa_exp_ref_id;
+                new Aurora.Window({
+                    url: url,
+                    title: '查看关联报销单',
+                    id: 'cux_oa_exp_detail_win',
+                    height: 500,
+                    width: 900
+                });
+            }
+            
+            
+            function cuxOaExpcellclick(grid, row, name, record) {
+                if (name == 'sign_code') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('sign_code');
+                    f1.setLovPara('exp_report_header_id', '${/parameter/@exp_report_header_id}');
+                }
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="framework_ag_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="exp_report_header_id" defaultValue="${/parameter/@exp_report_header_id}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="framework_ag_result_ds" autoPageSize="true" autoQuery="true" bindName="lines" model="expm.gr.cux_oa_exp_ref" queryDataSet="framework_ag_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="exp_report_header_id" defaultValue="${/parameter/@exp_report_header_id}"/>
+                    <a:field name="sign_code" autoComplete="true" autoCompleteField="code_name" lovGridHeight="300" lovHeight="460" lovService="expm.exp_associated_oasign_oa" lovWidth="500" prompt="OA签报单号" title="OA签报单号">
+                        <a:mapping>
+                            <a:map from="sign_code" to="sign_code"/>
+                            <a:map from="sign_name" to="sign_name"/>
+                            <a:map from="sign_url" to="sign_url"/>
+                            <a:map from="sign_id" to="sign_id"/>
+                        </a:mapping>
+                    </a:field>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:hBox>
+                <a:button click="framework_ag_back_fun" text="HAP_BACK"/>
+            </a:hBox>
+            <a:grid id="framework_ag_grid_id" bindTarget="framework_ag_result_ds" height="500" navBar="true" showRowNumber="true" style="margin-top:10px" width="1400">
+                <a:toolBar>
+                    <a:button type="add"/>
+                    <a:button type="save"/>
+                    <a:button type="delete"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="sign_code" align="center" editor="framework_ag_lov_editor" prompt="签报号" width="200"/>
+                    <a:column name="sign_name" align="center" prompt="签报名称" width="200"/>
+                    <a:column name="exp_rep_amount" align="right" prompt="报销金额" renderer="Aurora.formatMoney" width="200"/>
+                    <a:column name="cux_oa_exp_ref_id" align="center" prompt="查看关联的报销单" renderer="cux_oa_exp_ref_detail" width="200"/>
+                    <a:column name="sign_url" align="center" prompt="签报详细查看" renderer="show_oa_sign_detail" width="200"/>
+                </a:columns>
+                <a:editors>
+                    <a:lov id="framework_ag_lov_editor"/>
+                </a:editors>
+                <a:events>
+                    <a:event name="cellclick" handler="cuxOaExpcellclick"/>
+                </a:events>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

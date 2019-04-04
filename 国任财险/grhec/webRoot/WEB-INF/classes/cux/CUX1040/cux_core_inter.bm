@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:27:09  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="CUX_HR_COMPANY_INTERFACE">
+    <bm:fields>
+        <bm:field name="atribute1" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute2" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute3" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute5" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute6" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute7" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute8" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute9" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute10" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute11" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="atribute12" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <!--    <bm:query-field name="sapcode" queryExpression="t1.sapcode like &apos;%&apos;|| ${@sapcode} ||&apos;%&apos;"/>
+        <bm:query-field name="orgname" queryExpression="t1.orgname like &apos;%&apos;|| ${@orgname} ||&apos;%&apos;"/>
+        <bm:query-field name="orgcode" queryExpression="t1.orgcode like &apos;%&apos;|| ${@orgcode} ||&apos;%&apos;"/>
+        <bm:query-field name="process_status" queryExpression="t1.process_status = ${@process_status}"/>
+        <bm:query-field name="systemdate" dataType="java.util.Date" queryExpression="t1.systemdate = ${@systemdate}"/> --><![CDATA[
+     
+    ]]></bm:query-fields>
+</bm:model>

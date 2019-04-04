@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018年10月5日 上午11:48:12  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+				 select
+				  	(select i.image_type_code
+		              from image_types i
+		             where i.image_type_id = es.image_type_id) image_type_code,
+		        	(select i.image_type_description
+		              from image_types i
+		             where i.image_type_id = es.image_type_id) image_type_description
+		   		from exp_image_types es
+		  		where es.expense_type_id in
+			                (select distinct erl.expense_type_id
+			                   from exp_report_lines erl
+			                  where erl.exp_report_header_id =${@exp_report_header_id})
+		    	AND es.enabled_flag = 'Y'
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="image_type_code"/>
+        <bm:field name="image_type_description"/>
+    </bm:fields>
+</bm:model>

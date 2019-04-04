@@ -1,0 +1,80 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec
+svn://10.75.42.67
+
+
+
+2019-01-22T12:16:05.986130Z
+1689
+luqiang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+.project
+file
+
+
+
+
+2019-01-21T11:17:02.089000Z
+fd0654d925f6eb34311b7d5c176eceec
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+365
+
+.settings
+dir
+
+AuroraUI
+dir
+
+DB
+dir
+
+birt
+dir
+
+logs
+dir
+
+webRoot
+dir
+

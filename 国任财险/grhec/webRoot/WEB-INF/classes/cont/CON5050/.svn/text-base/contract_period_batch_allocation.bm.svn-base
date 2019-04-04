@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-9-13 下午5:15:48  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features" alias="t1" baseTable="CONTRACT_PERIOD_ALLOCATION">
+    <bm:operations>
+        <bm:operation name="delete">
+            <bm:update-sql><![CDATA[
+			begin
+				cux_con_contract_pkg.delete_anotation(p_contract_return_period_id => ${@contract_return_period_id},
+                                p_user_id                       => ${/session/@user_id});
+			end;
+			]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+			begin
+				cux_con_contract_pkg.insert_anotation(p_contract_return_period_id => ${../../@contract_return_period_id},
+                             p_company_id                => ${@company_id},
+                             p_unit_id                   => ${@unit_id},
+                             p_expense_item_id           => ${@expense_item_id},
+                             p_invoice_sales_amount      => ${@invoice_sales_amount},
+                             p_user_id                   => ${/session/@user_id},
+                             p_responsibility_center_id  => ${@responsibility_center_id});
+			end;
+			]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

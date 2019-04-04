@@ -1,0 +1,207 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/modules/bgt
+svn://10.75.42.67
+
+
+
+2019-01-22T12:12:57.409568Z
+1688
+pengqishi
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+BGT1010
+dir
+
+BGT1020
+dir
+
+BGT1030
+dir
+
+BGT1040
+dir
+
+BGT1070
+dir
+
+BGT2010
+dir
+
+BGT2020
+dir
+
+BGT2110
+dir
+
+BGT2200
+dir
+
+BGT2310
+dir
+
+BGT2910
+dir
+
+BGT2920
+dir
+
+BGT3010
+dir
+
+BGT3020
+dir
+
+BGT3030
+dir
+
+BGT3040
+dir
+
+BGT3050
+dir
+
+BGT3060
+dir
+
+BGT3100
+dir
+
+BGT3110
+dir
+
+BGT5110
+dir
+
+BGT5120
+dir
+
+BGT5210
+dir
+
+BGT5310
+dir
+
+BGT5410
+dir
+
+BGT6090
+dir
+
+BGT6100
+dir
+
+BGT6200
+dir
+
+BGT7010
+dir
+
+BGT7020
+dir
+
+BGT7030
+dir
+
+BGT7040
+dir
+
+BGT7080
+dir
+
+BGT7090
+dir
+
+BGT7100
+dir
+
+QHLBGT5100
+dir
+
+bgt_journal_approved_detail_for_pad.screen
+file
+
+
+
+
+2019-01-21T11:09:05.678000Z
+33ea4a8c6f8c5428a06806e7354bbdad
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12556
+
+bgt_version_company_batch.svc
+file
+
+
+
+
+2019-01-21T11:09:03.350000Z
+038d99e862b5302f5115fef56b383e67
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+369
+
+public
+dir
+

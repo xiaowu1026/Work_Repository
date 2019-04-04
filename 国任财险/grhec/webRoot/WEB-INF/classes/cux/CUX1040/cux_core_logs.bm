@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:27:09  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="sync_core_logs">
+    <bm:fields>
+        <bm:field name="batch_id" databaseType="VARCHAR2" datatype="java.lang.String" prompt="批次号"/>
+        <bm:field name="request_xml" databaseType="CLOB" datatype="java.lang.String"/>
+        <bm:field name="response_xml" databaseType="CLOB" datatype="java.lang.String"/>
+        <bm:field name="title_desc" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="operation_type" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="creation_date" databaseType="DATE" datatype="java.util.Date"/>
+    </bm:fields>
+    <!-- <bm:data-filters>
+        <bm:data-filter enforceOperations="query" expression="t1.data_type=03"/>
+    </bm:data-filters> -->
+    <bm:query-fields>
+        <bm:query-field name="batch_id" queryExpression="t1.batch_id like &apos;%&apos;|| ${@batch_id} ||&apos;%&apos;"/>
+        <bm:query-field name="title_desc" queryExpression="t1.title_desc like &apos;%&apos;|| ${@title_desc} ||&apos;%&apos;"/>
+        <bm:query-field name="operation_type" queryExpression="t1.operation_type like &apos;%&apos;|| ${@operation_type} ||&apos;%&apos;"/>
+        <bm:query-field name="creation_date" queryExpression="to_char(t1.creation_date,&apos;yyyy-MM-dd&apos;)=${@creation_date}"/>
+    </bm:query-fields>
+</bm:model>

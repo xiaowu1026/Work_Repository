@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+               SELECT cso.sign_code,
+	               cso.sign_name,
+	               cso.sign_url,
+	               (SELECT SUM(erl.requisition_amount)
+	                  FROM cux_oa_exp_requisition_ref cr,
+	                       exp_requisition_headers    erh,
+	                       exp_requisition_lines      erl
+	                 WHERE erh.exp_requisition_header_id =
+	                       erl.exp_requisition_header_id
+	                   AND cr.sign_code = cso.sign_code
+	                   AND cr.exp_requisition_header_id =
+	                       erh.exp_requisition_header_id
+	                   AND erh.requisition_status IN
+	                       ('SUBMITTED', 'COMPLETELY_APPROVED')
+	                   AND erh.exp_requisition_header_id =
+	                       erl.exp_requisition_header_id
+	                
+	                ) exp_rep_amount,
+	               cr.cux_oa_exp_requisition_ref_id,
+	               cr.exp_requisition_header_id,
+	               cr.sign_id
+	          FROM cux_oa_exp_requisition_ref cr, con_sign_oa cso
+	         where cr.sign_id = cso.sign_id
+	        and cr.exp_requisition_header_id = ${@exp_requisition_header_id}
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

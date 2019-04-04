@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[	    begin
+			cux_exp_report_pkg.insert_line_period_tmp(${/session/@session_id},
+													${@exp_report_line_id},
+													${/session/@user_id});
+		end;]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

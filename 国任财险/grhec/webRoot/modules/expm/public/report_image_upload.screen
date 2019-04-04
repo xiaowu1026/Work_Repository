@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018年9月28日 下午9:19:29  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure>
+        <a:model-query autoCount="false" defaultWhereClause="table_pk_value=${/parameter/@head_id}" fetchAll="true" model="expm.exp_rep_att_exist_by_image_types" rootPath="exp_report_attachments"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="upload_file_link" url="${/request/@context_path}/uploadFile.screen"/>
+        <a:link id="check_uploadFile_link_9" url="${/request/@context_path}/check_uploadFile.screen"/>
+        <!-- <a:link id="attch_num_link" model="expm.exp_rep_att_exist_by_image_types" modelaction="query"/> -->
+        <script><![CDATA[
+       
+            
+            var head_id='${/parameter/@head_id}';
+            var checkFlag='${/parameter/@checkFlag}';
+            
+             function image_upload_render(value,record,name){
+               if (record.isNew) {
+                    return '';
+                }
+                var exp_report_attachments_records=$('exp_report_attachments_ds').getAll();
+                var image_type_code=record.get('image_type_code');
+                var table_name='EXP_REPORT_HEADERS'+image_type_code;
+                for(var i=0;i<exp_report_attachments_records.length;i++)
+                {
+                    if(table_name==exp_report_attachments_records[i].get('table_name')){
+                    	return '<a style="color:red" href="javascript:uploadFile(\'' + image_type_code + '\')">影像类别</a>';
+                    }
+                }
+                 return '<a  href="javascript:uploadFile(\'' + image_type_code + '\')">影像类别</a>';
+                
+            }
+           function uploadFile(image_type_code) {
+               var url='';
+               if(checkFlag=='true'){
+                  url = /*${/request/@context_path}/uploadFile.screen*/
+                $('check_uploadFile_link_9').getUrl()+'?table_name=EXP_REPORT_HEADERS'+image_type_code+'&header_id=' + head_id;   
+              	 new Aurora.Window({
+                    url: url,
+                    title: '${l:PROMPT.VIEW_ATTACHMENT}',
+                    id: 'image_types_upload_file_screen',
+                    width: 680,
+                    height: 400
+                });
+               }else{
+                 url = /*${/request/@context_path}/uploadFile.screen*/
+                $('upload_file_link').getUrl()+'?table_name=EXP_REPORT_HEADERS'+image_type_code+'&header_id=' + head_id; 
+                new Aurora.Window({
+                    url: url,
+                    title: '${l:ATM.UPLOAD_ATTACHMENT}',
+                    id: 'image_types_check_upload_file_screen',
+                    width: 680,
+                    height: 400
+                });
+               }
+                
+               
+           }
+           
+           function image_line_number(value, record, name) {
+                return ($('exp_sob_type_images_result_ds').indexOf(record) + 1) ;
+            }
+        
+          
+		]]></script>
+        <a:dataSets>
+            <a:dataSet id="exp_report_attachments_ds">
+                <a:datas dataSource="/model/exp_report_attachments"/>
+            </a:dataSet>
+            <a:dataSet id="exp_sob_type_images_result_ds" autoQuery="true" model="exp.EXP4030.export_image_upload" queryUrl="${/request/@context_path}/autocrud/exp.EXP4030.export_image_upload/query?exp_report_header_id=${/parameter/@head_id}&amp;enabled_flag=Y">
+                <a:fields>
+                    <!--  <a:field name="exp_sob_image_type_id"/>
+                    <a:field name="set_of_books_id"/>
+                    <a:field name="expense_type_code"/>
+                    <a:field name="enabled_flag"/> -->
+                    <a:field name="image_type_code"/>
+                    <a:field name="image_type_description"/>
+                    <a:field name="line_number"/>
+                    <a:field name="has_attach_flag"/>
+                </a:fields>
+                <a:events>
+                    <a:event name="load" handler="lineLoadFunction"/>
+                </a:events>
+            </a:dataSet>
+        </a:dataSets>
+        <a:grid id="grid_id" bindTarget="exp_sob_type_images_result_ds" height="300" width="800">
+            <!--   <a:toolBar>
+                <a:button type="add"/>
+                <a:button type="save"/>
+                <a:button type="delete"/>
+                <a:button type="excel"/>
+                <a:button type="clear"/>
+            </a:toolBar> -->
+            <a:columns>
+                <a:column name="line_number" prompt="序号" renderer="image_line_number"/>
+                <a:column name="image_type_description" prompt="影像类别" width="100"/>
+                <a:column name="image_upload" prompt="影像上传" renderer="image_upload_render" width="100"/>
+            </a:columns>
+            <a:editors>
+                <a:numberField id="grid_id_numberField_id"/>
+                <a:textField id="grid_id_textField_id"/>
+            </a:editors>
+        </a:grid>
+        <a:hBox/>
+    </a:view>
+</a:screen>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                SELECT *
+				  FROM (WITH comp_temp AS (SELECT fc.company_code
+				                             FROM fnd_companies fc
+				                            WHERE fc.company_id = nvl(${@company_id},${/session/@company_id})
+				                              AND nvl(${@chd_company_flag}, 'N') = 'N'
+				                           UNION ALL
+				                           SELECT fc2.company_code
+				                             FROM fnd_companies fc2
+				                            WHERE ${@chd_company_flag} = 'Y'
+				                           CONNECT BY PRIOR
+				                                       fc2.company_id = fc2.parent_company_id
+				                            START WITH fc2.company_id = nvl(${@company_id},${/session/@company_id}))
+				         select b.bgt_advance_id,
+				                b.company_code,
+				                (select f.company_short_name
+				                   from fnd_companies_vl f
+				                  where f.company_code = b.company_code) company_name,
+				                b.unit_code,
+				                (select e.DESCRIPTION
+				                   from exp_org_unit_vl e
+				                  where e.unit_code = b.unit_code) unit_name,
+				                b.period_name,
+				                b.budget_item_code,
+				                (select bv.description
+				                   from bgt_budget_items_vl bv
+				                  where bv.budget_item_code = b.budget_item_code) budget_item,
+				                b.channel_code,
+				                (select t.description
+				                   from fnd_dimension_values_vl t, fnd_dimensions f
+				                  where t.dimension_id = f.dimension_id
+				                    and t.dimension_value_code = b.channel_code
+				                    and f.dimension_code = 'GTCX_COA_BANKDOC01'
+				                    and t.enabled_flag = 'Y') channel_name,
+				                b.exclusive_marking,
+				                (select t.description
+				                   from fnd_dimension_values_vl t, fnd_dimensions f
+				                  where t.dimension_id = f.dimension_id
+				                    and t.dimension_value_code = b.exclusive_marking
+				                    and f.dimension_code = 'GTCX_COA_DEFDOC02'
+				                    and t.enabled_flag = 'Y') exclusive_name,
+				                b.budget_balance,
+				                b.advance_number,
+				                b.state,
+				                decode(b.state, '', '未预提', '0', '未预提', '1', '已预提') state_desc
+				           from bgt_customer_support_advance b
+				          where b.company_code IN (SELECT * FROM comp_temp)) v
+                      #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+            begin
+               bgt_advance_pkg.bgt_advance_query(p_session_id => ${@session_id}, p_user_id => ${/session/@user_id});
+            end;
+            ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+                begin
+	              bgt_advance_pkg.bgt_advance_account(p_session_id     => ${/session/@session_id}, 
+	                                                  p_user_id        => ${/session/@user_id},
+	                                                  p_bgt_advance_id => ${@bgt_advance_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <!-- <bm:query-field name="company_code" queryExpression="v.company_code=${@company_code}"/> -->
+        <bm:query-field name="unit_code" queryExpression="v.unit_code=${@unit_code}"/>
+        <bm:query-field name="period_name" queryExpression="v.period_name=${@period_name}"/>
+        <bm:query-field name="budget_item_code" queryExpression="v.budget_item_code=${@budget_item_code}"/>
+        <bm:query-field name="channel_code" queryExpression="v.channel_code=${@channel_code}"/>
+        <bm:query-field name="exclusive_code" queryExpression="v.exclusive_marking=${@exclusive_code}"/>
+        <bm:query-field name="advance_number" queryExpression="v.advance_number like &apos;%&apos;${@advance_number}&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

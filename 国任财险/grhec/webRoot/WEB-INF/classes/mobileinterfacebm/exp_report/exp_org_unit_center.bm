@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select t1.responsibility_center_id,
+				       (select t.responsibility_center_code
+				          from fnd_responsibility_centers_vl t
+				         where t.responsibility_center_id = t1.responsibility_center_id) responsibility_center_code,
+				       (select t.responsibility_center_name
+				          from fnd_responsibility_centers_vl t
+				         where t.responsibility_center_id = t1.responsibility_center_id) responsibility_center_name
+				  from EXP_ORG_UNIT_RESP_DIST t1
+				 where t1.unit_id = ${@unit_id}
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

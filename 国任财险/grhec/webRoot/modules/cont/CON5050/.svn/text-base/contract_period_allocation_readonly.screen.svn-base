@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2018-9-13 17:21:27  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <script><![CDATA[
+            function back() {
+                $('exp_expense_items_company_screen').close();
+            }
+            
+            
+            function allocation_back_fun() {
+                $('allocation_win').close();
+            }
+            
+            
+            
+            function cellClickFunction(grid, row, name, record) {
+                //=================行点击==========================
+                if (name == 'unit_name') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('unit_name');
+                    f1.setLovPara('company_id', record.get('company_id'));
+                    f1.setLovService('exp.exp_org_unit');
+                }
+            }
+            
+            
+            function lineUpdateFunction(dataSet, record, name, value, oldValue) {
+                //=================行更新==========================
+                if (name == 'company_name') {
+                    record.set('unit_id', '');
+                    record.set('unit_name', '');
+                }
+            }
+            
+            
+            function sum_renderer(datas, name) {
+                var sum = 0;
+                for (var i = 0;i < datas.length;i++) {
+                    var r = datas[i];
+                    var d = r.get(name);
+                    var x = parseFloat(d).toFixed(2);
+                    var n = parseFloat(x);
+                    if (!isNaN(n)) {
+                        sum += n;
+                    }
+                }
+                var total = (typeof(sum) == 'undefined' ? '' : parseFloat(sum).toFixed(2));
+                return '<font color="red">' + Aurora.formatNumber(total) + '</font>';
+            } 
+            
+            function allocation_save_fun(){
+                $('contract_period_allocation_query_ds').submit();
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="contract_period_allocation_query_ds" autoCreate="true" submitUrl="${/request/@context_path}/modules/cont/CON5050/contract_period_allocation_save.svc">
+                <a:fields>
+                    <a:field name="contract_return_period_id" defaultValue="${/parameter/@contract_return_period_id}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="contract_period_allocation_result_ds" autoQuery="true" bindName="lines" bindTarget="contract_period_allocation_query_ds" model="cont.CON5050.contract_period_allocation" queryDataSet="contract_period_allocation_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="contract_return_period_id" defaultValue="${/parameter/@contract_return_period_id}"/>
+                    <a:field name="company_name" lovGridHeight="320" lovHeight="450" lovService="expm.exp_company_accross_company" lovWidth="600" required="true" title="公司">
+                        <a:mapping>
+                            <a:map from="company_id" to="company_id"/>
+                            <a:map from="company_code" to="company_code"/>
+                            <a:map from="code_name" to="company_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="unit_name" lovGridHeight="320" lovHeight="450" required="true" title="部门">
+                        <a:mapping>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="unit_code_name" to="unit_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="invoice_sales_amount" required="true"/>
+                    <a:field name="expense_item_name" lovGridHeight="320" lovHeight="450" lovService="expm.exp_expense_item?enabled_flag=Y" lovWidth="500" required="true">
+                        <a:mapping>
+                            <a:map from="expense_item_description" to="expense_item_name"/>
+                            <a:map from="expense_item_id" to="expense_item_id"/>
+                        </a:mapping>
+                    </a:field>
+                </a:fields>
+                <a:events>
+                    <a:event name="update" handler="lineUpdateFunction"/>
+                </a:events>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:hBox>
+                <a:button click="allocation_back_fun" text="HAP_BACK"/>
+            </a:hBox>
+            <a:grid name="" bindTarget="contract_period_allocation_result_ds" height="400" navBar="true" showRowNumber="true" width="800">
+                <a:columns>
+                    <a:column name="company_name" align="center" editor="allocation_lov_editor" prompt="公司" width="150"/>
+                    <a:column name="unit_name" align="center" editor="allocation_lov_editor" prompt="部门" width="150"/>
+                    <a:column name="responsibility_center_name" align="center" editor="allocation_lov_editor" prompt="责任中心" width="150"/>
+                    <a:column name="expense_item_name" align="center" editor="allocation_lov_editor" prompt="费用项目" width="150"/>
+                    <a:column name="invoice_sales_amount" align="right" editor="allocation_num_editor" footerRenderer="sum_renderer" prompt="不含税金额" width="120"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

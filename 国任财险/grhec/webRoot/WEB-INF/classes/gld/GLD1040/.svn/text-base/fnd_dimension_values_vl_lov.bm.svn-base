@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:e="aurora.service.exception" xmlns:o="aurora.database.local.oracle" xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features" baseTable="GLD_SOB_WO_TYPE_REF_ACCOUNTS">
+    <bm:fields>
+        <bm:field name="dimension_value_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="DIMENSION_VALUE_ID"/>
+        <bm:field name="dimension_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="DIMENSION_ID"/>
+        <bm:field name="dimension_value_code" databaseType="VARCHAR2" datatype="java.lang.String" displayWidth="150" forDisplay="true" forQuery="true" physicalName="DIMENSION_VALUE_CODE" prompt="代码" queryWidth="100"/>
+        <bm:field name="description" databaseType="VARCHAR2" datatype="java.lang.String" displayWidth="300" forDisplay="true" forQuery="true" physicalName="DESCRIPTION" prompt="描述" queryWidth="100"/>
+    </bm:fields>
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+        SELECT
+            *
+        FROM
+            (select t.dimension_id,
+		       (select f.dimension_code
+		          from fnd_dimensions f
+		         where f.dimension_id = t.dimension_id) dimension_code,
+		       t.dimension_value_id,
+		       t.dimension_value_code,
+		       a.description_text as description
+			  from fnd_dimension_values t, fnd_descriptions a
+			 where t.description_id = a.description_id(+)
+			   and a.language(+) = 'ZHS'
+			   and a.ref_table(+) = 'FND_DIMENSION_VALUES'
+			   and a.ref_field(+) = 'DESCRIPTION_ID'
+			   and t.enabled_flag = 'Y'
+            )v #WHERE_CLAUSE#
+    ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="dimension_code" queryExpression="dimension_code like &apos;%&apos; || ${@dimension_code} || &apos;%&apos;"/>
+        <bm:query-field name="dimension_value_code" queryExpression="dimension_value_code like &apos;%&apos; || ${@dimension_value_code} || &apos;%&apos;"/>
+        <bm:query-field name="description" queryExpression="description like &apos;%&apos; || ${@description} || &apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select *
+				  from (select b.assign_id,
+						       b.session_id,
+						       b.company_code,
+						       (select f.company_short_name
+						          from fnd_companies_vl f
+						         where f.company_code = b.company_code) company_name,
+						       (select f.company_id
+						          from fnd_companies_vl f
+						         where f.company_code = b.company_code) company_id,
+						       b.unit_code,
+						       (select e.DESCRIPTION
+						          from exp_org_unit_vl e
+						         where e.unit_code = b.unit_code) unit_name,
+						       b.period_name,
+						       b.bgt_budget_items_code as budget_item_code,
+						       (select bv.description
+					              from bgt_budget_items_company_vl bv
+					             where bv.enabled_flag = 'Y'
+					             and bv.budget_item_code = b.bgt_budget_items_code
+					             and rownum = 1) bgt_budget_items_desc,
+						       b.assign_amount
+						  from bgt_premium_assign b) v
+                      #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+                begin
+                  bgt_budget_premium_pkg.insert_bgt_premium_assign(p_assign_id             => ${@assign_id},
+								                                   p_session_id            => ${@session_id},
+								                                   p_company_code          => ${@company_code},
+								                                   p_unit_code             => ${@unit_code},
+								                                   p_period_name           => ${@period_name},
+								                                   p_bgt_budget_items_code => ${@budget_item_code},
+								                                   p_assign_amount         => ${@assign_amount},
+								                                   p_user_id               => ${/session/@user_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+                begin
+                  bgt_budget_premium_pkg.submit_bgt_premium_assign(p_session_id => ${@session_id},
+                                                                   p_user_id    => ${/session/@user_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="session_id" queryExpression="v.session_id=${@session_id}"/>
+    </bm:query-fields>
+</bm:model>

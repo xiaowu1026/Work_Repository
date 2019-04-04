@@ -1,0 +1,55 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/modules/acp
+svn://10.75.42.67
+
+
+
+2019-01-02T01:13:17.025096Z
+1540
+luqiang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+ACP1135
+dir
+
+ACP3100
+dir
+
+ACP5030
+dir
+
+ACP5035
+dir
+
+ACP5040
+dir
+
+ACP5050
+dir
+
+ACP5055
+dir
+
+ACP5060
+dir
+
+public
+dir
+

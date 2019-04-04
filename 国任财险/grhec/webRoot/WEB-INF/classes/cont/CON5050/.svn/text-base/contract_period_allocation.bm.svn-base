@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-9-13 下午5:15:48  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features" alias="t1" baseTable="CONTRACT_PERIOD_ALLOCATION">
+    <bm:fields>
+        <bm:field name="contract_period_allocation_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="CONTRACT_PERIOD_ALLOCATION_ID" prompt="CONTRACT_PERIOD_ALLOCATION.CONTRACT_PERIOD_ALLOCATION_ID"/>
+        <bm:field name="contract_return_period_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="CONTRACT_RETURN_PERIOD_ID" prompt="CONTRACT_PERIOD_ALLOCATION.CONTRACT_RETURN_PERIOD_ID"/>
+        <bm:field name="company_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="COMPANY_ID" prompt="CONTRACT_PERIOD_ALLOCATION.COMPANY_ID"/>
+        <bm:field name="company_name" expression="(select fc.company_short_name  from fnd_companies_vl fc where fc.company_id = t1.company_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="unit_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="UNIT_ID" prompt="CONTRACT_PERIOD_ALLOCATION.UNIT_ID"/>
+        <bm:field name="unit_name" expression="(select v.DESCRIPTION  from exp_org_unit_vl v where v.UNIT_ID = t1.unit_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="responsibility_center_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="responsibility_center_id" prompt="CONTRACT_PERIOD_ALLOCATION.responsibility_center_id"/>
+        <bm:field name="responsibility_center_name" expression="(SELECT fcv.responsibility_center_name FROM fnd_responsibility_centers_vl fcv   WHERE fcv.responsibility_center_id = t1.responsibility_center_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="expense_item_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="EXPENSE_ITEM_ID" prompt="CONTRACT_PERIOD_ALLOCATION.EXPENSE_ITEM_ID"/>
+        <bm:field name="expense_item_name" expression="(select ee.description  from Exp_Expense_Items_Vl  ee where ee.expense_item_id = t1.expense_item_id)" forInsert="false" forUpdate="false"/>
+        <bm:field name="invoice_sales_amount" databaseType="NUMBER" datatype="java.lang.Double" physicalName="INVOICE_SALES_AMOUNT" prompt="CONTRACT_PERIOD_ALLOCATION.INVOICE_SALES_AMOUNT"/>
+    </bm:fields>
+    <bm:features>
+        <f:standard-who/>
+        <o:sequence-pk/>
+    </bm:features>
+    <bm:primary-key>
+        <bm:pk-field name="contract_period_allocation_id"/>
+    </bm:primary-key>
+    <bm:query-fields>
+        <bm:query-field field="contract_return_period_id" queryOperator="="/>
+    </bm:query-fields>
+    <bm:operations>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+			begin
+				cux_con_contract_pkg.check_anotation(p_contract_return_period_id => ${@contract_return_period_id},
+                                p_user_id                       => ${/session/@user_id});
+			end;
+			]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

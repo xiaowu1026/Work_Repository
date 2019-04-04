@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-16 下午02:03:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:view>
+        <a:link id="bgt_transmit_link" model="bgt.BGT7100.bgt_budget_premium_transmit" modelaction="batch_update"/>
+        <script><![CDATA[
+				
+			function reset(){
+				$('bgt_query_ds').reset();
+			}
+			
+			function queryPeriod(){
+				if(!$('bgt_query_ds').validate()){
+					return ;
+				}
+				$('bgt_result_ds').query();
+			}
+            
+            function transmitFunction(){
+               
+                var jsonData = $('bgt_result_ds').getJsonData(true);
+                if(jsonData.length == 0){
+                    Aurora.showMessage('提示','请选择需下达的保费数据！');
+                    return;
+                }
+                if(!$('bgt_result_ds').validate()){
+                    return;
+                }
+                for(var i=0;i<jsonData.length;i++){
+                    jsonData[i]._status = 'update'; 
+                }
+                
+                Aurora.request({
+                    url: $('bgt_transmit_link').getUrl(),
+                    para: jsonData,
+                    lockMessage: '正在下达,请耐心等待',
+                    success: function() {
+                        // Aurora.showMessage('提示', '下达成功！');
+                        $('bgt_query_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+            function numField_fun(recod,name,value){
+                var transmit_status = recod.get('transmit_status');
+                if(transmit_status == 'Y'){
+                    return '';
+                }else{
+                    return 'num_edit';
+                }
+            }
+            
+            function updateFunction(dataSet, record, name, value, oldvalue){
+                if(name == 'premium_rate'){
+                    var premium_rate = value;
+                    var premium_income_amount = record.get('premium_income_amount');
+                    var bgt_amount = premium_income_amount * value / 100;
+                    record.set('transmit_bgt_amount',bgt_amount);
+                }
+            }
+            function save(){
+                $('bgt_result_ds').setSubmitUrl('${/request/@context_path}/autocrud/bgt.BGT7100.bgt_budget_premium_rate_save/batch_update');
+                $('bgt_result_ds').submit();
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <!--公司comboBox-->
+            <a:dataSet id="company_combo_ds" fetchAll="true" loadData="true" model="bgt.BGT3010.bgt_budget_balance_query_company"/>
+            <a:dataSet id="transmit_status_ds">
+                <a:datas>
+                    <a:record code_value="Y" code_value_name="已下达"/>
+                    <a:record code_value="N" code_value_name="未下达"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="bgt_query_ds">
+                <a:fields>
+                    <a:field name="company_name" displayField="company_short_name" options="company_combo_ds" prompt="BGT_BUDGET_ITEM_MAPPING.COMPANY_ID" returnField="company_id" valueField="company_id">
+                        <a:mapping>
+                            <a:map from="company_code" to="company_code"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="company_code"/>
+                    <a:field name="company_id"/>
+                    <a:field name="period_name" autoComplete="true" autoCompleteField="period_name" lovGridHeight="300" lovHeight="420" lovService="expm.EXP5400.bgt_period_detail_lov" lovWidth="500" title="EXP_REQ.PERIOD_NAME">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="premium_date_from"/>
+                    <a:field name="premium_date_to"/>
+                    <a:field name="transmit_status_desc" displayField="code_value_name" options="transmit_status_ds" returnField="transmit_status" valueField="code_value"/>
+                    <a:field name="transmit_status"/>
+                    <a:field name="transmit_bgt_amount"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="bgt_result_ds" autoQuery="false" model="bgt.BGT7100.bgt_budget_premium_transmit" queryDataSet="bgt_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="premium_rate" required="true"/>
+                </a:fields>
+                <a:events>
+                    <a:event name="update" handler="updateFunction"/>
+                </a:events>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" labelWidth="100" title="总公司费率下达" width="800">
+                <!-- <a:lov name="period_name" bindTarget="bgt_query_ds" prompt="期间"/> -->
+                <a:datePicker name="premium_date_from" bindTarget="bgt_query_ds" prompt="日期从"/>
+                <a:datePicker name="premium_date_to" bindTarget="bgt_query_ds" prompt="日期到"/>
+                <a:comboBox name="company_name" bindTarget="bgt_query_ds" prompt="机构"/>
+                <a:comboBox name="transmit_status_desc" bindTarget="bgt_query_ds" prompt="状态"/>
+            </a:form>
+            <a:hBox>
+                <a:button click="queryPeriod" text="HAP_QUERY"/>
+                <a:button click="reset" text="HAP_RESET"/>
+                <a:button click="transmitFunction" text="下达"/>
+                <a:button click="save" text="保存"/>
+            </a:hBox>
+            <a:grid bindTarget="bgt_result_ds" height="350" navBar="true" width="800">
+                <a:toolBar>
+                    <a:button type="excel"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="premium_date" align="center" prompt="日期" width="80"/>
+                    <a:column name="company_name" align="center" prompt="机构" width="150"/>
+                    <a:column name="premium_income_amount" align="right" prompt="保费收入" renderer="Aurora.formatMoney" width="80"/>
+                    <a:column name="premium_rate" align="center" editorFunction="numField_fun" prompt="费率(%)" width="100"/>
+                    <a:column name="transmit_bgt_amount" align="right" prompt="分配预算额" width="80"/>
+                    <a:column name="transmit_status_desc" align="center" prompt="状态" width="80"/>
+                </a:columns>
+                <a:editors>
+                    <a:numberField id="num_edit"/>
+                </a:editors>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            select * from (
+		            select t.cux_oa_trans_logs_id,
+					       t.req_msg,
+					       t.resp_msg,
+					       t.doc_number,
+					       t.type,
+					       decode(t.type,'OA_TODO_DONE','OA已办','OA_TODO_DONE','OA已办删除','OA_TODO','OA待办','INSERT_OA_SIGN','OA签报传入费控','OA_SIGN_AUTHORITIES','签报手工授权','SEND_SIGN_AUTHORITIES','定任务发送签报查阅权','OA_SIGN_READ','签报查阅权限发送OA') type_desc,
+					       t.error_msg,
+					       to_char(t.last_update_date, 'yyyy-mm-dd') submit_day
+					  from cux_oa_trans_logs t
+					 where t.type not in ('HR_SYN_UNIT', 'HR_SYN_EMPLOYEE', 'HR_SYN_COMPANY')
+					 order by t.last_update_date desc) v
+			        #WHERE_CLAUSE#
+        ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="cux_oa_trans_logs_id"/>
+        <bm:field name="req_msg"/>
+        <bm:field name="resp_msg"/>
+        <bm:field name="doc_number"/>
+        <bm:field name="type"/>
+        <bm:field name="type_desc"/>
+        <bm:field name="error_msg"/>
+        <bm:field name="submit_day"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="document_num" queryExpression="v.doc_number=${@document_num}"/>
+        <bm:query-field name="submit_day" queryExpression="v.submit_day=${@submit_day}"/>
+        <bm:query-field name="req_msg" queryExpression="v.req_msg like &apos;%&apos;||${@req_msg}||&apos;%&apos;"/>
+        <bm:query-field name="resp_msg" queryExpression="v.resp_msg like &apos;%&apos;||${@resp_msg}||&apos;%&apos;"/>
+        <bm:query-field name="type" queryExpression="v.type=${@type}"/>
+    </bm:query-fields>
+</bm:model>

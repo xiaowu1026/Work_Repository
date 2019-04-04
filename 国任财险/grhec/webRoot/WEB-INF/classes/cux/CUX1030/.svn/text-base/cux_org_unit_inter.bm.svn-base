@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:22:21  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="cux_hr_department_interface">
+    <bm:fields>
+        <bm:field name="orgcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="orgname" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="deptcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="deptname" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="fatherdeptcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="fatherdeptname" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="principalcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="chargeleader" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="costcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="disablestate" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="showorder" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="modifiedtime" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="systemdate" databaseType="DATE" datatype="java.util.Date"/>
+        <bm:field name="process_status" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="process_status_desc" databaseType="VARCHAR2" datatype="java.lang.String" expression="(decode(process_status,&apos;N&apos;,&apos;未处理&apos;,&apos;Y&apos;,&apos;已入正式表&apos;,&apos;E&apos;,&apos;同步出错&apos;))"/>
+        <bm:field name="orgsapcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <!-- <bm:field name="first_unit_name" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="FIRST_UNIT_NAME" prompt="CUX_ORG_UNIT_INTER.FIRST_UNIT_NAME"/> -->
+        <!-- <bm:field name="process_flag" databaseType="VARCHAR2" datatype="java.lang.String" expression="(decode(t1.process_flag,&apos;10&apos;,&apos;已处理&apos;,&apos;20&apos;,&apos;未处理&apos;,&apos;30&apos;,&apos;处理失败&apos;))" physicalName="PROCESS_FLAG" prompt="CUX_ORG_UNIT_INTER.PROCESS_FLAG"/> -->
+        <bm:field name="message" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="deptcode" queryExpression="t1.deptcode like &apos;%&apos;|| ${@deptcode} ||&apos;%&apos;"/>
+        <bm:query-field name="costcode" queryExpression="t1.costcode like &apos;%&apos;|| ${@costcode} ||&apos;%&apos;"/>
+        <bm:query-field name="deptname" queryExpression="t1.deptname like &apos;%&apos;|| ${@deptname} ||&apos;%&apos;"/>
+        <bm:query-field name="fatherdeptcode" queryExpression="t1.fatherdeptcode like &apos;%&apos;|| ${@fatherdeptcode} ||&apos;%&apos;"/>
+        <bm:query-field name="process_status" queryExpression="t1.process_status = ${@process_status}"/>
+        <bm:query-field name="orgsapcode" queryExpression="t1.orgsapcode like &apos;%&apos;|| ${@orgsapcode} ||&apos;%&apos;"/>
+        <bm:query-field name="orgname" queryExpression="t1.orgname like &apos;%&apos;|| ${@orgname} ||&apos;%&apos;"/>
+        <bm:query-field name="orgcode" queryExpression="t1.orgcode like &apos;%&apos;|| ${@orgcode} ||&apos;%&apos;"/>
+        <bm:query-field name="systemdate" dataType="java.util.Date" queryExpression="t1.systemdate = ${@systemdate}"/>
+    </bm:query-fields>
+</bm:model>

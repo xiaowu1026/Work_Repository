@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018年10月18日 下午2:32:50  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+           select t.* from (select  
+		              zyear,zlgid,zitem,zbukr,zbeln,
+		              zbuze,
+		              case zmtyp when 'E' then '错误'
+		              when 'W' then '警告'
+		              when 'I' then '信息'
+			          when 'S' then '成功' end zmtyp,
+			          zmess,zfien,zfiev,
+			          to_char(to_date(cdate,'yyyy-MM-dd'),'yyyy-mm-dd') cdate,
+		              substr(ctime,0,2)||':'||substr(ctime,3,2)||':'||substr(ctime,5,2) ctime
+			      from 
+	            	zbx_logd 
+	            	order by cdate desc) t
+            	#WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="zyear" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zlgid" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zitem" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zbukr" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zbeln" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zbuze" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zmtyp" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zmess" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zfien" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="zfiev" databaseType="VARCHAER2" datatype="java.lang.String"/>
+        <bm:field name="cdate" databaseType="VARCHAER2" datatype="java.util.Date"/>
+        <bm:field name="ctime" databaseType="VARCHAER2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="zbeln" queryExpression="t.zbeln=${@zbeln}"/>
+        <bm:query-field name="cdate" queryExpression="t.cdate=${@cdate}"/>
+    </bm:query-fields>
+</bm:model>

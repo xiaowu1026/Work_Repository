@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <script><![CDATA[
+            function ds_query() {
+                $('gl_account_entry_log_ds').query();
+            }
+            
+            function ds_reset() {
+                $('gl_account_entry_query_ds').reset();
+            }
+          
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="gl_account_entry_query_ds" model="gl.GL2011.gl_account_entry_log"/>
+            <a:dataSet id="gl_account_entry_log_ds" autoPageSize="true" autoQuery="true" model="gl.GL2011.gl_account_entry_log" queryDataSet="gl_account_entry_query_ds"/>
+        </a:dataSets>
+        <a:screenBody>
+            <a:screenTopToolbar>
+                <a:screenTitle/>
+                <a:toolbarButton click="ds_reset" text="HAP_RESET" width="80"/>
+                <a:gridButton bind="gl_account_entry_log_grid" type="excel"/>
+            </a:screenTopToolbar>
+            <a:queryForm bindTarget="gl_account_entry_query_ds" resultTarget="gl_account_entry_log_ds" style="width:100%;border:none">
+                <a:formToolBar labelWidth="100">
+                    <a:textField name="zbeln" bindTarget="gl_account_entry_query_ds" prompt="GL_ACCOUNT_ENTRY.BATCH_CODE"/>
+                    <a:datePicker name="cdate" bindTarget="gl_account_entry_query_ds" prompt="GL_ACCOUNT_ENTRY.IMPORT_DATE"/>
+                </a:formToolBar>
+                <!--  <a:formBody column="4">
+                </a:formBody> -->
+            </a:queryForm>
+            <a:grid id="gl_account_entry_log_grid" bindTarget="gl_account_entry_log_ds" marginHeight="122" navBar="true">
+                <a:columns>
+                    <a:column name="zyear" align="center" autoAdjust="true" prompt="年度" width="80"/>
+                    <a:column name="zlgid" align="center" prompt="日志流水号" width="100"/>
+                    <a:column name="zitem" align="center" prompt="年日志行项目号" width="100"/>
+                    <a:column name="zbukr" align="center" prompt="公司代码" width="100"/>
+                    <a:column name="zbeln" align="center" prompt="发送批号" width="150"/>
+                    <a:column name="zbuze" align="center" prompt="报销系统凭证行号" width="100"/>
+                    <a:column name="zmtyp" align="center" prompt="SAP错误类型" width="100"/>
+                    <a:column name="zmess" align="center" prompt="SAP错误文本" width="200"/>
+                    <a:column name="zfien" align="center" prompt="SAP错误字段名称" width="100"/>
+                    <a:column name="zfiev" align="center" prompt="SAP错误字段值" width="100"/>
+                    <a:column name="cdate" align="center" prompt="创建日期" renderer="Aurora.formatDate" sortable="true" width="100"/>
+                    <a:column name="ctime" align="center" prompt="创建时间" sortable="true" width="100"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+        <script purpose="auto_resize"><![CDATA[
+
+            function gldAccountEntryInitSize() {
+                //描述宽度
+            　　    var labelWidth = 75;
+            　　    //标签宽度,5 = 3padding + 2border-spacing
+            　　    var tagWidth = 150 + 5;
+            　　    //页面宽度、高度
+            　　    var vw = $A.getViewportWidth();
+            　　    var vh = $A.getViewportHeight();
+            　　    //留白宽度
+            　　    var marginWidth = 35;
+            　　    //自适应宽度
+            　　    var autoWidth = vw - marginWidth;
+            　　    //Form内部宽度，-2border
+            　　    var formInnerWidth = autoWidth - 2;
+            　　    //所占列数
+            　　    var colSpan = 4;
+            　　    //设置组件的自适应宽度
+            	   $('gl_account_entry_log_grid').setWidth(autoWidth);
+            }
+            //Ext.fly(window).on('resize', gldAccountEntryInitSize);
+            gldAccountEntryInitSize();
+        ]]></script>
+    </a:view>
+</a:screen>

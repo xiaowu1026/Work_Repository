@@ -1,0 +1,375 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/WEB-INF/classes
+svn://10.75.42.67
+
+
+
+2019-01-22T12:12:57.409568Z
+1688
+pengqishi
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+Interface.properties
+file
+
+
+
+
+2019-01-21T11:10:46.395000Z
+927e360a39f00c6afdfbbbdb3143f747
+2018-10-22T14:38:21.142016Z
+583
+pengqishi
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+376
+
+acp
+dir
+
+aut
+dir
+
+basic
+dir
+
+bgt
+dir
+
+bgt_journal
+dir
+
+birt
+dir
+
+blt
+dir
+
+bpm
+dir
+
+capital
+dir
+
+capital_adjust
+dir
+
+com
+dir
+
+cont
+dir
+
+csh
+dir
+
+csh_payment_requisition
+dir
+
+cux
+dir
+
+db
+dir
+
+demo
+dir
+
+eam
+dir
+
+ebank
+dir
+
+ebs
+dir
+
+es
+dir
+
+exp
+dir
+
+exp_report
+dir
+
+expm
+dir
+
+fnd
+dir
+
+gl
+dir
+
+gld
+dir
+
+handle-chain.xml
+file
+
+
+
+
+2019-01-21T11:10:12.244000Z
+eecc62b169353e32f19da1c63776d343
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+335
+
+hclc
+dir
+
+idoc
+dir
+
+img
+dir
+
+init
+dir
+
+ios
+dir
+
+ipm
+dir
+
+log4j.properties
+file
+
+
+
+
+2019-01-21T11:11:23.884000Z
+1338e917aac522baa80866f9feccd9fa
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2032
+
+mlc
+dir
+
+mobile
+dir
+
+mobileinterfacebm
+dir
+
+ord
+dir
+
+parameter.properties
+file
+
+
+
+
+2019-01-21T11:10:12.915000Z
+e0efe0e056a1bed6120a09aa6f66a358
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+28
+
+pm
+dir
+
+prj
+dir
+
+psr
+dir
+
+pt
+dir
+
+ptl
+dir
+
+ptl.properties
+file
+
+
+
+
+2019-01-21T11:11:54.917000Z
+b54533adab8b0f21d2211c257dc31ac2
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+427
+
+public
+dir
+
+pur
+dir
+
+rpt
+dir
+
+sch
+dir
+
+security
+dir
+
+spnego
+dir
+
+sys
+dir
+
+tax
+dir
+
+test
+dir
+
+tra
+dir
+
+util
+dir
+
+vat
+dir
+
+wbc
+dir
+
+weixin
+dir
+
+wfl
+dir
+
+ws
+dir
+
+zj
+dir
+

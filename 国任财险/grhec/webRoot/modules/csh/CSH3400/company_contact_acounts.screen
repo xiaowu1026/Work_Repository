@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: HM  
+    $Date: 2016-4-18 上午11:17:18  
+    $Revision: 1.0  
+    $Purpose: 营改增用途类型定义
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure/>
+    <a:view package="aurora.ui.std" template="default">
+        <script><![CDATA[
+        
+           function edit_func(record,name){
+               if(record.isNew){
+                   return 'editor_combox';
+               }else{
+                   return '';
+               }
+           }
+           //公司级别校验
+          function CompanyLevelValidator(record, name, value) {
+              if(name=='child_company_level_code'||name=='parent_company_level_code'){
+                  var p_com_level_code=record.get('parent_company_level_code');
+                  var c_com_level_code=record.get('child_company_level_code');
+                   if(p_com_level_code>=c_com_level_code){
+                       return '下级公司代码级别需要大于上级公司级别代码';
+                   }else if(p_com_level_code==30 && c_com_level_code==40){
+                       return '上下级公司级别代码组合不能为[30,40]';
+                   }
+                   return true;
+              }
+          }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="company_level_ds" autoQuery="true" model="fnd.fnd_company_levels"/>
+            <a:dataSet id="company_contact_accounts_result_ds" autoCount="true" autoPageSize="true" autoQuery="true" model="csh.CSH3400.company_contact_accounts" selectable="true">
+                <a:fields>
+                    <a:field name="company_contact_accounts_id"/>
+                    <a:field name="parent_company_level_code" displayField="description" options="company_level_ds" required="true" returnField="parent_company_level_code" validator="CompanyLevelValidator" valueField="company_level_code"/>
+                    <a:field name="child_company_level_code" displayField="description" options="company_level_ds" required="true" returnField="child_company_level_code" validator="CompanyLevelValidator" valueField="company_level_code"/>
+                    <a:field name="gld_account_code" autoComplete="true" lovGridHeight="350" lovHeight="500" lovService="gld.FND2140.gld_accounts" lovWidth="500" required="true" title="GLD_ACCOUNTS.ACCOUNT_DESCRIPTION">
+                        <a:mapping>
+                            <a:map from="account_code" to="gld_account_code"/>
+                            <a:map from="acount_code_description" to="account_code_description"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="acount_code_description"/>
+                    <a:field name="enabled_flag" checkedValue="Y" defaultValue="N" uncheckedValue="N"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:screenTopToolbar>
+                <a:screenTitle/>
+            </a:screenTopToolbar>
+            <a:grid id="grid" bindTarget="company_contact_accounts_result_ds" marginHeight="130" marginWidth="50" navBar="true" style="margin-left:5px;margin-top:5px">
+                <a:toolBar>
+                    <a:button type="add"/>
+                    <a:button type="save"/>
+                    <a:button type="clear"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="parent_company_level_code" align="center" editorFunction="edit_func" prompt="上级公司级别代码" width="180"/>
+                    <a:column name="child_company_level_code" align="center" editorFunction="edit_func" prompt="下级公司级别代码" width="180"/>
+                    <a:column name="gld_account_code" align="center" editor="editor_lov" prompt="科目代码" width="100"/>
+                    <a:column name="account_code_description" align="center" prompt="科目描述" width="150"/>
+                    <a:column name="enabled_flag" align="center" editor="editor_chb" prompt="启用" width="50"/>
+                </a:columns>
+                <a:editors>
+                    <a:lov id="editor_lov"/>
+                    <a:comboBox id="editor_combox"/>
+                    <a:checkBox id="editor_chb"/>
+                </a:editors>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

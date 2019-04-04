@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            select * from(
+				select m.table_name,m.table_pk_value
+	              from fnd_atm_attachment_multi m
+	             where m.table_name like 'EXP_REPORT_HEADERS'||'%'
+             )
+              #WHERE_CLAUSE#
+			]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

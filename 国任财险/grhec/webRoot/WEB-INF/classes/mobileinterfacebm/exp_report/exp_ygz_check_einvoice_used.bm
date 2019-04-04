@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+                begin
+                  exp_ygz_vms_interface_pkg.mobile_check_invoice_true(p_exp_report_head_id  => ${@exp_report_header_id},
+										                               p_exp_report_line_id => ${@exp_report_line_id},
+										                               p_taxNo              => ${@taxNo},
+										                               p_invoice_type       => ${@invoice_type},
+										                               p_invoice_amount     => ${@invoice_amount}, 
+										                               p_invoice_number     => ${@invoice_number},
+										                               p_invoice_code       => ${@invoice_code},
+										                               p_invoice_check_code => ${@invoice_check_code},
+										                               p_invoice_date       => ${@invoice_date},
+										                               p_verification_flag  => ${@verification_flag},
+										                               p_requestUrl         => ${@requestUrl},
+										                               p_appid              => ${@appId},
+										                               p_key                => ${@key},
+										                               p_enterpriseCode     => ${@enterpriseCode},
+										                               p_user_id            => ${@user_id});
+                end;
+            ]]></bm:update-sql>
+            <bm:parameters>
+                <bm:parameter name="exp_report_header_id" input="true" inputPath="@exp_report_header_id" output="true" outputPath="/parameter/@exp_report_header_id"/>
+                <bm:parameter name="user_id" input="true" inputPath="@user_id"/>
+                <bm:parameter name="exp_report_line_id" dataType="java.lang.Long" output="true" outputPath="/parameter/@exp_report_line_id"/>
+                <bm:parameter name="invoice_type" dataType="java.lang.String" input="true" inputPath="@invoice_type" output="true" outputPath="/parameter/@invoice_type"/>
+                <bm:parameter name="invoice_amount" dataType="java.lang.String" input="true" inputPath="@invoice_amount" output="true" outputPath="/parameter/@invoice_amount"/>
+                <bm:parameter name="invoice_number" dataType="java.lang.String" input="true" inputPath="@invoice_number" output="true" outputPath="/parameter/@invoice_number"/>
+                <bm:parameter name="invoice_code" dataType="java.lang.String" input="true" inputPath="@invoice_code" output="true" outputPath="/parameter/@invoice_code"/>
+                <bm:parameter name="invoice_check_code" dataType="java.lang.String" input="true" inputPath="@invoice_check_code" output="true" outputPath="/parameter/@invoice_check_code"/>
+                <bm:parameter name="invoice_date" dataType="java.lang.String" input="true" inputPath="@invoice_date" output="true" outputPath="/parameter/@invoice_date"/>
+                <bm:parameter name="verification_flag" dataType="java.lang.String" output="true" outputPath="/parameter/@verification_flag"/>
+                <bm:parameter name="requestUrl" dataType="java.lang.String" output="true" outputPath="/parameter/@requestUrl"/>
+                <bm:parameter name="enterpriseCode" dataType="java.lang.String" output="true" outputPath="/parameter/@enterpriseCode"/>
+                <bm:parameter name="appId" dataType="java.lang.String" output="true" outputPath="/parameter/@appId"/>
+                <bm:parameter name="key" dataType="java.lang.String" output="true" outputPath="/parameter/@key"/>
+                <bm:parameter name="taxNo" dataType="java.lang.String" output="true" outputPath="/parameter/@taxNo"/>
+            </bm:parameters>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+                begin
+                  exp_ygz_vms_interface_pkg.mobile_query_invoice_status(p_exp_report_head_id         => ${@exp_report_header_id},
+		                                                                 p_invoice_type               => ${@invoice_type},
+										                                 p_invoice_code               => ${@invoice_code},
+										                                 p_invoice_number             => ${@invoice_number},
+										                                 p_invoice_amount             => ${@invoice_amount},
+										                                 p_invoice_check_code         => ${@invoice_check_code},
+										                                 p_invoice_date               => ${@invoice_date},
+										                                 p_message                    => ${@return_message},
+										                                 p_need_invoice_true_flag     => ${@success_flag},
+										                                 p_total_amount               => ${@total_amount});
+                end;
+            ]]></bm:update-sql>
+            <bm:parameters>
+                <bm:parameter name="exp_report_header_id" input="true" inputPath="@exp_report_header_id"/>
+                <bm:parameter name="invoice_type" dataType="java.lang.String" input="true" inputPath="@invoice_type"/>
+                <bm:parameter name="invoice_code" dataType="java.lang.String" input="true" inputPath="@invoice_code" output="true" outputPath="/parameter/@invoice_code"/>
+                <bm:parameter name="invoice_number" dataType="java.lang.String" input="true" inputPath="@invoice_number" output="true" outputPath="/parameter/@invoice_number"/>
+                <bm:parameter name="invoice_amount" dataType="java.lang.String" input="true" inputPath="@invoice_amount" output="true" outputPath="/parameter/@invoice_amount"/>
+                <bm:parameter name="invoice_check_code" dataType="java.lang.String" input="true" inputPath="@invoice_check_code" output="true" outputPath="/parameter/@invoice_check_code"/>
+                <bm:parameter name="invoice_date" dataType="java.lang.String" input="true" inputPath="@invoice_date" output="true" outputPath="/parameter/@invoice_date"/>
+                <bm:parameter name="return_message" dataType="java.lang.String" output="true" outputPath="/parameter/@return_message"/>
+                <bm:parameter name="success_flag" dataType="java.lang.String" output="true" outputPath="/parameter/@success_flag"/>
+                <bm:parameter name="total_amount" dataType="java.lang.String" output="true" outputPath="/parameter/@total_amount"/>
+            </bm:parameters>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

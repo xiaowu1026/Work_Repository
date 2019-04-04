@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+            begin
+			   exp_report_pkg.save_exp_report_oa(p_exp_report_header_id => ${@exp_report_header_id},
+					                             p_cux_oa_exp_ref_id    => ${@cux_oa_exp_ref_id},
+					                             p_sign_code            => ${@sign_code},
+					                             p_user_id              => ${/session/@user_id});
+		    end;			                             
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

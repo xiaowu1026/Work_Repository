@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018年9月28日 上午10:43:55  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure/>
+    <a:view>
+        <script><![CDATA[
+        	function queryImageTypes(){
+        	    $('image_types_result_ds').query();
+        	}
+        	function resetImageTypes(){
+        	     $('image_types_result_ds').reset();
+        	}
+		]]></script>
+        <a:dataSets>
+            <a:dataSet id="image_types_query_ds" model="expm.image_types">
+                <a:fields>
+                    <a:field name="image_type_code" prompt="影像代码"/>
+                    <a:field name="image_type_description" prompt="描述"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="image_types_result_ds" bindTarget="image_types_result_ds" model="expm.image_types" queryDataSet="image_types_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="image_type_code" required="true"/>
+                    <a:field name="image_type_description" required="true"/>
+                    <a:field name="enabled_flag" checkedValue="Y" defaultValue="N" uncheckedValue="N"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:form id="image_type_query_form" column="4" marginWidth="50" style="margin-left:15px;margin-top:5px;" title="查询条件">
+            <a:hBox labelWidth="120">
+                <a:textField name="image_type_code" bindTarget="image_types_query_ds"/>
+                <a:textField name="image_type_description" bindTarget="image_types_query_ds"/>
+            </a:hBox>
+        </a:form>
+        <a:hBox style="margin-left:15px;margin-top:5px;">
+            <a:button click="queryImageTypes" text="查询"/>
+            <a:button click="resetImageTypes" style="margin-left:15px;" text="重置"/>
+        </a:hBox>
+        <a:grid id="grid_id" bindTarget="image_types_result_ds" height="360" marginWidth="50" navBar="true" style="margin-left:15px;margin-top:5px;">
+            <a:toolBar>
+                <a:button type="add"/>
+                <a:button type="save"/>
+            </a:toolBar>
+            <a:columns>
+                <a:column name="image_type_code" editor="tf_editor" prompt="影像代码" width="250"/>
+                <a:column name="image_type_description" editor="tf_editor" prompt="影像描述" width="200"/>
+                <a:column name="enabled_flag" editor="chb_editor" prompt="启用" width="50"/>
+            </a:columns>
+            <a:editors>
+                <a:checkBox id="chb_editor"/>
+                <a:textField id="tf_editor"/>
+            </a:editors>
+        </a:grid>
+        <a:hBox/>
+    </a:view>
+</a:screen>

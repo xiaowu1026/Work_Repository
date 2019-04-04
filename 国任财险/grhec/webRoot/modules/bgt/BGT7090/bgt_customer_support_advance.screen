@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-16 下午02:03:02  
+    $Revision: 1.0  
+    $Purpose: 费用申请年度结转
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:init-procedure>
+        <a:model-query model="bgt.BGT3010.bgt_budget_balance_query_record" rootPath="record"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="bgt_budget_balance_budget_insert_control_link" url="${/request/@context_path}/modules/bgt/BGT3010/bgt_budget_balance_budget_insert_control.svc"/>
+        <a:link id="bgt_budget_query_link" model="bgt.BGT7090.bgt_customer_support_advance" modelaction="execute"/>
+        <a:link id="bgt_advance_account_link" model="bgt.BGT7090.bgt_customer_support_advance" modelaction="batch_update"/>
+        <a:link id="preextract_detail_link" url="${/request/@context_path}/modules/bgt/BGT7090/bgt_advance_account_detail.screen"/>
+        <a:link id="view_detail_link" url="${/request/@context_path}/modules/bgt/BGT7090/bgt_advance_account_detail.screen"/>
+        <script><![CDATA[
+				
+			function reset(){
+				$('bgt_query_ds').reset();
+			}
+			
+			function queryPeriod(){
+				if(!$('bgt_query_ds').validate()){
+					return ;
+				}
+				$('bgt_result_ds').query();
+			}
+			
+			// function accounting(){
+            	// var headDs = $("bgt_query_ds");
+            	// var lineDs = $("bgt_result_ds");
+            	// var headPara = headDs.getCurrentRecord().data;
+            	// var linePara = lineDs.getJsonData(true);
+                // if (linePara.length != 1) {
+                    // Aurora.showWarningMessage('', '${l:PROMPT.PLEASE_SELECT_ONE}', null, 200, 100);
+                    // return;
+                // }
+            	// for (i=0;i<linePara.length;i++){
+            	    // linePara[i]._status = 'update';
+            	    // linePara[i]['head_period_name']=headPara['period_name'];
+            	// }
+        		// headPara['lines'] = linePara;
+        		// Aurora.request({
+            		// url:$('exp_req_create_account_link').getUrl(),
+            		// para:headPara,
+            		// success:function(args){
+            		    
+					   // $('bgt_result_ds').query();
+					// },
+            		// scope:this
+            	// });
+			// }
+			
+			function get_company_lov(lov) {
+                company_lov = lov;
+            }
+			
+			function bandaccountFocus(com) {
+                var ds = $('bgt_query_ds');
+                var recs = ds.getCurrentRecord();
+                var open_organ = recs.get('company_name');
+                if (!open_organ) {
+                    Aurora.showWarningMessage("${l:PROMPT}", "请选择机构!");
+                    return;
+                }
+            }
+			
+			function bandaccountF(lov) {
+                var ds = $('bgt_query_ds');
+                var recs = ds.getCurrentRecord();
+                var open_organ = recs.get('company_name');
+                var company_id = recs.get('company_id');
+            
+                if (!open_organ) {
+                    Aurora.showWarningMessage("${l:PROMPT}", "请选择机构!");
+                    return;
+                }
+            
+                var lovField = recs.getMeta().getField('unit_name');
+                lovField.setLovPara('company_id', company_id);
+                lovField.setLovService('expm.EXP1220.exp_org_unit_exp_lov');
+            }
+            
+            function balance_Fun(){
+                if (!$('bgt_query_ds').validate()) {
+                    return;
+                }
+                var headerReacord = $('bgt_query_ds').getAt(0);
+                var period_name = headerReacord.get('period_name');
+                var str = period_name.substr(5,2);
+                if(str === '12'){
+                    Aurora.showWarningMessage('警告','12月不允许汇总预提，请手工预提!');
+                    return;
+                }
+                var param = $('bgt_query_ds').getJsonData()[0];
+                var data = [];
+                var company = {};
+                var version = {};
+                var scenario = {};
+                var budget_structure = {};
+                var period = {};
+                var period_quarter = {};
+                var period_year = {};
+                var bgtTabRecord = {};
+                var orgTabRecord = {};
+                var dimTabRecord = {};
+                var dimTabRecord1 = {};
+            
+                company['parameter_name'] = '${l:ACP_ACP_REQUISITION_HDS.COMPANY_ID}'
+                company['control_rule_range'] = 'ALL';
+                company['position_code'] = headerReacord.get('company_code');
+                company['position_code_from'] = headerReacord.get('company_code');
+                company['position_code_to'] = headerReacord.get('company_code');
+                company['parameter_code'] = 'COMPANY';
+                company['_status'] = 'insert';
+            
+                version['parameter_name'] = '${l:BGT_BALANCE_QUREY_CONDS_H.VERSION_CODE}'
+                version['control_rule_range'] = 'ALL';
+                version['position_code'] = 'GRCX_BGT_VERSION';
+                version['position_code_from'] = 'GRCX_BGT_VERSION';
+                version['position_code_to'] = 'GRCX_BGT_VERSION';
+                version['parameter_code'] = 'BUDGET_VERSION';
+                version['_status'] = 'insert';
+            
+                scenario['parameter_name'] = '${l:BGT_BALANCE_QUREY_CONDS_H.SCENARIO_CODE}'
+                scenario['control_rule_range'] = 'ALL';
+                scenario['position_code'] = 'GRCX_BGT_SCENE';
+                scenario['position_code_from'] = 'GRCX_BGT_SCENE';
+                scenario['position_code_to'] = 'GRCX_BGT_SCENE';
+                scenario['parameter_code'] = 'BUDGET_SCENARIO';
+                scenario['_status'] = 'insert';
+            
+                budget_structure['parameter_name'] = '${l:BGT_BALANCE_QUREY_CONDS_H.BUDGET_STRC_CODE}'
+                budget_structure['control_rule_range'] = 'ALL';
+                budget_structure['position_code'] = 'GRCX_BGT_XS';
+                budget_structure['position_code_from'] = 'GRCX_BGT_XS';
+                budget_structure['position_code_to'] = 'GRCX_BGT_XS';
+                budget_structure['parameter_code'] = 'BUDGET_STRUCTURE';
+                budget_structure['_status'] = 'insert';
+            
+                period['parameter_name'] = '${l:BGT_CHECK_LOGS.PERIOD_NAME}'
+                period['control_rule_range'] = 'ALL';
+                period['position_code'] = '';
+                period['position_code_from'] = headerReacord.get('period_name');
+                period['position_code_to'] = headerReacord.get('period_name');
+                period['parameter_code'] = 'PERIOD';
+                period['_status'] = 'insert';
+            
+                period_quarter['parameter_name'] = '${l:BGT_JOURNAL_HEADERS.PERIOD_QUARTER}'
+                period_quarter['control_rule_range'] = 'ALL';
+                period_quarter['position_code'] = '';
+                period_quarter['position_code_from'] = '';
+                period_quarter['position_code_to'] = '';
+                period_quarter['parameter_code'] = 'PERIOD_QUARTER';
+                period_quarter['_status'] = 'insert';
+            
+                period_year['parameter_name'] = '${l:BGT_JOURNAL_ALHEADERS.PERIOD_YEAR}'
+                period_year['control_rule_range'] = 'ALL';
+                period_year['position_code'] = '';
+                period_year['position_code_from'] = '';
+                period_year['position_code_to'] = '';
+                period_year['parameter_code'] = 'PERIOD_YEAR';
+                period_year['_status'] = 'insert';
+                
+                bgtTabRecord['parameter_name'] = '预算项目'
+                bgtTabRecord['control_rule_range'] = 'DETAIL';
+                bgtTabRecord['position_code'] = '';
+                bgtTabRecord['position_code_from'] = 'YS06901';
+                bgtTabRecord['position_code_to'] = 'YS06901';
+                bgtTabRecord['parameter_code'] = 'BUDGET_ITEM';
+                bgtTabRecord['_status'] = 'insert';
+                
+                orgTabRecord['parameter_name'] = '预算部门'
+                orgTabRecord['control_rule_range'] = 'DETAIL';
+                orgTabRecord['position_code'] = '';
+                orgTabRecord['position_code_from'] = '';
+                orgTabRecord['position_code_to'] = '';
+                orgTabRecord['parameter_code'] = 'ORG_UNIT';
+                orgTabRecord['_status'] = 'insert';
+                
+                dimTabRecord['parameter_name'] = '预算维度1'
+                dimTabRecord['control_rule_range'] = 'DETAIL';
+                dimTabRecord['position_code'] = '';
+                dimTabRecord['position_code_from'] = '';
+                dimTabRecord['position_code_to'] = '';
+                dimTabRecord['parameter_code'] = 'GTCX_COA_BANKDOC01';
+                dimTabRecord['_status'] = 'insert';
+                
+                dimTabRecord1['parameter_name'] = '预算维度2'
+                dimTabRecord1['control_rule_range'] = 'DETAIL';
+                dimTabRecord1['position_code'] = '';
+                dimTabRecord1['position_code_from'] = '';
+                dimTabRecord1['position_code_to'] = '';
+                dimTabRecord1['parameter_code'] = 'GTCX_COA_DEFDOC02';
+                dimTabRecord1['_status'] = 'insert';
+                
+                data.push(company);
+                data.push(version);
+                data.push(scenario);
+                data.push(budget_structure);
+                data.push(period);
+                data.push(period_quarter);
+                data.push(period_year);
+                data.push(bgtTabRecord);
+                data.push(orgTabRecord);
+                data.push(dimTabRecord);
+                data.push(dimTabRecord1);
+            
+                // for (var i = 0;i < bgtTabRecord.length;i++) {
+                    // bgtTabRecord[i].set('_status', 'insert');
+                    // data.push(bgtTabRecord[i].data);
+                // };
+                // for (var i = 0;i < orgTabRecord.length;i++) {
+                    // orgTabRecord[i].set('_status', 'insert');
+                    // data.push(orgTabRecord[i].data);
+                // };
+                // for (var i = 0;i < dimTabRecord.length;i++) {
+                    // dimTabRecord[i].set('_status', 'insert');
+                    // data.push(dimTabRecord[i].data);
+                // };
+                param['details'] = data;
+                $('queryBtn').disable();
+                var session_id = '${/session/@session_id}';
+                Aurora.request({
+                    url: $('bgt_budget_balance_budget_insert_control_link').getUrl(),
+                    para: param,
+                    lockMessage: '正在结算,请耐心等待',
+                    success: function() {
+                        Aurora.request({
+		                    url: $('bgt_budget_query_link').getUrl(),
+		                    para: {session_id : session_id},
+		                    lockMessage: '正在更新,请耐心等待',
+		                    success: function() {
+		                        $('queryBtn').enable();
+		                        $('bgt_result_ds').query();
+		                    },
+		                    scope: this
+		                });
+                    },
+                    scope: this
+                });
+            }
+            
+            function advance_Fun(){
+                var jsonDatas = $('bgt_result_ds').getJsonData(true);
+                if(jsonDatas.length == 0){
+                    Aurora.showMessage('提示','请选择需预提的数据!');
+                    return;
+                }
+                
+                for(var i=0;i<jsonDatas.length;i++){
+                    jsonDatas[i]._status = 'update';
+                }
+                
+                var records = $('bgt_result_ds').getSelected();
+                for(var i=0;i<records.length;i++){
+                    var advance_number = records[i].get('advance_number');
+                    if(advance_number){
+                       Aurora.showMessage('提示','存在已预提的数据,不允许重复预提!');
+                       return;
+                    }
+                }
+                
+                var ids = '';
+                for(var i=0;i<records.length;i++){
+                    if(i > 0){
+                        ids = ids + ',';
+                    }
+                    ids += records[i].get('bgt_advance_id');
+                }
+                        
+                Aurora.request({
+                    url: $('bgt_advance_account_link').getUrl(),
+                    para: jsonDatas,
+                    lockMessage: '正在预提,请耐心等待',
+                    success: function() {
+                        var url = $('preextract_detail_link').getUrl() + "?bgt_advance_ids=" + ids;
+                        new Aurora.Window({
+		                    url: url,
+		                    title: '客户支持费预提凭证',
+		                    id: 'preextract_win',
+		                    fullScreen: true
+		                }).on('close', function() {
+		                    $('bgt_result_ds').query();
+		                });
+                    },
+                    scope: this
+                });
+            }   
+            
+            function advance_view(){
+                var records = $('bgt_result_ds').getSelected();
+                var ids = '';
+                for(var i=0;i<records.length;i++){
+                    if(i > 0){
+                        ids = ids + ',';
+                    }
+                    ids += records[i].get('bgt_advance_id');
+                }
+                var url = $('view_detail_link').getUrl() + "?view_flag=Y&bgt_advance_ids=" + ids;
+                new Aurora.Window({
+                    url: url,
+                    title: '客户支持费预提凭证',
+                    id: 'preextract_win',
+                    fullScreen: true
+                }).on('close', function() {
+                    $('bgt_result_ds').query();
+                });
+            }
+        ]]></script>
+        <a:dataSets>
+            <!--公司comboBox-->
+            <a:dataSet id="company_combo_ds" fetchAll="true" loadData="true" model="bgt.BGT3010.bgt_budget_balance_query_company"/>
+            <a:dataSet id="bgt_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="company_name" defaultValue="${/model/record/record/@company_short_name}" displayField="company_short_name" options="company_combo_ds" prompt="BGT_BUDGET_ITEM_MAPPING.COMPANY_ID" required="true" returnField="company_id" valueField="company_id">
+                        <a:mapping>
+                            <a:map from="company_code" to="company_code"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="company_code" defaultValue="${/model/record/record/@company_code}"/>
+                    <a:field name="company_id" defaultValue="${/model/record/record/@company_id}"/>
+                    <a:field name="unit_name" lovGridHeight="340" lovHeight="500" lovWidth="560" title="部门">
+                        <a:mapping>
+                            <a:map from="unit_code" to="unit_code"/>
+                            <a:map from="description" to="unit_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="unit_code"/>
+                    <a:field name="period_name" autoComplete="true" autoCompleteField="period_name" lovGridHeight="300" lovHeight="420" lovService="expm.EXP5400.bgt_period_detail_lov" lovWidth="500" required="true" title="EXP_REQ.PERIOD_NAME">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="channel_name" autoComplete="true" fetchRemote="true" lovGridHeight="320" lovHeight="450" lovService="gld.GLD1040.fnd_dimension_values_vl_lov?dimension_code=GTCX_COA_BANKDOC01" lovWidth="500" title="渠道">
+                        <a:mapping>
+                            <a:map from="dimension_value_code" to="channel_code"/>
+                            <a:map from="description" to="channel_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="channel_code"/>
+                    <a:field name="exclusive_name" autoComplete="true" fetchRemote="true" lovGridHeight="320" lovHeight="450" lovService="gld.GLD1040.fnd_dimension_values_vl_lov?dimension_code=GTCX_COA_DEFDOC02" lovWidth="500" title="专属费用标识">
+                        <a:mapping>
+                            <a:map from="dimension_value_code" to="exclusive_code"/>
+                            <a:map from="description" to="exclusive_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="exclusive_code"/>
+                    <a:field name="advance_number"/>
+                    <a:field name="chd_company_flag" checkedValue="Y" defaultValue="N" uncheckedValue="N"/>
+                    <a:field name="period_sum" defaultValue="Y"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="bgt_result_ds" autoQuery="false" model="bgt.BGT7090.bgt_customer_support_advance" queryDataSet="bgt_query_ds" selectable="true"/>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" labelWidth="100" title="客户支持费预提" width="1200">
+                <a:comboBox name="company_name" bindTarget="bgt_query_ds" prompt="机构"/>
+                <a:lov name="unit_name" bindTarget="bgt_query_ds" prompt="部门">
+                    <a:events>
+                        <a:event name="focus" handler="bandaccountFocus"/>
+                        <a:event name="beforetriggerclick" handler="bandaccountF"/>
+                    </a:events>
+                </a:lov>
+                <a:lov name="channel_name" bindTarget="bgt_query_ds" prompt="渠道"/>
+                <a:lov name="exclusive_name" bindTarget="bgt_query_ds" prompt="专属标识"/>
+                <a:lov name="period_name" bindTarget="bgt_query_ds" prompt="期间"/>
+                <a:textField name="advance_number" bindTarget="bgt_query_ds" prompt="预提单号"/>
+                <a:checkBox name="chd_company_flag" bindTarget="bgt_query_ds" prompt="是否含下级机构"/>
+            </a:form>
+            <a:hBox>
+                <a:button click="queryPeriod" text="HAP_QUERY"/>
+                <a:button click="reset" text="HAP_RESET"/>
+                <a:button id="queryBtn" click="balance_Fun" text="结算"/>
+                <a:button click="advance_Fun" text="预提"/>
+                <a:button click="advance_view" text="预提凭证"/>
+            </a:hBox>
+            <a:grid bindTarget="bgt_result_ds" height="350" navBar="true" width="1200">
+                <a:toolBar>
+                    <a:button type="excel"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="company_name" align="center" prompt="机构" width="150"/>
+                    <a:column name="unit_name" align="center" prompt="部门" width="150"/>
+                    <a:column name="period_name" align="center" prompt="期间" width="100"/>
+                    <a:column name="budget_item_code" align="center" prompt="预算项目代码" width="100"/>
+                    <a:column name="budget_item" align="center" prompt="预算项目名称" width="120"/>
+                    <a:column name="channel_name" align="center" prompt="渠道" width="80"/>
+                    <a:column name="exclusive_name" align="center" prompt="专属标识" width="90"/>
+                    <a:column name="budget_balance" align="center" prompt="期间至今累计可用数" renderer="Aurora.formatMoney" width="120"/>
+                    <a:column name="advance_number" align="right" prompt="预提单号" width="90"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

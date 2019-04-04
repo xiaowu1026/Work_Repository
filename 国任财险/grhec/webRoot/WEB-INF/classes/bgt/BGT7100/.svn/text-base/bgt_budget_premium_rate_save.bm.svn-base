@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: hp  
+    $Date: 2019-1-22 下午7:21:33  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+          	 
+            	  update bgt_budget_premium_transmit b
+				   set b.premium_rate        = ${@premium_rate}/100,
+				       b.transmit_bgt_amount = ${@transmit_bgt_amount},
+				       b.last_update_date    = sysdate,
+				       b.last_updated_by     = ${/session/@user_id}
+				 where b.transmit_id = ${@transmit_id}
+				 
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

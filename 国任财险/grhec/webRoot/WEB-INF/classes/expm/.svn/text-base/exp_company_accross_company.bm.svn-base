@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: liangying  
+    $Date: 2014-3-28 上午10:00:28  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+			select * from (	
+			 SELECT
+                    fc.company_id,
+                    fc.company_code,
+                    fc.company_short_name code_name
+                FROM
+                    fnd_companies_vl fc where 
+                    fc.company_type =1 and fc.start_date_active <= sysdate and (fc.end_date_active is null or end_date_active <sysdate) and fc.set_of_books_id=(select v.set_of_books_id from fnd_companies_vl v where v.company_id=${/session/@company_id}) 
+                     START
+                WITH company_id = ${/session/@company_id} CONNECT BY prior company_id = parent_company_id
+             ) t #WHERE_CLAUSE#	ORDER BY
+                    t.company_code			
+	]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="company_code" displayWidth="150" forDisplay="true" forQuery="true" prompt="COMPANY_CODE"/>
+        <bm:field name="code_name" displayWidth="300" forDisplay="true" forQuery="true" prompt="FND_COMPANIES.COMPANY_NAME"/>
+        <bm:field name="company_id"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="company_code" queryExpression="t.company_code like &apos;%&apos;||${@company_code}||&apos;%&apos;"/>
+        <bm:query-field name="code_name" queryExpression="t.code_name like &apos;%&apos;||${@code_name}||&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

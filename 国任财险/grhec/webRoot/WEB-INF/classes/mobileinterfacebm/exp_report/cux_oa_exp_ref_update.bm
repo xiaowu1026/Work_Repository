@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+                insert into CUX_OA_EXP_REF
+				  (
+					   cux_oa_exp_ref_id,
+					   exp_report_header_id,
+					   sign_code,
+					   created_by,
+					   creation_date,
+					   last_updated_by,
+					   last_update_date
+				   )
+				values
+				  (
+					   CUX_OA_EXP_REF_s.Nextval,
+					   ${../../@exp_report_header_id},
+					   ${@sign_code},
+					   ${/session/@user_id},
+					   sysdate,
+					   ${/session/@user_id},
+					   sysdate
+				   )
+            ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="delete">
+            <bm:update-sql><![CDATA[
+            delete from CUX_OA_EXP_REF cr where cr.cux_oa_exp_ref_id = ${@cux_oa_exp_ref_id} and cr.exp_report_header_id = ${@exp_report_header_id}
+        ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+               select  cso.sign_code,
+				       cso.sign_name,
+				       cso.sign_url,
+				       (
+				        select sum(erl.report_amount)
+				        from CUX_OA_EXP_REF cr,exp_report_headers erh,exp_report_lines erl
+				        where erh.exp_report_header_id = cr.exp_report_header_id
+				        and cr.sign_code = cso.sign_code
+				        and erh.report_status in ('SUBMITTED','COMPLETELY_APPROVED')
+				        and erh.exp_report_header_id = erl.exp_report_header_id
+				        
+				       ) exp_rep_amount,
+				       cr.cux_oa_exp_ref_id,
+				       cr.exp_report_header_id
+				from CUX_OA_EXP_REF cr,con_sign_oa cso
+				where cr.sign_code = cso.sign_code
+				and cr.exp_report_header_id = ${@exp_report_header_id}
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="exp_report_header_id" queryOperator="="/>
+    </bm:query-fields>
+</bm:model>

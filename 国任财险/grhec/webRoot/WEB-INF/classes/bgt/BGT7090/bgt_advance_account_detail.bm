@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-7 下午02:44:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+         	select * from (
+				SELECT l.session_id,
+				       l.transaction_header_id,
+				       l.period_name,
+				       l.description,
+				       to_char(l.transaction_date, 'yyyy-mm-dd') transaction_date,
+				       to_char(l.accounting_date, 'yyyy-mm-dd') accounting_date,
+				       l.entered_amount_dr,
+				       l.entered_amount_cr,
+				       l.segment1,
+				       nvl(l.segment2,'null') segment2,
+				       l.segment3,
+				       nvl(l.segment4,'null') segment4,
+				       nvl(l.segment5,'null') segment5,
+				       nvl(l.segment6,'null') segment6,
+				       nvl(l.segment7,'null') segment7,
+				       nvl(l.segment8,'null') segment8,
+				       nvl(l.segment9,'null') segment9,
+				       nvl(l.segment10,'null') segment10,
+				       nvl(l.segment11,'null') segment11,
+				       nvl(l.segment12,'null') segment12,
+				       nvl(l.segment13,'null') segment13,
+				       nvl(l.segment14,'null') segment14,
+				       nvl(l.segment15,'null') segment15,
+				       nvl(l.segment16,'null') segment16,
+				       nvl(l.segment17,'null') segment17,
+				       nvl(l.segment18,'null') segment18,
+				       nvl(l.segment19,'null') segment19,
+				       nvl(l.segment20,'null') segment20,
+				       (select f.company_short_name
+				          from fnd_companies_vl f
+				         where f.company_code = l.segment1) segment_desc1,
+				       (select fr.responsibility_center_name
+				          from fnd_responsibility_centers_vl fr
+				         where fr.responsibility_center_code = l.segment2) segment_desc2,
+				       (select v.DESCRIPTION
+				          from gld_accounts_vl v
+				         where v.ACCOUNT_CODE = l.segment3) segment_desc3,
+				       l.creation_date,
+				       l.created_by,
+				       l.last_update_date,
+				       l.last_updated_by,
+				       l.company_id,
+				       l.account_id,
+				       (SELECT eei.description
+				          FROM bgt_budget_items_vl eei
+				         WHERE eei.budget_item_code =
+				               (select b.budget_item_code
+				                  from bgt_customer_support_advance b
+				                 where b.bgt_advance_id = l.transaction_header_id)) budget_item_name,
+				       l.transaction_number          
+				  FROM bgt_advance_account l
+				 order by l.transaction_number desc
+		)  o
+ 		#WHERE_CLAUSE# 
+			   ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+                begin
+	              bgt_advance_pkg.bgt_advance_account_submit(p_session_id      => ${/session/@session_id}, 
+		                                                     p_user_id         => ${/session/@user_id},
+		                                                     p_bgt_advance_ids => ${@bgt_advance_ids});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="bgt_advance_ids" queryExpression="o.transaction_header_id in (${:@bgt_advance_ids})"/>
+    </bm:query-fields>
+</bm:model>

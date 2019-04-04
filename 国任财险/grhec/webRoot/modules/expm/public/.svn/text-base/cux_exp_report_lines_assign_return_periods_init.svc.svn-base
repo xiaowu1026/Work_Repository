@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:service xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:init-procedure>
+        <a:model-delete model="expm.cux_exp_report_lines_assign_return_periods_tmp_delete"/>
+        <a:batch-apply sourcepath="/parameter/details">
+            <a:model-insert model="expm.cux_exp_report_lines_assign_return_periods_tmp_insert"/>
+        </a:batch-apply>
+    </a:init-procedure>
+</a:service>

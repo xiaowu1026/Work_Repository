@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                 SELECT fcv.company_short_name,
+			        eouv.description unit_name,
+			        bbiv.description budget_item_name,
+			        nvl(a.balance_amount, 0) - nvl(b.occ_amount, 0) remain_amount,
+			        a.balance_amount,
+			        decode(a.balance_amount,
+			                       '',
+			                       0,
+			                       0,
+			                       0,
+			                       round(nvl(b.occ_amount, 0) * 100 / a.balance_amount,
+			                             2)) || '%' bgt_sum_rate
+			   FROM (SELECT bjb.company_id,
+			                bjb.unit_id,
+			                bjb.budget_item_id,
+			                SUM(bjb.period_amount) balance_amount
+			           FROM bgt_journal_balances bjb
+			          WHERE bjb.period_name <= to_char(SYSDATE, 'yyyy-mm')
+			            AND bjb.period_year = to_char(SYSDATE, 'yyyy')
+			          GROUP BY bjb.company_id, bjb.unit_id, bjb.budget_item_id) a,
+			        (SELECT bbr.company_id,
+			                bbr.unit_id,
+			                bbr.budget_item_id,
+			                SUM(bbr.amount) occ_amount
+			           FROM bgt_budget_reserves bbr
+			          WHERE bbr.status = 'P'
+			            AND bbr.period_name <= to_char(SYSDATE, 'yyyy-mm')
+			            AND bbr.period_year = to_char(SYSDATE, 'yyyy')
+			            AND EXISTS
+			          (SELECT 1
+			                   FROM exp_report_headers erh, exp_report_lines erl
+			                  WHERE erh.exp_report_number = ${@document_number}
+			                    AND erh.exp_report_header_id = erl.exp_report_header_id
+			                    AND bbr.company_id = erl.company_id
+			                    AND bbr.unit_id = erl.unit_id
+			                    AND bbr.budget_item_id = erl.budget_item_id)
+			          GROUP BY bbr.company_id, bbr.unit_id, bbr.budget_item_id) b,
+			        fnd_companies_vl fcv,
+			        exp_org_unit_vl eouv,
+			        bgt_budget_items_vl bbiv
+			  WHERE b.company_id = a.company_id(+)
+			    AND b.unit_id = a.unit_id
+			    AND b.budget_item_id = a.budget_item_id
+			    AND b.company_id = fcv.company_id
+			    AND b.unit_id = eouv.unit_id
+			    AND b.budget_item_id = bbiv.budget_item_id
+
+
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

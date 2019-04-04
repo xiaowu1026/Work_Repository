@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-12 下午3:50:34  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[SELECT eou.description unit_name
+  FROM exp_org_unit_vl eou
+ WHERE eou.unit_code = ${@unit_code}
+   AND eou.company_id =
+       (SELECT fc.company_id
+          FROM fnd_companies fc
+         WHERE fc.company_code = ${@company_code})
+	]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

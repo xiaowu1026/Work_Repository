@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2018-9-13 17:21:27  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="pre_extract_submit_link" model="cont.CON5050.con_preextract_accounts_h" modelaction="update"/>
+        <script><![CDATA[
+            function preextract_back() {
+                $('preextract_win').close();
+            }
+            
+            function preextract_account_submit() {
+                var con_preextract_accounts_h_id = '${/parameter/@con_preextract_accounts_h_id}';
+                Aurora.request({
+                    url: $('pre_extract_submit_link').getUrl(),
+                    para: {
+                        con_preextract_accounts_h_id: con_preextract_accounts_h_id,
+                        status : 'SUBMITTED'
+                        
+                    },
+                    success: function(args) {
+                         Aurora.showWarningMessage('${l:PROMPT}', '提交成功!');
+                        preextract_back();
+                    },
+                    sync: true,
+                    lockMessage: '正在提交,请稍后',
+                    scope: this
+                });
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="contract_period_preextract_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="con_preextract_accounts_h_id" defaultValue="${/parameter/@con_preextract_accounts_h_id}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="contract_period_preextract_result_ds" autoPageSize="true" autoQuery="true" model="cont.CON5050.con_preextract_accounts_l" queryDataSet="contract_period_preextract_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="period_name"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:hBox>
+                <a:button click="preextract_back" text="HAP_BACK"/>
+                <a:button click="preextract_account_submit" text="提交"/>
+            </a:hBox>
+            <a:grid name="" bindTarget="contract_period_preextract_result_ds" marginHeight="200" marginWidth="100" navBar="true" showRowNumber="true" width="800">
+                <a:toolBar>
+                    <a:button type="excel"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="period_name" align="center" prompt="期间" width="100"/>
+                    <a:column name="accounting_date" align="center" prompt="凭证日期" width="100"/>
+                    <a:column name="budget_item_name" align="center" prompt="预算项目" width="100"/>
+                    <a:column name="entered_amount_dr" align="right" prompt="借方金额" renderer="Aurora.formatMoney" width="100"/>
+                    <a:column name="entered_amount_cr" align="right" prompt="贷方金额" renderer="Aurora.formatMoney" width="100"/>
+                    <a:column name="segment1" align="center" prompt="公司代码" width="100"/>
+                    <a:column name="segment2" align="center" prompt="责任中心代码" width="100"/>
+                    <a:column name="segment3" align="center" prompt="科目代码" width="100"/>
+                    <a:column name="segment_desc1" align="center" prompt="公司" width="100"/>
+                    <a:column name="segment_desc2" align="center" prompt="责任中心" width="100"/>
+                    <a:column name="segment_desc3" align="center" prompt="科目" width="100"/>
+                    <a:column name="segment4" align="center" prompt="承诺项目" width="100"/>
+                    <a:column name="segment5" align="center" prompt="内部订单" width="100"/>
+                    <a:column name="segment6" align="center" prompt="银行账号" width="100"/>
+                    <a:column name="segment7" align="center" prompt="现金流量项目" width="100"/>
+                    <a:column name="segment8" align="center" prompt="险种" width="100"/>
+                    <a:column name="segment9" align="center" prompt="险类1" width="100"/>
+                    <a:column name="segment10" align="center" prompt="专属费用标识" width="100"/>
+                    <a:column name="segment11" align="center" prompt="业务来源(渠道)" width="100"/>
+                    <a:column name="segment12" align="center" prompt="基金中心" width="100"/>
+                    <a:column name="segment15" align="center" prompt="客商辅助段" width="100"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

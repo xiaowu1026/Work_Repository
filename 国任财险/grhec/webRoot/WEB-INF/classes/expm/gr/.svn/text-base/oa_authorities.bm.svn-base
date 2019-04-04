@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select *
+                from(select osa.oa_sign_authority_id,
+					       osa.employee_id,
+					       osa.granted_employee_id,
+					       (select ee.employee_code
+					          from exp_employees ee
+					         where ee.employee_id = osa.granted_employee_id) granted_employee_code,
+					       (select ee.name
+					          from exp_employees ee
+					         where ee.employee_id = osa.granted_employee_id) granted_employee_name,
+					       osa.company_id,
+					       osa.enabled_flag,
+					       (select fcv.company_short_name
+					          from fnd_companies_vl fcv
+					         where fcv.company_id = osa.company_id) company_name
+					  from oa_sign_authorities osa
+					  where osa.sign_id=${@sign_id} and osa.employee_id=${@employee_id}
+					) v
+				#WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+            begin
+		       hec_to_oa_interface_pkg.insert_oa_sign_authorities(p_employee_id         => ${@employee_id},
+						                                          p_granted_employee_id => ${@granted_employee_id},
+						                                          p_company_id          => ${@company_id},
+						                                          p_unit_id             => ${@unit_id},
+						                                          p_position_id         => ${@position_id},
+						                                          p_user_id             => ${/session/@user_id},
+						                                          p_sign_id             => ${@sign_id},
+						                                          p_enabled_flag        => ${@enabled_flag});
+            end;						                                          
+        	]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+        	update OA_SIGN_AUTHORITIES 
+        	set 
+	            GRANTED_EMPLOYEE_ID=${@granted_employee_id},
+	            COMPANY_ID=${@company_id},
+	            UNIT_ID=${@unit_id},
+	            POSITION_ID=${@position_id},
+	            LAST_UPDATED_BY=${/session/@user_id},
+	            enabled_flag=${@enabled_flag},
+	            LAST_UPDATE_DATE=sysdate
+	        where OA_SIGN_AUTHORITY_ID=${@oa_sign_authority_id}
+        ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="delete">
+            <bm:update-sql><![CDATA[
+             delete from OA_SIGN_AUTHORITIES osa
+             where osa.OA_SIGN_AUTHORITY_ID=${@oa_sign_authority_id}
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <!--  <bm:query-fields>
+        <bm:query-field name="create_by" queryExpression="created_by=${@created_by}"/>
+        <bm:query-field name="sign_code" queryExpression="sign_code=${@sign_code}"/>
+        <bm:query-field name="sign_name" queryExpression="sign_name=${@sign_name}"/>
+    </bm:query-fields>  -->
+</bm:model>

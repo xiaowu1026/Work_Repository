@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-7-3 下午4:35:59  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                    SELECT 'Y' is_todo, wwi.instance_param document_id, ww.workflow_category
+					  FROM wfl_instance_node_recipient winr,
+					       wfl_workflow_instance       wwi,
+					       wfl_workflow                ww
+					 WHERE winr.record_id = ${@record_id}
+					   AND winr.instance_id = wwi.instance_id
+					   AND wwi.workflow_id = ww.workflow_id
+					UNION ALL
+					SELECT 'N' is_todo, wwi.instance_param document_id, ww.workflow_category
+					  FROM wfl_instance_node_recipient_ht winr_ht,
+					       wfl_workflow_instance          wwi,
+					       wfl_workflow                   ww
+					 WHERE winr_ht.record_id = ${@record_id}
+					   AND winr_ht.instance_id = wwi.instance_id
+					   AND wwi.workflow_id = ww.workflow_id
+
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

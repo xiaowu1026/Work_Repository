@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-12 下午3:57:27  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:init-procedure>
+        <!-- <a:model-query autocount="false" fetchall="true" model="fnd.fnd_companies" rootpath="comp_object"/>
+    	<a:model-query autocount="false" fetchall="true" model="bgt.BGT7080.bgt_query_unit" rootpath="unit_object"/> --><![CDATA[
+    	
+    	
+    ]]></a:init-procedure>
+    <a:view>
+        <script><![CDATA[
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="bgt_query_interface_query_result_ds" autoCreate="true" autoPageSize="true" autoQuery="true">
+                <a:fields>
+                    <a:field name="company_short_name" defaultValue="${/model/comp_object/record/@company_short_name}"/>
+                    <a:field name="unit_name" defaultValue="${/model/unit_object/record/@unit_name}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="bgt_query_interface_result_ds" autoPageSize="true" autoQuery="true" model="bgt.BGT7080.bgt_query_interface">
+                <a:fields>
+                    <a:field name="company_code"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:form column="2" marginWidth="100" style="margin-left:20px;margin-top:20px;" title="部门预算执行情况">
+            <a:textField name="company_short_name" bindTarget="bgt_query_interface_query_result_ds" prompt="公司" readOnly="true"/>
+            <a:textField name="unit_name" bindTarget="bgt_query_interface_query_result_ds" prompt="部门" readOnly="true"/>
+        </a:form>
+        <a:grid id="grid_id" bindTarget="bgt_query_interface_result_ds" marginHeight="50" marginWidth="100" showRowNumber="true" style="margin-left:20px;margin-top:20px;">
+            <a:toolBar>
+                <a:button type="excel"/>
+            </a:toolBar>
+            <a:columns>
+                <a:column name="company_code" align="center" prompt="公司代码" width="150"/>
+                <a:column name="company_short_name" align="center" prompt="公司名称" width="200"/>
+                <a:column name="unit_code" align="center" prompt="部门代码" width="150"/>
+                <a:column name="unit_name" align="center" prompt="部门名称" width="200"/>
+                <a:column name="budget_item_code" align="center" prompt="预算项目代码" width="150"/>
+                <a:column name="budget_item_name" align="center" prompt="预算项目名称" width="200"/>
+                <a:column name="balance_amount" align="right" prompt="预算额" renderer="Aurora.formatMoney" width="150"/>
+                <a:column name="remain_amount" align="right" prompt="可用额" renderer="Aurora.formatMoney" width="200"/>
+            </a:columns>
+        </a:grid>
+    </a:view>
+</a:screen>

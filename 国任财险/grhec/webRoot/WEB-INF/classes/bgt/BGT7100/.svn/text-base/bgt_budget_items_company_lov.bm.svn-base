@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:update-sql><![CDATA[
+                select *
+				  from (select b.company_id,
+						       b.budget_item_id,
+						       b.budget_item_code,
+						       b.description as bgt_budget_items_desc
+						  from bgt_budget_items_company_vl b
+						 where b.enabled_flag = 'Y') v
+                      #WHERE_CLAUSE#
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="budget_item_id"/>
+        <bm:field name="budget_item_code" forDisplay="true" forQuery="true" prompt="预算项目代码"/>
+        <bm:field name="bgt_budget_items_desc" forDisplay="true" forQuery="true" prompt="预算项目描述"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="company_id" queryExpression="v.company_id=${@company_id}"/>
+    </bm:query-fields>
+</bm:model>

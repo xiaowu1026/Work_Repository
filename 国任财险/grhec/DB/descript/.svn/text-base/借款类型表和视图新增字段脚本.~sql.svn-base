@@ -1,0 +1,55 @@
+create or replace view csh_sob_pay_req_types_vl as
+select t.type_id,
+       t.type_code,
+       t.set_of_books_id,
+       a.description_text as description,
+       t.description_id,
+       t.currency_code,
+       t.enabled_flag,
+       t.auto_approve_flag,
+       t.creation_date,
+       t.created_by,
+       t.last_update_date,
+       t.last_updated_by,
+        t.report_name,
+        t.payment_method,
+        t.mobile_approve,
+        t.mobile_fill,
+        t.app_documents_icon,
+        t.auto_audit_flag
+  from csh_sob_pay_req_types t, fnd_descriptions a
+ where t.description_id = a.description_id(+)
+   and a.language(+) = 'ZHS'
+   and a.ref_table(+) = 'CSH_SOB_PAY_REQ_TYPES'
+   and a.ref_field(+) = 'DESCRIPTION_ID';
+ 
+ create or replace view csh_pay_req_types_vl as
+select t.type_id,
+       t.type_code,
+       t.company_id,
+       a.description_text as description,
+       t.description_id,
+       t.currency_code,
+       t.enabled_flag,
+       t.auto_approve_flag,
+       t.creation_date,
+       t.created_by,
+       t.last_update_date,
+       t.last_updated_by,
+        t.report_name,
+        t.payment_method,
+        t.mobile_approve,
+        t.mobile_fill,
+        t.app_documents_icon,
+        t.payment_object,
+        t.auto_audit_flag
+  from csh_pay_req_types t, fnd_descriptions a
+ where t.description_id = a.description_id(+)
+   and a.language(+) = 'ZHS'
+   and a.ref_table(+) = 'CSH_PAY_REQ_TYPES'
+   and a.ref_field(+) = 'DESCRIPTION_ID';
+  
+alter table csh_pay_req_types add  auto_audit_flag varchar2(1);
+comment on column csh_pay_req_types.auto_audit_flag is '×ÔÉóºË';
+alter table csh_sob_pay_req_types add  auto_audit_flag varchar2(1);
+comment on column csh_sob_pay_req_types.auto_audit_flag is '×ÔÉóºË';

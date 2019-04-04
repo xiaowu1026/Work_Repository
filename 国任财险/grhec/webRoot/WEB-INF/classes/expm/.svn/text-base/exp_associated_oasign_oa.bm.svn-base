@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                SELECT
+                    v.*
+                FROM
+                    (SELECT c.sign_id,c.sign_code, c.sign_name,c.sign_url,company_code FROM con_sign_oa c
+                     WHERE exists (select 1 from 
+                         sys_user su,
+                         oa_sign_authorities osa
+                         where su.user_id=${/session/@user_id}
+                          and  osa.sign_id=c.sign_id 
+                          and (osa.granted_employee_id=su.employee_id 
+                          and osa.enabled_flag='Y' 
+                          and osa.company_id=${/session/@company_id} 
+                          or  osa.employee_id=su.employee_id)
+                          )
+                    ) v #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="sign_code" displayWidth="100" forDisplay="true" forQuery="true" prompt="代码"/>
+        <bm:field name="sign_name" displayWidth="200" forDisplay="true" forQuery="true" prompt="名称"/>
+        <bm:field name="sign_url" displayWidth="200" forDisplay="false" forQuery="false"/>
+        <bm:field name="sign_id" displayWidth="200" forDisplay="false" forQuery="false"/>
+    </bm:fields>
+    <bm:query-fields>
+        <!-- <bm:query-field name="exp_report_header_id" queryExpression="(EXISTS (SELECT 1 FROM exp_report_headers erh, fnd_companies fc          WHERE erh.exp_report_header_id = ${@exp_report_header_id}            AND erh.company_id = fc.company_id            AND fc.company_code = v.company_code))"/> -->
+        <!-- <bm:query-field name="exp_requisition_header_id" queryExpression="(EXISTS (SELECT 1 FROM exp_requisition_headers erh, fnd_companies fc          WHERE  erh.exp_requisition_header_id = ${@exp_requisition_header_id}            AND erh.company_id = fc.company_id            AND fc.company_code = v.company_code))"/> -->
+        <bm:query-field name="sign_code" queryExpression="v.sign_code like &apos;%&apos;||${@sign_code}||&apos;%&apos;"/>
+        <bm:query-field name="sign_name" queryExpression="v.sign_name like &apos;%&apos;||${@sign_name}||&apos;%&apos;"/>
+        <!-- <bm:query-field name="company_id" queryExpression="(exists( select 1        from fnd_companies fc        where fc.company_code = v.company_code        and fc.company_id =  ${@company_id}))"/> -->
+        <!-- <bm:query-field name="code_name" queryExpression="v.sign_code like &apos;%&apos;||${@sign_code}||&apos;%&apos; or v.sign_name like &apos;%&apos;||${@sign_name}||&apos;%&apos;"/> -->
+    </bm:query-fields>
+</bm:model>

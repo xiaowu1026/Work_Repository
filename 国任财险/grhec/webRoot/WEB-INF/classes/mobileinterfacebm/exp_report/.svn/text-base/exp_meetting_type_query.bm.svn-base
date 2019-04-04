@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select sv.code_value_id as meeting_type_id, 
+                       sv.code_value as meeting_type_code, 
+                       f.description_text as meeting_type_desc
+				  from sys_codes s, sys_code_values sv, fnd_descriptions f
+				 where s.code_id = sv.code_id
+				   and s.code = 'MEETING_TYPE'
+				   and sv.code_value_name_id = f.description_id
+				   and f.language = 'ZHS'
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="meeting_type_id"/>
+        <bm:field name="meeting_type_code"/>
+        <bm:field name="meeting_type_desc"/>
+    </bm:fields>
+</bm:model>

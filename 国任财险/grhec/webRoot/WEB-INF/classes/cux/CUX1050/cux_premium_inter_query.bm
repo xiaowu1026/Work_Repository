@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2019年1月9日 上午8:42:01  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="p" baseTable="premium_income_data">
+    <bm:fields>
+        <bm:field name="premium_income_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="company_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="amount" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="income_date" databaseType="DATE" datatype="java.sql.Date"/>
+        <!-- <bm:field name="reserve_segment1" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment2" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment3" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment4" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment5" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment6" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment7" databaseType="VARCHAR2" datatype="java.lang.String"/>
+		<bm:field name="reserve_segment8" databaseType="VARCHAR2" datatype="java.lang.String"/> -->
+        <!-- <bm:field name="status_desc" databaseType="VARCHAR2" datatype="java.lang.String"/> -->
+        <bm:field name="message" databaseType="VARCHAr2" datatype="java.lang.String"/>
+        <bm:field name="creation_date" databaseType="DATE" datatype="java.util.Date"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="company_code" queryExpression="company_code=${@company_code}"/>
+        <bm:query-field name="creation_date" queryExpression="to_char(p.creation_date,&apos;yyyy-MM-dd&apos;)=${@caretion_date}"/>
+        <bm:query-field name="income_date" queryExpression="to_char(p.income_date,&apos;yyyy-MM-dd&apos;)=${@income_date}"/>
+        <bm:query-field name="status" queryExpression="p.tatus=${@status}"/>
+    </bm:query-fields>
+</bm:model>

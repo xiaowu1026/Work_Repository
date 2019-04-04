@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: 小鹏  
+    $Date: 2014-5-28 下午03:28:13  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" needAccessControl="false">
+    <bm:operations>
+        <bm:operation name="execute">
+            <bm:parameters>
+                <bm:parameter name="input_xml" dataType="java.lang.String" input="true" inputPath="@input_xml" output="false"/>
+                <bm:parameter name="output_xml" dataType="java.lang.String" input="flase" output="true" outputPath="@output_xml"/>
+            </bm:parameters>
+            <bm:update-sql><![CDATA[
+            begin
+                cux_payment_gr_pkg.ws_get_result_zj(p_input_xml => ${@input_xml},
+                                                    p_output_xml => ${@output_xml});
+            end;]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

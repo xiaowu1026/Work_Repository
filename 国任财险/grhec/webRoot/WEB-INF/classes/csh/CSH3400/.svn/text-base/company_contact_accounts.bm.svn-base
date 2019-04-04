@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:27:09  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:ns2="aurora.database.local.oracle" xmlns:f="aurora.database.features" xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="company_contact_accounts" defaultOrderBy="t1.parent_company_level_code,t1.child_company_level_code">
+    <bm:fields>
+        <bm:field name="company_contact_accounts_id" databaseType="NUMBER" datatype="java.lang.Long" forInsert="true" forQuery="true" forUpdate="false" insertExpression="company_contact_accounts_s.nextval"/>
+        <bm:field name="parent_company_level_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="child_company_level_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="gld_account_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="enabled_flag" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="account_code_description" databaseType="VARCHAR2" datatype="java.lang.String" expression="gld_account_code || (select  g.description from gld_accounts_vl g where g.account_code=t1.gld_account_code)" forInsert="false"/>
+    </bm:fields>
+    <bm:primary-key>
+        <bm:pk-field name="company_contact_accounts_id"/>
+    </bm:primary-key>
+    <bm:operations>
+        <bm:operation name="update"><![CDATA[
+    		update company_contact_accounts t
+    		set t.gld_account_code=${@gld_account_code},
+    			t.enabled_flag=${@enabled_flag}
+    		where t.company_contact_accounts_id=${@company_contact_accounts_id}	
+    	]]></bm:operation>
+    </bm:operations>
+</bm:model>

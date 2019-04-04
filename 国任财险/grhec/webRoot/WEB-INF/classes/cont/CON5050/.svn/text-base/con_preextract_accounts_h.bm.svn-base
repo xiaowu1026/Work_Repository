@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-7 下午02:44:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+         	select * from (
+				SELECT t.con_preextract_accounts_h_id,
+				       t.contract_header_id,
+				       t.contract_number,
+				       t.status,
+				       t.contract_return_period_ids,
+				       t.created_by,
+				       t.creation_date,
+				       t.last_updated_by,
+				       t.last_update_date,
+				       decode( t.status,'GENERATE','新建','REJECTED','拒绝','SUBMITTED','提交','AUDIT','审核') status_desc,
+				       cux_con_contract_pkg.get_return_periods(t.contract_return_period_ids) extract_periods,
+				       (SELECT ee.name
+				          FROM sys_user su, exp_employees ee
+				         WHERE su.user_id = t.created_by
+				           AND su.employee_id = ee.employee_id) employee_name,
+				       to_char(t.creation_date,'yyyy-mm-dd hh24:mi:ss') preextract_date
+				  FROM con_preextract_accounts_h t, con_contract_headers cc
+				 WHERE t.contract_header_id = cc.contract_header_id
+
+		)  o
+ 		#WHERE_CLAUSE# 
+ 		order by o.creation_date desc
+			   ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+			begin
+				cux_con_contract_pkg.preextract_contract(p_con_preextract_accounts_h_id => ${@con_preextract_accounts_h_id},
+                                p_contract_header_id           => ${@contract_header_id},
+                                p_contract_return_period_ids   => ${@contract_return_period_ids},
+                                p_user_id                      => ${/session/@user_id});
+			end;
+			]]></bm:update-sql>
+            <bm:parameters>
+                <bm:parameter name="con_preextract_accounts_h_id" dataType="java.lang.Long" input="false" output="true" outputPath="@con_preextract_accounts_h_id"/>
+            </bm:parameters>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+			begin
+				cux_con_contract_pkg.set_preextract_accounts_status(p_con_preextract_accounts_h_id => ${@con_preextract_accounts_h_id},
+                                           p_status                       => ${@status},
+                                           p_user_id                      => ${/session/@user_id});
+			end;
+			]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="con_preextract_accounts_h_id" queryExpression="o.con_preextract_accounts_h_id = ${@con_preextract_accounts_h_id}"/>
+        <bm:query-field name="self_flag" queryExpression="o.created_by =  ${/session/@user_id}"/>
+        <bm:query-field name="status" queryExpression="o.status =  ${@status}"/>
+        <bm:query-field name="contract_number" queryExpression="o.contract_number =  ${@contract_number}"/>
+        <bm:query-field name="audit_flag" queryExpression="o.status =  &apos;SUBMITTED&apos;"/>
+        <bm:query-field name="employee_name" queryExpression="o.employee_name =  ${@employee_name}"/>
+    </bm:query-fields>
+</bm:model>

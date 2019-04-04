@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: hp  
+    $Date: 2013-7-26 上午10:54:01  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="exp_assign_save_link" model="exp.EXP7030.exp_assign_share" modelaction="batch_update"/>
+        <a:link id="exp_assign_submit_link" model="exp.EXP7030.exp_assign_share" modelaction="delete"/>
+        <a:link id="exp_assign_bgt_check_link" model="exp.EXP7030.exp_assign_share" modelaction="execute"/>
+        <script><![CDATA[
+            function queryBtn(){
+                $('result_ds').query();
+            }
+            
+            //保存
+            function saveBtn(){
+                
+                if(!$('result_ds').validate()){
+                    return;
+                }
+                var records = $('result_ds').getJsonData(true);
+                for(var i=0;i<records.length;i++){
+                    records[i]._status = 'update';
+                }
+                Aurora.request({
+                    url: $('exp_assign_save_link').getUrl(),
+                    para: records,
+                    lockMessage: '正在保存,请耐心等待',
+                    success: function() {
+                        Aurora.showMessage('提示', '保存成功！');
+                        $('result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+            //提交
+            function submitBtn(){
+                
+                if(!$('result_ds').validate()){
+                    return;
+                }
+                if ($('result_ds').isModified()) {
+                    Aurora.showInfoMessage('${l:PROMPT}', '${l:PROMPT.SAVE_SUBMIT}', null, 250, 100);
+                    return;
+                }
+                var record = $('result_ds').getCurrentRecord();
+                var exp_report_header_id = record.get('exp_report_header_id');
+                var exp_report_line_id = record.get('exp_report_line_id');
+                Aurora.request({
+                    url: $('exp_assign_bgt_check_link').getUrl(),
+                    para: {exp_report_header_id:exp_report_header_id,
+                           exp_report_line_id:exp_report_line_id},
+                    lockMessage: '正在提交,请耐心等待',
+                    sync: true,
+                    success: function(data) {
+                            debugger;
+	                        var error_level_code = data.result.error_level_code;
+			                if (!error_level_code) {
+			                    finalSubmit();
+			                } else if (error_level_code == 'ALLOWED') {
+			                    var okCan = Aurora.showConfirm('${l:PROMPT}', data.result.message_code, function() {
+			                        finalSubmit();
+			                        okCan.close();
+			                    }, function() {
+			                        okCan.close();
+			                    }, 300, 200);
+			                } else if (error_level_code == 'BLOCK') {
+			                    Aurora.showInfoMessage('${l:PROMPT}', data.result.message_code, null, 300, 200);
+			                    return;
+			                }
+	                    },
+                    scope: this
+                });
+            }
+            
+            function finalSubmit(){
+                var record = $('result_ds').getCurrentRecord();
+                var exp_report_header_id = record.get('exp_report_header_id');
+                var exp_report_line_id = record.get('exp_report_line_id');
+                Aurora.request({
+                    url: $('exp_assign_submit_link').getUrl(),
+                    para: {exp_report_header_id:exp_report_header_id,
+                           exp_report_line_id:exp_report_line_id},
+                    lockMessage: '正在提交,请耐心等待',
+                    success: function() {
+                        Aurora.showMessage('提示', '提交成功！');
+                        $('result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+            function gridcellclick(grid, row, name, record) {
+                if (name == 'unit_name') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('unit_name');
+                    f1.setLovPara('company_id', record.get('company_id'));
+                    f1.setLovPara('company_filter','Y');
+
+                }
+                
+                 if (name == 'responsibility_center_name') {
+                    var r2 = record.getMeta();
+                    var f2 = r2.getField('responsibility_center_name');
+                    f2.setLovPara('company_id', record.get('company_id'));
+                }
+            }
+            
+            // function unit_render(value, record, name){
+                // var assign_share_status = record.get('assign_share_status');
+                // if(assign_share_status == 'ASSIGN'){
+                    // record.set('unit_name','');
+                    // record.set('unit_id','');
+                // }
+            // }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="query_ds">
+                <a:fields>
+                    <a:field name="exp_report_number"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="result_ds" fetchAll="false" model="exp.EXP7030.exp_assign_share" pageSize="15" queryDataSet="query_ds" selectable="true" selectionModel="single">
+                <a:fields>
+                    <a:field name="unit_id"/>
+                    <a:field name="unit_name" autoComplete="true" autoCompleteField="unit_code_name" lovGridHeight="320" lovHeight="460" lovWidth="500" lovservice="exp.exp_org_unit" required="true" title="EXP_REPORT_LINES.UNIT_ID">
+                        <a:mapping>
+                            <a:map from="org_unit_description" to="unit_name"/>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="responsibility_center_name" to="responsibility_center_name"/>
+                            <a:map from="responsibility_center_id" to="responsibility_center_id"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="responsibility_center_id"/>
+                    <a:field name="responsibility_center_name" autoComplete="true" autoCompleteField="resp_center_code_name" lovGridHeight="320" lovHeight="460" lovWidth="500" lovservice="fnd.fnd_responsibility_centers_lov" title="EXP_REPORT_LINES.RESPONSIBILITY_CENTER_ID">
+                        <a:mapping>
+                            <a:map from="responsibility_center_name" to="responsibility_center_name"/>
+                            <a:map from="responsibility_center_id" to="responsibility_center_id"/>
+                        </a:mapping>
+                    </a:field>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form title="分摊确认" width="600">
+                <a:hBox>
+                    <a:textField name="exp_report_number" bindTarget="query_ds" prompt="单据编号"/>
+                </a:hBox>
+                <a:hBox>
+                    <a:button click="queryBtn" text="查询"/>
+                    <a:button click="saveBtn" text="保存"/>
+                    <a:button click="submitBtn" text="提交"/>
+                </a:hBox>
+            </a:form>
+            <a:grid bindTarget="result_ds" height="350" navBar="true" width="1100">
+                <a:columns>
+                    <a:column name="exp_report_number" align="center" prompt="单据编号" width="80"/>
+                    <a:column name="exp_report_type_desc" align="center" prompt="单据类型" width="80"/>
+                    <a:column name="report_date" align="center" prompt="报销日期" width="80"/>
+                    <a:column name="employee_name" align="center" prompt="报销人" width="80"/>
+                    <a:column name="line_number" align="center" prompt="行号" width="50"/>
+                    <a:column name="company_name" align="center" prompt="公司" width="100"/>
+                    <a:column name="unit_name" align="center" editor="lov_edit" prompt="预算部门" width="100"/>
+                    <a:column name="responsibility_center_name" align="center" editor="lov_edit" prompt="成本中心" width="100"/>
+                    <a:column name="report_type_desc" align="center" prompt="报销类型" width="100"/>
+                    <a:column name="expense_items_desc" align="center" prompt="费用项目" width="100"/>
+                    <a:column name="report_amount" align="right" prompt="报销金额" renderer="Aurora.formatMoney" width="80"/>
+                    <a:column name="assign_share_desc" align="center" prompt="状态" width="80"/>
+                </a:columns>
+                <a:editors>
+                    <a:comboBox id="com_edit"/>
+                    <a:lov id="lov_edit"/>
+                    <a:textField id="text_edit"/>
+                </a:editors>
+                <a:events>
+                    <a:event name="cellclick" handler="gridcellclick"/>
+                </a:events>
+            </a:grid>
+        </a:screenBody>
+        <script><![CDATA[
+           // function init(){
+               // var records = $('result_ds').getAll();
+               // if(records.length > 0){
+                   // for(var i=0;i<records.length;i++){
+                       // debugger;
+                       // var assign_share_status = records[i].get('assign_share_status');
+		               // if(assign_share_status == 'ASSIGN'){
+		                   // record.set('unit_name','');
+		                   // record.set('unit_id','');
+		               // }
+                   // }
+               // }
+           // }
+           // init();
+        ]]></script>
+    </a:view>
+</a:screen>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: CJM
+    $Date: 2016-9-6 下午03:41:06  
+    $Revision: 1.0  
+    $Purpose:  银企直连接口日志
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="detail_link" url="${/request/@context_path}/modules/sch/SCH113/log_detail.screen"/>
+        <a:link id="detail_link1" url="${/request/@context_path}/modules/sch/SCH113/log_detail2.screen"/>
+        <script><![CDATA[
+            function query() {
+                $('log_result_ds').query();
+            }
+            
+            function reset() {
+                $('log_query_ds').reset();
+            }
+            
+            function sub_error(value, record, name) {
+                if(value){
+                    return value.substring(0, 100);
+                }else{
+                    return '';
+                }
+            }
+            
+            function fun_cellclick(grid, row, name, record) {
+                if (name == 'req_msg') {
+                    var url = $('detail_link').getUrl() + "?cux_oa_trans_logs_id=" + record.get('cux_oa_trans_logs_id');
+                    new Aurora.Window({
+                        id: 'detail_window',
+                        url: url,
+                        title: '明细',
+                        closeable: true,
+                        draggable: false,
+                        height: 500,
+                        width: 600
+                    });
+                }else if(name == 'resp_msg'){
+                    var url = $('detail_link1').getUrl() + "?cux_oa_trans_logs_id=" + record.get('cux_oa_trans_logs_id');
+                    new Aurora.Window({
+                        id: 'detail_window',
+                        url: url,
+                        title: '明细',
+                        closeable: true,
+                        draggable: false,
+                        height: 500,
+                        width: 600
+                    });
+                }
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="oa_combox">
+                <a:datas>
+                    <a:record code_value="OA_TODO_DONE" code_value_name="OA已办"/>
+                    <a:record code_value="OA_TODO_DONE" code_value_name="OA已办删除"/>
+                    <a:record code_value="OA_TODO" code_value_name="OA待办"/>
+                    <a:record code_value="INSERT_OA_SIGN" code_value_name="OA签报传入费控"/>
+                    <a:record code_value="OA_SIGN_AUTHORITIES" code_value_name="签报手工授权"/>
+                    <a:record code_value="SEND_SIGN_AUTHORITIES" code_value_name="定任务发送签报查阅权"/>
+                    <a:record code_value="OA_SIGN_READ" code_value_name="签报查阅权限发送OA"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="log_query_ds">
+                <a:fields>
+                    <a:field name="submit_day"/>
+                    <a:field name="document_num"/>
+                    <a:field name="req_msg"/>
+                    <a:field name="resp_msg"/>
+                    <a:field name="type_desc" displayField="code_value_name" options="oa_combox" returnField="type" valueField="code_value"/>
+                    <a:field name="type"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="log_result_ds" autoPageSize="true" model="sch.SCH113.cux_oa_trans_logs" pageSize="15" queryDataSet="log_query_ds"/>
+        </a:dataSets>
+        <a:screenBody>
+            <a:screenTopToolbar>
+                <a:toolbarButton click="reset" text="HAP_RESET" width="80"/>
+            </a:screenTopToolbar>
+            <a:queryForm bindTarget="log_query_ds" marginWidth="80" resultTarget="log_result_ds" style="width:100%;border:none">
+                <a:formToolBar>
+                    <a:comboBox name="type_desc" bindTarget="log_query_ds" prompt="操作类型"/>
+                    <a:textField name="document_num" bindTarget="log_query_ds" prompt="编号"/>
+                    <a:textField name="req_msg" bindTarget="log_query_ds" prompt="发送内容"/>
+                    <a:textField name="resp_msg" bindTarget="log_query_ds" prompt="响应内容"/>
+                </a:formToolBar>
+                <a:formBody>
+                    <a:datePicker name="submit_day" bindTarget="log_query_ds" prompt="创建日期"/>
+                </a:formBody>
+            </a:queryForm>
+            <a:grid id="log_result_ds_grid" bindTarget="log_result_ds" marginHeight="120" marginWidth="80" navBar="true">
+                <a:columns>
+                    <a:column name="type_desc" align="center" prompt="操作" width="200"/>
+                    <a:column name="req_msg" align="center" prompt="发送内容" renderer="sub_error" width="500"/>
+                    <a:column name="resp_msg" align="center" prompt="响应内容" renderer="sub_error" width="500"/>
+                    <a:column name="submit_day" align="center" prompt="创建日期" width="150"/>
+                    <a:column name="doc_number" align="center" prompt="编码" width="150"/>
+                </a:columns>
+                <a:events>
+                    <a:event name="cellclick" handler="fun_cellclick"/>
+                </a:events>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

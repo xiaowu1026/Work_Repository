@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: CJM  
+    $Date: 2016-8-22 下午05:25:12  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure>
+        <a:model-query model="bgt.BGT6100.bgt_journal_import_batch_id" rootPath="batch_id"/>
+        <a:model-query model="bgt.bgt_get_sys_import_head_id" rootPath="header"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="con_contract_edit_link" url="${/request/@context_path}/modules/cont/public/con_contract_headers_add.screen"/>
+        <a:link id="con_contract_import_err_link" url="${/request/@context_path}/modules/cont/CON5080/con_contract_import_err.screen"/>
+        <a:link id="con_contract_import_commit_link" model="cont.CON5080.con_contract_lns_tmp" modelaction="execute"/>
+        <a:link id="con_contract_import_check_link" model="cont.CON5080.con_contract_lns_tmp" modelaction="update"/>
+        <a:link id="con_contract_import_upload_link" url="${/request/@context_path}/modules/cont/CON5080/con_contract_import_upload.screen"/>
+        <script><![CDATA[
+            var check = 0;
+            
+            function loadData() {
+                var url = $('con_contract_import_upload_link').getUrl() + '?batch_id=${/parameter/@batch_id}&contract_header_id=${/parameter/@contract_header_id}&contract_return_period_id=${/parameter/@contract_return_period_id}';
+                new Aurora.Window({
+                    id: 'upload_window',
+                    url: url,
+                    title: '合同受益期分摊导入',
+                    width: 420,
+                    height: 275
+                });
+            }
+            
+            function checkData() {
+                var allData = $('result_ds').getAll();
+                if (allData.length == 0) {
+                    Aurora.showMessage('${l:PROMPT}', '${l:BGT_BUDGET_ITEMS_INTERFACE.CHECK1}');
+                } else {
+                    var param = {};
+                    param['batch_id'] = '${/model/batch_id/record/@batch_id}';
+                    param['contract_header_id'] = '${/parameter/@contract_header_id}';
+                    param['contract_return_period_id'] = '${/parameter/@contract_return_period_id}';
+                    Aurora.request({
+                        url: $('con_contract_import_check_link').getUrl(),
+                        para: param,
+                        success: function() {
+                            check = 1;
+                            Aurora.showMessage('信息', '核对成功');
+                        },
+                        scope: this
+                    });
+                }
+            }
+            
+            function submitData() {
+                if (check==0){
+                    Aurora.showMessage('${l:PROMPT}', '请先核对！！');
+                    return;
+                }
+                var allData = $('result_ds').getAll();
+                if (allData.length == 0) {
+                    Aurora.showMessage('${l:PROMPT}', '${l:BGT_BUDGET_ITEMS_INTERFACE.CHECK2}');
+                } else {
+                    var param = {};
+                    param['batch_id'] = '${/model/batch_id/record/@batch_id}';
+                    param['contract_header_id'] = '${/parameter/@contract_header_id}';
+                    param['contract_return_period_id'] = '${/parameter/@contract_return_period_id}';
+                    Aurora.request({
+                        url: $('con_contract_import_commit_link').getUrl(),
+                        para: param,
+                        success: function() {
+                            Aurora.showMessage('信息', '提交成功');
+                            //window.location.reload();
+                            backFun();
+                        },
+                        scope: this
+                    });
+                }
+            }
+            
+            function backFun() {
+                var url = $('con_contract_edit_link').getUrl() + '?contract_header_id=${/parameter/@contract_header_id}&contract_return_period_id=${/parameter/@contract_return_period_id}';
+                Aurora.post(url);
+            
+            }
+            
+            function errorData() {
+                window.open($('con_contract_import_err_link').getUrl() + '?contract_header_id=${/parameter/@contract_header_id}&contract_return_period_id=${/parameter/@contract_return_period_id}');
+            }
+            
+            
+             function exportFun() {
+                var columnTitles = ['公司代码*', '公司名称', '部门代码*', '部门名称', '责任中心代码*', '责任中心名称', '费用项目代码*', '费用项目名称', '金额*'];
+                var columnNames = ['company_code', 'company_name', 'unit_code', 'unit_name', 'responsibility_center_code', 'responsibility_center_name', 'expense_item_code', 'expense_item_desc', 'amount'];
+                var columns = [];
+                for (var i = 0;i < columnTitles.length;i++) {
+                    //选取文件启用的列
+                    columns.push({
+                        prompt: columnTitles[i],
+                        name: columnNames[i],
+                        width: 100
+                    });
+                }
+                $A.doExport($('result_ds'), columns, '', '', '', 'con_contract_allocation');
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="query_ds">
+                <a:fields>
+                    <a:field name="contract_header_id" defaultValue="${/parameter/@contract_header_id}"/>
+                    <a:field name="contract_return_period_id" defaultValue="${/parameter/@contract_return_period_id}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="result_ds" autoPageSize="true" fetchAll="true" loadData="true" model="cont.CON5080.con_contract_lns_tmp" queryDataSet="query_ds">
+                <a:fields>
+                    <a:field name="company_name"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenTopToolbar>
+            <a:screenTitle/>
+            <a:toolbarButton click="loadData" text="PROMPT.LOADDATA"/>
+            <a:toolbarButton click="checkData" text="PROMPT.CHECK"/>
+            <a:toolbarButton click="submitData" text="PROMPT.SUBMIT"/>
+            <a:toolbarButton click="errorData" text="PROMPT.ERROR"/>
+            <a:toolbarButton id="expoert" click="exportFun" text="导出行"/>
+            <a:toolbarButton click="backFun" text="返回"/>
+        </a:screenTopToolbar>
+        <a:grid bindTarget="result_ds" marginHeight="50" marginWidth="50" navBar="true" showRowNumber="true" style="margin-left:10px;margin-top:10px;">
+            <a:columns>
+                <a:column name="company_code" align="center" prompt="公司代码" width="125"/>
+                <a:column name="company_name" align="center" prompt="公司名称" width="125"/>
+                <a:column name="unit_code" align="center" prompt="部门代码" width="125"/>
+                <a:column name="unit_name" align="center" prompt="部门名称" width="125"/>
+                <a:column name="responsibility_center_code" align="center" prompt="责任中心代码" width="125"/>
+                <a:column name="responsibility_center_name" align="center" prompt="责任中心名称" width="125"/>
+                <a:column name="expense_item_code" align="center" prompt="费用项目代码" width="125"/>
+                <a:column name="expense_item_desc" align="center" prompt="费用项目名称" width="125"/>
+                <a:column name="amount" align="center" prompt="金额" width="125"/>
+            </a:columns>
+        </a:grid>
+    </a:view>
+</a:screen>

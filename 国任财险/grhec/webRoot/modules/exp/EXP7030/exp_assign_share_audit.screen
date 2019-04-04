@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: hp  
+    $Date: 2013-7-26 上午10:54:01  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="exp_assign_confirm_link" model="exp.EXP7030.exp_assign_share_audit" modelaction="batch_update"/>
+        <a:link id="exp_assign_reject_link" model="exp.EXP7030.exp_assign_share_audit" modelaction="batch_update"/>
+        <script><![CDATA[
+            function queryBtn(){
+                $('result_ds').query();
+            }
+            
+            //确定
+            function confirm(){
+                var records = $('result_ds').getJsonData(true);
+                for(var i=0;i<records.length;i++){
+                    records[i]._status = 'update';
+                }
+                Aurora.request({
+                    url: $('exp_assign_confirm_link').getUrl(),
+                    para: records,
+                    lockMessage: '正在同意,请耐心等待',
+                    success: function() {
+                        Aurora.showMessage('提示', '同意成功！');
+                        $('result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+            //拒绝
+            function reject(){
+                var records = $('result_ds').getJsonData(true);
+                for(var i=0;i<records.length;i++){
+                    records[i]._status = 'execute';
+                }
+                Aurora.request({
+                    url: $('exp_assign_reject_link').getUrl(),
+                    para: records,
+                    lockMessage: '正在拒绝,请耐心等待',
+                    success: function() {
+                        Aurora.showMessage('提示', '拒绝成功！');
+                        $('result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="query_ds">
+                <a:fields>
+                    <a:field name="exp_report_number"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="result_ds" fetchAll="false" model="exp.EXP7030.exp_assign_share_audit" pageSize="15" queryDataSet="query_ds" selectable="true" selectionModel="single"/>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form title="分摊审批" width="600">
+                <a:hBox>
+                    <a:textField name="exp_report_number" bindTarget="query_ds" prompt="单据编号"/>
+                </a:hBox>
+                <a:hBox>
+                    <a:button click="queryBtn" text="查询"/>
+                    <a:button click="confirm" text="同意"/>
+                    <a:button click="reject" text="拒绝"/>
+                </a:hBox>
+            </a:form>
+            <a:grid bindTarget="result_ds" height="350" navBar="true" width="1100">
+                <a:columns>
+                    <a:column name="exp_report_number" align="center" prompt="单据编号" width="80"/>
+                    <a:column name="exp_report_type_desc" align="center" prompt="单据类型" width="80"/>
+                    <a:column name="report_date" align="center" prompt="报销日期" width="80"/>
+                    <a:column name="employee_name" align="center" prompt="报销人" width="80"/>
+                    <a:column name="line_number" align="center" prompt="行号" width="50"/>
+                    <a:column name="company_name" align="center" prompt="公司" width="100"/>
+                    <a:column name="unit_name" align="center" editor="lov_edit" prompt="预算部门" width="100"/>
+                    <a:column name="responsibility_center_name" align="center" editor="lov_edit" prompt="成本中心" width="100"/>
+                    <a:column name="report_type_desc" align="center" prompt="报销类型" width="100"/>
+                    <a:column name="expense_items_desc" align="center" prompt="费用项目" width="100"/>
+                    <a:column name="report_amount" align="right" prompt="报销金额" renderer="Aurora.formatMoney" width="80"/>
+                    <a:column name="assign_share_desc" align="center" prompt="状态" width="80"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2017-12-21 15:23:33 
+    $Revision: 1.0  
+    $Purpose: OA签报查询授权
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="cux_oa_authorities_link" url="${/request/@context_path}/modules/expm/public/gr/cux_oa_authorities.screen"/>
+        <script><![CDATA[
+           
+            function queryOA(){
+                $('oa_sign_result_ds').query();
+            }
+            //查询重置
+         	 function reset(){
+                $('oa_sign_query_ds').reset();
+            }
+            
+            function show_oa_sign_detail(value, record, name) {
+                var url = record.get('sign_url');
+                if (value) {
+                    return '<a href="javascript:show_oa_sign_detail_win(\'' + url + '\')">'+value+'</a>';
+                } else {
+                    return '';
+                }
+            } 
+            
+            function oa_sign_authorities(value, record, name) {
+                var oa_sign_id=record.get('sign_id');
+                var oa_sign_code=record.get('sign_code');
+              		if(record.get('can_grant_flag')=='Y'){
+                    	return '<a href="javascript:open_oa_sign_authorities(\''+oa_sign_id +'\',\''+oa_sign_code+'\')">授权</a>';
+              		}else {
+                		return '';
+              		}
+            
+            }
+            function open_oa_sign_authorities(sign_id,sign_code){
+                 var sign_code=encodeURIComponent(sign_code);
+                 var url =$('cux_oa_authorities_link').getUrl()+'?sign_id='+sign_id+'&sign_code='+sign_code;
+                new Aurora.Window({
+                    id: 'oa_sign_authorities_screen',
+                    url: url,
+                    title: 'OA签报授权',
+                    fullScreen:true
+                });
+            }
+            function show_oa_sign_detail_win(url) {
+                window.open(url);
+            }
+            
+            
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="oa_sign_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="sign_code"/>
+                    <a:field name="sign_name"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="oa_sign_result_ds" autoPageSize="true" autoQuery="true" model="expm.gr.oa_query" queryDataSet="oa_sign_query_ds">
+                <a:fields>
+                    <a:field name="sign_code"/>
+                    <a:field name="sign_name"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" style="width:99%;margin-left:5px;margin-top:5px;" title="OA签报查询">
+                <a:hBox>
+                    <a:textField name="sign_code" bindTarget="oa_sign_query_ds" prompt="签报编号"/>
+                    <a:textField name="sign_name" bindTarget="oa_sign_query_ds" prompt="签报名称"/>
+                </a:hBox>
+            </a:form>
+            <a:hBox>
+                <a:toolbarButton click="queryOA" text="HAP_QUERY"/>
+                <a:toolbarButton click="reset" text="HAP_RESET"/>
+            </a:hBox>
+            <a:grid id="oa_sign_grid" bindTarget="oa_sign_result_ds" height="350" marginWidth="35" navBar="true" showRowNumber="true">
+                <a:columns>
+                    <a:column name="sign_code" align="center" prompt="签报单号" renderer="show_oa_sign_detail" width="150"/>
+                    <a:column name="sign_name" align="center" prompt="签报名称" width="200"/>
+                    <a:column name="company_name" align="center" prompt="机构" width="150"/>
+                    <a:column name="unit_name" align="center" prompt="部门" width="150"/>
+                    <a:column name="oa_sign_applyer" align="center" prompt="申请人" width="100"/>
+                    <a:column name="oa_authorities" align="center" prompt="授权" renderer="oa_sign_authorities" width="100"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

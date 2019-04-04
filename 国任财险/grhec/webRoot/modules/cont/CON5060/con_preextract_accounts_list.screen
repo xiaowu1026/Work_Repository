@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2017-12-21 15:23:33 
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="con_preextract_detail_link" url="${/request/@context_path}/modules/cont/CON5060/con_preextract_accounts_detail.screen"/>
+        <script><![CDATA[
+            
+            function SignListNumRenFunction(value, record, name) {
+                var con_preextract_accounts_h_id = record.get('con_preextract_accounts_h_id');
+                if (con_preextract_accounts_h_id) {
+                    return '<a href="javascript:SignListNumDispatch(' + con_preextract_accounts_h_id  + ')">' + value + '</a>';
+                }
+            }
+            
+            function SignListNumDispatch(con_preextract_accounts_h_id) {
+                var url = $('con_preextract_detail_link').getUrl() + "?con_preextract_accounts_h_id=" + con_preextract_accounts_h_id ;
+                new Aurora.Window({
+                    url: url,
+                    title: '合同预提凭证查询',
+                    id: 'preextract_win',
+                    fullScreen: true
+                }).on('close', function() {
+                    $('con_preextract_result_ds').query();
+                });
+            }
+            
+            function con_preextract_query_fun() {
+                $('con_preextract_result_ds').query();
+            }
+            
+            function con_preextract_reset_fun() {
+                $('con_preextract_query_ds').reset();
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="approve_status_ds" lookupCode="PAYMENT_REQUISITION_STATUS"/>
+            <a:dataSet id="con_preextract_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="self_flag" defaultValue="Y"/>
+                    <a:field name="approve_status_desc" displayField="code_value_name" options="approve_status_ds" returnField="status" valueField="code_value"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="con_preextract_result_ds" autoPageSize="true" autoQuery="true" bindName="lines" model="cont.CON5050.con_preextract_accounts_h" queryDataSet="con_preextract_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="employee_name"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" labelWidth="100" style="margin-left:5px;margin-top:10px;width:99%" title="合同预提凭证查询">
+                <a:textField name="contract_number" bindTarget="con_preextract_query_ds" prompt="合同编号"/>
+                <a:comboBox name="approve_status_desc" bindTarget="con_preextract_query_ds" prompt="状态"/>
+                <a:textField name="employee_name" bindTarget="con_preextract_query_ds" prompt="操作人"/>
+            </a:form>
+            <a:hBox>
+                <a:button click="con_preextract_query_fun" text="HAP_QUERY"/>
+                <a:button click="con_preextract_reset_fun" text="HAP_RESET"/>
+            </a:hBox>
+            <a:grid id="sign_exp_req_grid_id" bindTarget="con_preextract_result_ds" marginHeight="180" marginWidth="20" navBar="true" style="margin-top:10px">
+                <a:columns>
+                    <a:column name="contract_number" align="center" prompt="合同编号" renderer="SignListNumRenFunction" width="150"/>
+                    <a:column name="extract_periods" align="center" prompt="预提期间" width="185"/>
+                    <a:column name="employee_name" align="center" prompt="操作人" width="185"/>
+                    <a:column name="preextract_date" align="center" prompt="预提时间" width="185"/>
+                    <a:column name="status_desc" align="center" prompt="状态" width="185"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

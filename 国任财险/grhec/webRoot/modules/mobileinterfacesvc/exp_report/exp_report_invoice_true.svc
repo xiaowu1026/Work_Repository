@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: HM  
+    $Date: 2016-1-6 下午3:51:14  
+    $Revision: 1.0  
+    $Purpose: 报销申请单提交控制SVC
+-->
+<a:service xmlns:a="http://www.aurora-framework.org/application" xmlns:p="uncertain.proc">
+    <a:init-procedure>
+        <a:model-execute model="mobileinterfacebm.exp_report.exp_ygz_check_einvoice_used"/>
+        <p:echo message="${/parameter/@verification_flag}"/>
+        <p:echo message="${/parameter/@exp_report_line_id}"/>
+        <p:echo message="${/parameter/@invoice_amount}"/>
+        <p:echo message="${/parameter/@invoice_number}"/>
+        <p:echo message="${/parameter/@invoice_code}"/>
+        <p:echo message="${/parameter/@invoice_date}"/>
+        <p:echo message="${/parameter/@invoice_check_code}"/>
+        <p:echo message="${/parameter/@requestUrl}"/>
+        <p:echo message="${/parameter/@appId}"/>
+        <p:echo message="${/parameter/@key}"/>
+        <p:echo message="${/parameter/@enterpriseCode}"/>
+        <p:echo message="${/parameter/@taxNo}"/>
+        <p:echo message="${/parameter/@invoice_type}"/>
+        <p:switch test="/parameter/@verification_flag">
+            <p:case value="Y">
+                <p:method-invoke className="com.hand.invoice.GRCheckInvoiceT" methodName="check_status">
+                    <p:arguments>
+                        <p:argument path="/parameter/@requestUrl" type="java.lang.String"/>
+                        <p:argument path="/parameter/@appId" type="java.lang.String"/>
+                        <p:argument path="/parameter/@key" type="java.lang.String"/>
+                        <p:argument path="/parameter/@enterpriseCode" type="java.lang.String"/>
+                        <p:argument path="/parameter/@taxNo" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_type" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_number" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_code" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_date" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_amount" type="java.lang.String"/>
+                        <p:argument path="/parameter/@invoice_check_code" type="java.lang.String"/>
+                        <p:argument path="/parameter/@exp_report_line_id" type="int"/>
+                    </p:arguments>
+                </p:method-invoke>
+                <a:model-update model="mobileinterfacebm.exp_report.exp_ygz_check_einvoice_used"/>
+            </p:case>
+        </p:switch>
+    </a:init-procedure>
+    <a:service-output output="/parameter"/>
+</a:service>

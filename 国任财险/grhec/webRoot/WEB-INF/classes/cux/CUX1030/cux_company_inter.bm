@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:27:09  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="CUX_HR_COMPANY_INTERFACE">
+    <bm:fields>
+        <bm:field name="sapcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="orgcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="orgname" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="orgtypecode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="shortname" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="fatherorgcode" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="disablestate" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="showorder" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="modifiedtime" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="systemdate" databaseType="DATE" datatype="java.util.Date"/>
+        <bm:field name="process_status" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="process_status_desc" databaseType="VARCHAR2" datatype="java.lang.String" expression="(decode(process_status,&apos;N&apos;,&apos;未处理&apos;,&apos;Y&apos;,&apos;已入正式表&apos;,&apos;E&apos;,&apos;同步出错&apos;))"/>
+        <bm:field name="message" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="sapcode" queryExpression="t1.sapcode like &apos;%&apos;|| ${@sapcode} ||&apos;%&apos;"/>
+        <bm:query-field name="orgname" queryExpression="t1.orgname like &apos;%&apos;|| ${@orgname} ||&apos;%&apos;"/>
+        <bm:query-field name="orgcode" queryExpression="t1.orgcode like &apos;%&apos;|| ${@orgcode} ||&apos;%&apos;"/>
+        <bm:query-field name="orgtypecode" queryExpression="t1.orgtypecode like &apos;%&apos;|| ${@orgtypecode} ||&apos;%&apos;"/>
+        <bm:query-field name="fatherorgcode" queryExpression="t1.fatherorgcode like &apos;%&apos;|| ${@fatherorgcode} ||&apos;%&apos;"/>
+        <bm:query-field name="process_status" queryExpression="t1.process_status = ${@process_status}"/>
+        <bm:query-field name="systemdate" dataType="java.util.Date" queryExpression="t1.systemdate = ${@systemdate}"/>
+    </bm:query-fields>
+</bm:model>

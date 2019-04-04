@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:fields>
+        <bm:field name="user_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="user_name" databaseType="VARCHAR2" datatype="java.lang.String" forDisplay="true" forQuery="true" prompt="SYS_USER.ACCOUNT"/>
+        <bm:field name="employee_code" databaseType="VARCHAR2" datatype="java.lang.String" forDisplay="true" forQuery="true" prompt="EXP_EMPLOYEE.EMPLOYEE_CODE"/>
+        <bm:field name="employee_name" databaseType="VARCHAR2" datatype="java.lang.String" forDisplay="true" forQuery="true" prompt="EXP_EMPLOYEE.EMPLOYEE_NAME"/>
+        <bm:field name="employee_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="unit_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="company_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="position_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="position_desc" databaseType="VARCHAR2" datatype="java.lang.String" prompt="EXP_ORG_POSITION.POSITION_NAME"/>
+        <bm:field name="company_short_name" databaseType="VARCHAR2" datatype="java.lang.String" prompt="FND_COMPANIES.COMPANY_DISPLAY"/>
+        <bm:field name="unit_desc" databaseType="VARCHAR2" datatype="java.lang.String" prompt="EXP_ORG_UNIT.ORG_UNIT_DESCRIPTION"/>
+        <bm:field name="email" databaseType="VARCHAR2" datatype="java.lang.String" prompt="EXP_EMPLOYEE.EMAIL"/>
+        <bm:field name="mobil" databaseType="VARCHAR2" datatype="java.lang.String" prompt="EXP_EMPLOYEE.MOBIL"/>
+        <bm:field name="phone" databaseType="VARCHAR2" datatype="java.lang.String" prompt="EXP_EMPLOYEE.PHONE"/>
+    </bm:fields>
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+    	
+    	select * from(
+			select a.user_id,
+			       a.user_name,
+			       b.employee_id,
+			       b.employee_code,
+			       b.name employee_name,
+			       b.email,
+			       b.mobil,
+			       b.phone,
+			       ou.UNIT_ID,
+			       fv.COMPANY_ID,
+			       fv.COMPANY_SHORT_NAME ,
+			       ou.DESCRIPTION unit_desc,
+			       op.position_id,
+			       op.description position_desc
+			  from sys_user a,
+			       exp_employees b,
+			       exp_employee_assigns ea,
+			       fnd_companies_vl fv,
+			       exp_org_position_vl op,
+			       exp_org_unit_vl ou
+			 where a.employee_id = b.employee_id
+				   and  b.employee_id=ea.employee_id
+				   and  ea.enabled_flag='Y'
+				   and  ea.primary_position_flag='Y'
+				   and  ea.position_id=op.POSITION_ID 
+				   and  op.UNIT_ID=ou.UNIT_ID
+				   and  ea.company_id=fv.COMPANY_ID
+				   )
+				   #WHERE_CLAUSE#
+    	
+    	]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field field="user_name" queryOperator="like"/>
+        <bm:query-field field="employee_code" queryOperator="like"/>
+        <bm:query-field field="employee_name" queryExpression="employee_name like &apos;%&apos;||${@employee_name}||&apos;%&apos;"/>
+        <bm:query-field name="unit_id" queryExpression="&apos;U&apos;||unit_id = ${@unit_id}"/>
+        <bm:query-field name="company_id" queryExpression="&apos;C&apos;||company_id = ${@company_id}"/>
+        <bm:query-field field="unit_desc" queryExpression="unit_desc like &apos;%&apos;||${@unit_desc}||&apos;%&apos;"/>
+    </bm:query-fields>
+    <bm:ref-fields/>
+</bm:model>

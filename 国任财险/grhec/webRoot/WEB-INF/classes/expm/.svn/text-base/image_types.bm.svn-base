@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018年9月28日 上午9:46:07  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:fields>
+        <bm:field name="image_type_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="image_type_code" databaseType="VARCHAR" datatype="java.lang.String" forDisplay="true" forQuery="true" prompt="影像代码"/>
+        <bm:field name="image_type_description" databaseType="VARCHAR" datatype="java.lang.String" forDisplay="true"/>
+        <bm:field name="enabled_flag" databaseType="VARCHAR" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            	select 
+            		image_type_id,
+            		image_type_code,
+            		image_type_description,
+            		enabled_flag
+				from image_types
+				]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+        	
+        	Begin
+        		image_types_pkg.insert_image_type(
+        		    ${@image_type_code},
+        		    ${@image_type_description},
+        		    ${@enabled_flag},
+        		    ${/session/@user_id}
+        		);
+    		END;
+			
+        	]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+        	
+        	BEGIN
+        		image_types_pkg.update_image_type(
+        		    ${@image_type_id},
+        		    ${@image_type_code},
+        		    ${@image_type_description},
+        		    ${@enabled_flag},
+        		    ${/session/@user_id}
+        		);
+        	END;
+        	
+        	]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[	
+            select * from (      
+            select distinct t.user_id user_id, 
+                     t.user_name,
+                     t.description,
+                     e.employee_code,
+                     e.name employee_name,
+                     e.employee_code ||'-' ||e.name code_and_name,
+             t.user_name|| '-' ||t.description  description_and_code,
+             (SELECT
+                        eu.unit_id
+                    FROM
+                        exp_employee_assigns sa,
+                        exp_org_unit_vl eu,
+                        exp_org_position_vl ep
+                    WHERE
+                        sa.employee_id          =e.employee_id AND
+                        sa.company_id           =${/session/@company_id} AND
+                        sa.primary_position_flag='Y' AND
+                        eu.UNIT_ID              =ep.UNIT_ID AND
+                        sa.position_id          =ep.POSITION_ID
+                    ) unit_id,
+                    (SELECT
+                        eu.description
+                    FROM
+                        exp_employee_assigns sa,
+                        exp_org_unit_vl eu,
+                        exp_org_position_vl ep
+                    WHERE
+                        sa.employee_id          =e.employee_id AND
+                        sa.company_id           =${/session/@company_id} AND
+                        sa.primary_position_flag='Y' AND
+                        eu.UNIT_ID              =ep.UNIT_ID AND
+                        sa.position_id          =ep.POSITION_ID
+                    ) unit_name
+			from con_contract_headers c, sys_user t,exp_employees e
+		   where t.user_id = c.created_by and
+		    e.employee_id=t.employee_id )
+		    #WHERE_CLAUSE#]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="user_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="description_and_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="code_and_name" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="user_name" displayWidth="255" prompt="BGT_SOLUTION.USER_NAME"/>
+        <bm:field name="description" displayWidth="255" prompt="CON_CONTRACT_HEADERS.CREATED_BY"/>
+        <bm:field name="employee_code" displayWidth="255" forDisplay="true" forQuery="true" prompt="员工代码"/>
+        <bm:field name="employee_name" displayWidth="255" forDisplay="true" forQuery="true" prompt="员工姓名"/>
+        <bm:field name="unit_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="unit_name" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field field="user_name" queryOperator="like"/>
+        <bm:query-field field="description" queryOperator="like"/>
+        <bm:query-field name="user_id" queryExpression="user_id=${@user_id}"/>
+    </bm:query-fields>
+</bm:model>

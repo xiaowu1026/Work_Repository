@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-16 下午02:03:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <!-- <a:init-procedure>
+        <a:model-query autoCount="false" defaultWhereClause="v.session_id=${/parameter/@session_id}" fetchAll="true" model="bgt.BGT7100.bgt_premium_temp" rootPath="init_data"/>
+    </a:init-procedure> -->
+    <a:view>
+        <a:link id="bgt_assign_link" model="bgt.BGT7100.bgt_premium_assign" modelaction="batch_update"/>
+        <a:link id="bgt_assign_submit_link" model="bgt.BGT7100.bgt_premium_assign" modelaction="execute"/>
+        <script><![CDATA[
+
+            function gridcellclick(grid, row, name, record) {
+                if (name == 'unit_name') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('unit_name');
+                    if(record.get('company_id')){
+                        f1.setLovPara('company_id', record.get('company_id'));
+                        f1.setLovPara('company_filter','Y');
+                    }else{
+                        Aurora.showMessage('提示','请先选择机构！');
+                    }
+                }
+                
+                if(name == 'bgt_budget_items_desc'){
+                    var r = record.getMeta();
+                    var f1 = r.getField('bgt_budget_items_desc');
+                    if(record.get('company_id')){
+                        f1.setLovPara('company_id', record.get('company_id'));
+                    }else{
+                        Aurora.showMessage('提示','请先选择机构！');
+                        return;
+                    }
+                }
+            }
+            
+            function saveBut(){
+                var jsonData = $('bgt_assign_result_ds').getJsonData(true);
+                
+                if(!$('bgt_assign_result_ds').validate()){
+                    return;
+                }
+                
+                if(jsonData.length==0){
+                    Aurora.showMessage('提示','请先选择需保存数据！');
+                    return;
+                }
+                
+                for(var i=0;i<jsonData.length;i++){
+                    jsonData[i]._status = 'update'; 
+                }
+                Aurora.request({
+                    url: $('bgt_assign_link').getUrl(),
+                    para: jsonData,
+                    lockMessage: '正在保存,请耐心等待',
+                    success: function() {
+                        $('bgt_assign_result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+            function  submitBut(){
+                if(!$('bgt_assign_result_ds').validate()){
+                    return;
+                }
+                if ($('bgt_assign_result_ds').isModified()) {
+                    Aurora.showInfoMessage('${l:PROMPT}', '${l:PROMPT.SAVE_SUBMIT}', null, 250, 100);
+                    return;
+                }
+                var session_id = '${/parameter/@session_id}';
+                 Aurora.request({
+                    url: $('bgt_assign_submit_link').getUrl(),
+                    para: {session_id:session_id},
+                    lockMessage: '正在保存,请耐心等待',
+                    success: function() {
+                        $('bgt_premium_assign').close();
+                        $('bgt_result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <!--公司comboBox-->
+            <a:dataSet id="company_ds1" fetchAll="true" loadData="true" model="bgt.BGT3010.bgt_budget_balance_query_company"/>
+            <a:dataSet id="bgt_assign_query_ds">
+                <a:fields>
+                    <a:field name="session_id" defaultValue="${/parameter/@session_id}"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="bgt_assign_result_ds" autoQuery="true" model="bgt.BGT7100.bgt_premium_assign" queryDataSet="bgt_assign_query_ds" selectable="true">
+                <a:fields>
+                    <a:field name="company_name" displayField="company_short_name" options="company_ds1" prompt="BGT_BUDGET_ITEM_MAPPING.COMPANY_ID" required="true" returnField="company_id" valueField="company_id">
+                        <a:mapping>
+                            <a:map from="company_code" to="company_code"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="company_code"/>
+                    <a:field name="company_id"/>
+                    <a:field name="unit_name" autoComplete="true" autoCompleteField="unit_code_name" lovGridHeight="320" lovHeight="460" lovWidth="500" lovservice="exp.exp_org_unit" required="true" title="EXP_REPORT_LINES.UNIT_ID">
+                        <a:mapping>
+                            <a:map from="org_unit_description" to="unit_name"/>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="unit_code" to="unit_code"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="unit_id"/>
+                    <a:field name="unit_code"/>
+                    <a:field name="bgt_budget_items_desc" lovGridHeight="320" lovHeight="460" lovWidth="500" lovservice="bgt.BGT7100.bgt_budget_items_company_lov" required="true" title="预算项目">
+                        <a:mapping>
+                            <a:map from="budget_item_code" to="budget_item_code"/>
+                            <a:map from="bgt_budget_items_desc" to="bgt_budget_items_desc"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="budget_item_code"/>
+                    <a:field name="assign_amount" required="true"/>
+                    <a:field name="period_name" autoComplete="true" autoCompleteField="period_name" lovGridHeight="300" lovHeight="420" lovService="expm.EXP5400.bgt_period_detail_lov" lovWidth="500" required="true" title="EXP_REQ.PERIOD_NAME">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="session_id" defaultValue="${/parameter/@session_id}"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:hBox>
+                <a:button click="saveBut" text="保存"/>
+                <a:button click="submitBut" text="提交 "/>
+                <!-- <a:button click="create_bgt_function" text="生成预算日记账"/> -->
+            </a:hBox>
+            <a:grid bindTarget="bgt_assign_result_ds" height="350" navBar="true" width="800">
+                <a:toolBar>
+                    <a:button type="add"/>
+                    <a:button type="clear"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="company_name" align="center" editor="com_edit" prompt="机构" width="150"/>
+                    <a:column name="unit_name" align="center" editor="lov_edit" prompt="部门" width="150"/>
+                    <a:column name="period_name" align="center" editor="lov_edit" prompt="期间" width="80"/>
+                    <a:column name="bgt_budget_items_desc" align="center" editor="lov_edit" prompt="预算项目" width="80"/>
+                    <a:column name="assign_amount" align="right" editor="num_edit" prompt="分配额" renderer="Aurora.formatMoney" width="80"/>
+                </a:columns>
+                <a:editors>
+                    <a:numberField id="num_edit"/>
+                    <a:lov id="lov_edit"/>
+                    <a:comboBox id="com_edit"/>
+                </a:editors>
+                <a:events>
+                    <a:event name="cellclick" handler="gridcellclick"/>
+                </a:events>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

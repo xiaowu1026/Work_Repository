@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: 核心同步接口表查询
+    $Date: 2017-5-11 上午9:34:26  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure/>
+    <a:view>
+        <script><![CDATA[
+			
+			function cux_core_company_inter_reset_function(){
+				$('cux_core_company_inter_query_ds').reset();
+			}
+			function cux_core_unit_inter_reset_function(){
+				$('cux_core_unit_inter_query_ds').reset();
+			}
+			function cux_core_employee_inter_reset_function(){
+				$('cux_core_employee_inter_query_ds').reset();
+			}
+			function cux_core_marketing_expense_reset_function(){
+				$('cux_core_marketing_expense_inter_query_ds').reset();
+			}
+			function cux_core_logs_reset_function(){
+				$('cux_core_logs_query_ds').reset();
+			}
+			function cux_core_company_tax_number_inter_reset_function(){
+			    $('cux_core_company_tax_number_query_ds').reset();
+			}
+			function view_xml(value,record,name){
+			    if(typeof(value)!='undefined'){
+			        if(name=='request_xml'){
+			       		return '<a href="javascript:openReqXMLView(\''+value+'\')">'+value+'</a>';
+			        }else if(name=='response_xml'){
+			            return '<a href="javascript:openResXMLView(\''+value+'\')">'+value+'</a>'; 
+			        }
+			    }
+			}
+			function openResXMLView(xmlContent){
+			   new  Aurora.Window({
+			       id:'show_xml_contrent_screen',
+			       url:'${/request/@context_path}/modules/cux/CUX1040/cux_core_xml_view.screen?xml_content='+xmlContent.split('?>')[1],
+			       title:'响应报文查看',
+			       width:500,
+			       height:200
+			   });
+			}
+			function openReqXMLView(xmlContent){
+			    
+			   new  Aurora.Window({
+			       id:'show_xml_contrent_screen',
+			       url:'${/request/@context_path}/modules/cux/CUX1040/cux_core_xml_view.screen?xml_content='+xmlContent.split('?>')[1],
+			       title:'请求报文查看',
+			       width:500,
+			       height:200
+			   });
+			}
+			
+		]]></script>
+        <a:dataSets>
+            <a:dataSet id="process_status_ds">
+                <a:datas>
+                    <a:record process_status="Y" process_status_desc="已入正式表"/>
+                    <a:record process_status="N" process_status_desc="同步出错"/>
+                    <!-- <a:record process_status="E" process_status_desc="同步出错"/> -->
+                </a:datas>
+            </a:dataSet>
+            <!--核心公司接口查询-->
+            <a:dataSet id="cux_core_company_inter_query_ds">
+                <a:fields>
+                    <a:field name="batch_id"/>
+                    <a:field name="attribute1"/>
+                    <a:field name="attribute2"/>
+                    <a:field name="creation_date"/>
+                    <!-- <a:field name="psnname" prompt="员工姓名"/> -->
+                    <!-- <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/> -->
+                    <!-- <a:field name="process_status"/> -->
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_company_inter_result_ds" autoQuery="true" model="cux.CUX1040.cux_core_company_inter" pageSize="14" queryDataSet="cux_core_company_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="cux_core_company_tax_number_query_ds">
+                <a:fields>
+                    <a:field name="core_company_code"/>
+                    <a:field name="company_tax_number"/>
+                    <a:field name="company_name"/>
+                    <a:field name="creation_date"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_company_tax_number_result_ds" autoQuery="true" model="cux.CUX1040.cux_core_company_tax_number_inter" pageSize="14" queryDataSet="cux_core_company_tax_number_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="cux_core_unit_inter_query_ds">
+                <a:fields>
+                    <a:field name="attribute1"/>
+                    <a:field name="attribute2"/>
+                    <a:field name="attribute5"/>
+                    <a:field name="batch_id"/>
+                    <a:field name="creation_date"/>
+                    <!-- <a:field name="psnname" prompt="员工姓名"/> -->
+                    <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/>
+                    <a:field name="process_status"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_unit_inter_result_ds" autoQuery="true" model="cux.CUX1040.cux_core_unit_inter" pageSize="14" queryDataSet="cux_core_unit_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="cux_core_employee_inter_query_ds">
+                <a:fields>
+                    <a:field name="batch_id"/>
+                    <a:field name="attribute1"/>
+                    <a:field name="attribute8"/>
+                    <a:field name="attribute2"/>
+                    <a:field name="attribute9"/>
+                    <a:field name="creation_date" prompt="同步日期"/>
+                    <!-- <a:field name="psnname" prompt="员工姓名"/> -->
+                    <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/>
+                    <a:field name="process_status"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_employee_inter_result_ds" autoQuery="true" model="cux.CUX1040.cux_core_employee_inter" pageSize="14" queryDataSet="cux_core_employee_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="cux_core_marketing_expense_inter_query_ds">
+                <a:fields>
+                    <a:field name="batch_id"/>
+                    <a:field name="attribute1"/>
+                    <a:field name="attribute2"/>
+                    <a:field name="attribute3"/>
+                    <a:field name="creation_date"/>
+                    <!-- <a:field name="psnname" prompt="员工姓名"/> -->
+                    <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/>
+                    <a:field name="process_status"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_marketing_expense_inter_result_ds" autoQuery="true" model="cux.CUX1040.cux_core_marketing_expense_inter" pageSize="14" queryDataSet="cux_core_marketing_expense_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="cux_core_logs_query_ds">
+                <a:fields>
+                    <a:field name="batch_id" prompt="批次号"/>
+                    <a:field name="operation_type" prompt="操作类型"/>
+                    <a:field name="title_desc" prompt="同步节点"/>
+                    <a:field name="creation_date" prompt="同步日期"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_core_logs_result_ds" model="cux.CUX1040.cux_core_logs" pageSize="14" queryDataSet="cux_core_logs_query_ds"><![CDATA[
+            ]]></a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:tabPanel id="line_tab" marginWidth="10">
+                <a:tabs>
+                    <a:tab prompt="核心接口机构同步" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_company_inter_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_company_inter_query_ds" resultTarget="cux_core_company_inter_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="batch_id" bindTarget="cux_core_company_inter_query_ds" prompt="批次号"/>
+                                <a:textField name="attribute1" bindTarget="cux_core_company_inter_query_ds" prompt="SAP机构代码"/>
+                                <a:textField name="attribute2" bindTarget="cux_core_company_inter_query_ds" prompt="核心机构代码"/>
+                                <a:comboBox name="process_status_desc" bindTarget="cux_core_company_inter_query_ds" prompt="同步状态"/>
+                                <a:datePicker name="creation_date" bindTarget="cux_core_company_inter_query_ds" prompt="同步日期"/>
+                            </a:formToolBar>
+                            <!--  <a:formBody>
+                                <a:hBox labelWidth="100">
+                                    <a:datePicker name="attribute5" bindTarget="cux_core_company_inter_query_ds" prompt="系统同步日期"/>
+                                </a:hBox>
+                            </a:formBody> -->
+                        </a:queryForm>
+                        <a:grid id="grid" bindTarget="cux_core_company_inter_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="batch_id" prompt="批次号" width="100"/>
+                                <a:column name="seq_id" prompt="序列号" width="100"/>
+                                <a:column name="attribute1" width="100"/>
+                                <a:column name="attribute2" width="100"/>
+                                <a:column name="attribute3" prompt="机构名称" width="100"/>
+                                <a:column name="attribute4" prompt="机构税号" width="100"/>
+                                <a:column name="status_desc" width="100"/>
+                                <a:column name="message" width="100"/>
+                                <a:column name="creation_date" renderer="Aurora.formatDate" width="100"/>
+                                <!--  <a:column name="attribute5" prompt="字段5" width="100"/>
+			                    <a:column name="attribute6" prompt="字段6" width="100"/>
+			                    <a:column name="attribute7" prompt="字段7" width="100"/>
+			                    <a:column name="attribute8" prompt="字段8" width="100"/>
+			                    <a:column name="attribute9" prompt="字段9" width="100"/>
+			                    <a:column name="attribute10" prompt="字段10" width="100"/> -->
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="核心机构税号映射表" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_company_tax_number_inter_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid6" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_company_tax_number_query_ds" resultTarget="cux_core_company_tax_number_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="core_company_code" bindTarget="cux_core_company_tax_number_query_ds" prompt="核心机构代码"/>
+                                <a:textField name="company_tax_number" bindTarget="cux_core_company_tax_number_query_ds" prompt="机构税号"/>
+                                <a:datePicker name="creation_date" bindTarget="cux_core_company_tax_number_query_ds" prompt="同步日期"/>
+                            </a:formToolBar>
+                        </a:queryForm>
+                        <a:grid id="grid6" bindTarget="cux_core_company_tax_number_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="core_company_code" prompt="核心机构代码" width="100"/>
+                                <a:column name="company_tax_number" prompt="机构税号" width="100"/>
+                                <a:column name="company_name" prompt="机构名称" width="100"/>
+                                <a:column name="creation_date" renderer="Aurora.formatDate" width="100"/>
+                                <!--  <a:column name="attribute3" prompt="字段3" width="100"/>
+			                    <a:column name="attribute4" prompt="字段4" width="100"/>
+			                    <a:column name="attribute5" prompt="字段5" width="100"/>
+			                    <a:column name="attribute6" prompt="字段6" width="100"/>
+			                    <a:column name="attribute7" prompt="字段7" width="100"/>
+			                    <a:column name="attribute8" prompt="字段8" width="100"/>
+			                    <a:column name="attribute9" prompt="字段9" width="100"/>
+			                    <a:column name="attribute10" prompt="字段10" width="100"/> -->
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="核心接口部门同步" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_unit_inter_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid2" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_unit_inter_query_ds" resultTarget="cux_core_unit_inter_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="batch_id" bindTarget="cux_core_unit_inter_query_ds" prompt="批次号"/>
+                                <a:textField name="attribute1" bindTarget="cux_core_unit_inter_query_ds" prompt="SAP机构代码"/>
+                                <a:textField name="attribute2" bindTarget="cux_core_unit_inter_query_ds" prompt="核心部门代码"/>
+                                <a:comboBox name="process_status_desc" bindTarget="cux_core_unit_inter_query_ds" prompt="同步状态"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <a:hBox>
+                                    <a:textField name="attribute5" bindTarget="cux_core_unit_inter_query_ds" prompt="成本中心代码"/>
+                                    <a:datePicker name="creation_date" bindTarget="cux_core_unit_inter_query_ds" prompt="同步日期"/>
+                                </a:hBox>
+                            </a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid2" bindTarget="cux_core_unit_inter_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="batch_id" prompt="批次号" width="100"/>
+                                <a:column name="seq_id" prompt="序列号" width="100"/>
+                                <a:column name="attribute1" width="100"/>
+                                <a:column name="attribute2" width="100"/>
+                                <a:column name="attribute3" width="100"/>
+                                <a:column name="attribute4" width="100"/>
+                                <a:column name="attribute5" width="100"/>
+                                <a:column name="attribute6" width="100"/>
+                                <a:column name="attribute7" width="100"/>
+                                <!-- <a:column name="attribute8" prompt="字段8" width="100"/>
+	                    <a:column name="attribute9" prompt="字段9" width="100"/>-->
+                                <a:column name="attribute12" width="100"/>
+                                <a:column name="status_desc" width="100"/>
+                                <a:column name="message" width="100"/>
+                                <a:column name="creation_date" renderer="Aurora.formatDate" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="核心接口人员同步" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_employee_inter_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid4" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_employee_inter_query_ds" resultTarget="cux_core_employee_inter_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="batch_id" bindTarget="cux_core_employee_inter_query_ds" prompt="批次号"/>
+                                <a:textField name="attribute1" bindTarget="cux_core_employee_inter_query_ds" prompt="员工代码"/>
+                                <a:textField name="attribute8" bindTarget="cux_core_employee_inter_query_ds" prompt="SAP机构代码"/>
+                                <a:comboBox name="process_status_desc" bindTarget="cux_core_employee_inter_query_ds" prompt="同步状态"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <a:hBox>
+                                    <a:textField name="attribute2" bindTarget="cux_core_employee_inter_query_ds" prompt="员工姓名"/>
+                                    <a:textField name="attribute9" bindTarget="cux_core_employee_inter_query_ds" prompt="部门代码"/>
+                                    <a:datePicker name="creation_date" bindTarget="cux_core_employee_inter_query_ds" prompt="同步日期"/>
+                                </a:hBox>
+                            </a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid4" bindTarget="cux_core_employee_inter_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="batch_id" prompt="批次号" width="100"/>
+                                <a:column name="seq_id" prompt="序列号" width="100"/>
+                                <a:column name="attribute1" width="100"/>
+                                <a:column name="attribute2" width="100"/>
+                                <a:column name="attribute3" width="100"/>
+                                <a:column name="attribute4" width="100"/>
+                                <a:column name="attribute5" width="100"/>
+                                <a:column name="attribute6" width="100"/>
+                                <a:column name="attribute7" width="100"/>
+                                <a:column name="attribute8" width="100"/>
+                                <a:column name="attribute9" width="100"/>
+                                <a:column name="attribute10" width="100"/>
+                                <a:column name="attribute11" width="100"/>
+                                <a:column name="status_desc" width="100"/>
+                                <a:column name="message" width="100"/>
+                                <a:column name="creation_date" renderer="Aurora.formatDate" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="核心接口销售费用同步" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_marketing_expense_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid5" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_marketing_expense_inter_query_ds" resultTarget="cux_core_marketing_expense_inter_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="batch_id" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="批次号"/>
+                                <a:textField name="attribute1" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="头SAP机构代码"/>
+                                <a:textField name="attribute2" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="行SAP机构代码"/>
+                                <a:textField name="attribute3" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="部门代码"/>
+                                <a:comboBox name="process_status_desc" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="同步状态"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <a:hBox>
+                                    <a:datePicker name="creation_date" bindTarget="cux_core_marketing_expense_inter_query_ds" prompt="同步日期"/>
+                                </a:hBox>
+                            </a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid5" bindTarget="cux_core_marketing_expense_inter_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="batch_id" prompt="批次号" width="100"/>
+                                <a:column name="seq_id" prompt="序列号" width="100"/>
+                                <a:column name="attribute1" width="100"/>
+                                <a:column name="attribute2" width="100"/>
+                                <a:column name="attribute3" width="100"/>
+                                <a:column name="attribute4" width="100"/>
+                                <a:column name="attribute5" width="100"/>
+                                <a:column name="attribute6" width="100"/>
+                                <a:column name="attribute7" width="100"/>
+                                <a:column name="attribute8" width="100"/>
+                                <a:column name="attribute9" width="100"/>
+                                <!-- <a:column name="attribute10" width="100"/> -->
+                                <!-- <a:column name="attribute11" width="100"/> -->
+                                <a:column name="status_desc" width="100"/>
+                                <a:column name="message" width="100"/>
+                                <a:column name="creation_date" renderer="Aurora.formatDate" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="核心同步日志查询" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="cux_core_logs_reset_function" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid3" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_core_logs_query_ds" resultTarget="cux_core_logs_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="batch_id" bindTarget="cux_core_logs_query_ds" prompt="批次"/>
+                                <a:textField name="operation_type" bindTarget="cux_core_logs_query_ds" prompt="操作类型"/>
+                                <a:textField name="title_desc" bindTarget="cux_core_logs_query_ds" prompt="同步节点"/>
+                                <a:datePicker name="creation_date" bindTarget="cux_core_logs_query_ds" prompt="同步日期"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <!-- <a:hBox labelWidth="100">
+	                        <a:datePicker name="attribute5" bindTarget="cux_employee_inter_query_ds" prompt="系统同步日期"/>
+	                    </a:hBox> --><![CDATA[
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                            
+	                    ]]></a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid3" bindTarget="cux_core_logs_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="batch_id" prompt="批次号" width="100"/>
+                                <a:column name="request_xml" prompt="请求报文" renderer="view_xml" width="100"/>
+                                <a:column name="response_xml" prompt="响应报文" renderer="view_xml" width="100"/>
+                                <a:column name="title_desc" prompt="同步节点" width="100"/>
+                                <a:column name="operation_type" prompt="操作类型" width="100"/>
+                                <a:column name="creation_date" prompt="同步日期" renderer="Aurora.formatDate" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                </a:tabs>
+            </a:tabPanel>
+        </a:screenBody>
+    </a:view>
+</a:screen>

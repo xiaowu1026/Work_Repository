@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:view>
+        <script><![CDATA[
+            function doReset() {
+                $('psr_history_query_ds').reset();
+            }
+            function doUnitSet(){
+                $('psr_history_unit_query_ds').reset();
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="document_type_ds">
+                <a:datas>
+                    <a:record code_value="EXP_REQUISITION" code_value_name="申请单"/>
+                    <a:record code_value="EXP_REPORT" code_value_name="报销单"/>
+                    <a:record code_value="PAYMENT_REQUISITION" code_value_name="借款单"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="psr_history_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="employee_code"/>
+                    <a:field name="employee_name" lovHeight="480" lovService="expm.exp_employees_lov" lovWidth="500" title="审批人">
+                        <a:mapping>
+                            <a:map from="employee_code" to="employee_code"/>
+                            <a:map from="name" to="employee_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="document_type"/>
+                    <a:field name="document_type_desc" displayField="code_value_name" options="document_type_ds" returnField="document_type" valueField="code_value"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="psr_history_unit_query_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="unit_name" autoComplete="true" autoCompleteField="unit_name" lovGridHeight="340" lovHeight="460" lovService="expm.EXP1220.exp_org_unit_exp_lov" lovWidth="540" title="BGT_BUDGET_ITEM_MAPPING.ORG_UNIT_CODE_SEARCH">
+                        <a:mapping>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="unit_code" to="unit_code"/>
+                            <a:map from="description" to="unit_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="unit_code"/>
+                    <a:field name="employee_code"/>
+                    <a:field name="employee_name" lovHeight="480" lovService="expm.exp_employees_lov" lovWidth="500" title="审批人">
+                        <a:mapping>
+                            <a:map from="employee_code" to="employee_code"/>
+                            <a:map from="name" to="employee_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="document_type"/>
+                    <a:field name="document_type_desc" displayField="code_value_name" options="document_type_ds" returnField="document_type" valueField="code_value"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="psr_all_documents_result_ds" autoCount="true" autoPageSize="true" autoQuery="true" fetchAll="true" model="psr.PSR2011.psr_all_documents_history_query" queryDataSet="psr_history_query_ds"/>
+            <a:dataSet id="psr_all_documents_unit_result_ds" autoCount="true" autoPageSize="true" autoQuery="true" fetchAll="true" model="psr.PSR2011.psr_all_documents_history_unit_query" queryDataSet="psr_history_unit_query_ds"/>
+        </a:dataSets>
+        <a:screenBody>
+            <a:tabPanel id="line_tab" marginWidth="10">
+                <a:tabs>
+                    <a:tab prompt="审批时效查询(部门)" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="doUnitSet" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="psr_all_documents_result_unit_grid" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="psr_history_unit_query_ds" resultTarget="psr_all_documents_unit_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:lov name="unit_name" bindTarget="psr_history_unit_query_ds" prompt="部门"/>
+                                <a:lov name="employee_name" bindTarget="psr_history_unit_query_ds" prompt="审批人"/>
+                                <a:comboBox name="document_type_desc" bindTarget="psr_history_unit_query_ds" prompt="单据类型"/>
+                            </a:formToolBar>
+                        </a:queryForm>
+                        <a:grid id="psr_all_documents_result_unit_grid" bindTarget="psr_all_documents_unit_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <!-- <a:column name="exp_report_number" align="left" prompt="单据编号" width="150"/> -->
+                                <a:column name="document_type_desc" align="center" prompt="单据类型" width="150"/>
+                                <a:column name="unit_code" align="center" prompt="审批人部门" width="150"/>
+                                <a:column name="unit_name" align="center" prompt="审批人部门名称" width="150"/>
+                                <a:column name="employee_code" align="center" prompt="审批人编码" width="150"/>
+                                <a:column name="employee_name" align="center" prompt="审批人名称" width="150"/>
+                                <a:column name="approve_times" align="center" prompt="审批次数" width="150"/>
+                                <a:column name="approve_sum_time" align="center" prompt="审批时长" width="150"/>
+                                <a:column name="approve_avg_time" align="center" prompt="审批时效" width="150"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="审批时效查询(人员)" width="150">
+                        <a:screenTopToolbar style="margin-top:0.1cm">
+                            <a:toolbarButton click="doReset" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="psr_all_documents_result_grid" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="psr_history_query_ds" resultTarget="psr_all_documents_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:lov name="employee_name" bindTarget="psr_history_query_ds" prompt="审批人"/>
+                                <a:comboBox name="document_type_desc" bindTarget="psr_history_query_ds" prompt="单据类型"/>
+                            </a:formToolBar>
+                        </a:queryForm>
+                        <a:grid id="psr_all_documents_result_grid" bindTarget="psr_all_documents_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <!-- <a:column name="exp_report_number" align="left" prompt="单据编号" width="150"/> -->
+                                <a:column name="document_type_desc" align="center" prompt="单据类型" width="150"/>
+                                <a:column name="employee_code" align="center" prompt="审批人编码" width="150"/>
+                                <a:column name="employee_name" align="center" prompt="审批人名称" width="150"/>
+                                <a:column name="approve_times" align="center" prompt="审批次数" width="150"/>
+                                <a:column name="approve_sum_time" align="center" prompt="审批时长" width="150"/>
+                                <a:column name="approve_avg_time" align="center" prompt="审批时效" width="150"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                </a:tabs>
+            </a:tabPanel>
+        </a:screenBody>
+        <!--   <script purpose="auto_resize"><![CDATA[
+            function PsrPaymentDateQueryInitSize() {
+                //描述宽度
+                var labelWidth = 75;
+                //标签宽度,5 = 3padding + 2border-spacing
+                var tagWidth = 150 + 5;
+                //页面宽度、高度
+                var vw = $A.getViewportWidth();
+                var vh = $A.getViewportHeight();
+                //留白宽度
+                var marginWidth = 35 ;
+                //自适应宽度
+                var autoWidth = vw - marginWidth;
+                $('psr_all_documents_result_grid').setWidth(autoWidth);
+                $('psr_all_documents_result_unit_grid').setWidth(autoWidth);
+            }
+            //Ext.fly(window).on('resize', PsrPaymentDateQueryInitSize);
+            PsrPaymentDateQueryInitSize();]]></script> -->
+    </a:view>
+</a:screen>

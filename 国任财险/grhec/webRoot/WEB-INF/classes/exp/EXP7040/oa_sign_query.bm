@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: hp  
+    $Date: 2019-1-23 下午2:47:41  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:fields>
+        <bm:field name="sign_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="SIGN_ID" prompt="CUX_OA_EXP_REF.SIGN_ID"/>
+        <bm:field name="sign_code" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="SIGN_CODE" prompt="CUX_OA_EXP_REF.SIGN_CODE"/>
+        <bm:field name="sign_name" databaseType="VARCHAR2" forInsert="false" forUpdate="false"/>
+        <bm:field name="sign_url" databaseType="VARCHAR2" forInsert="false" forUpdate="false"/>
+        <bm:field name="exp_rep_amount" databaseType="VARCHAR2" forInsert="false" forUpdate="false"/>
+        <bm:field name="company_name" databaseType="VARCHAR2" forInsert="false" forUpdate="false"/>
+        <bm:field name="oa_sign_applyer" databaseType="VARCHAR2" forInsert="false" forUpdate="false"/>
+    </bm:fields>
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select v.* from 
+				(select cso.sign_code,
+				       cso.sign_name,
+				       cso.sign_id,
+				       cso.sign_url,
+				       cso.company_code,
+				       cso.oa_sign_applyer,
+				       (select company_short_name 
+				       	  from fnd_companies_vl fc
+				       	 where fc.company_code=cso.company_code) company_name,
+				       (select sum(erl.report_amount)
+				          from exp_report_headers erh,
+				               exp_report_lines   erl,
+				               CUX_OA_EXP_REF     cr
+				         where cr.sign_id = cso.sign_id
+				           and erh.exp_report_header_id = cr.exp_report_header_id
+				           and erh.report_status in ('SUBMITTED', 'COMPLETELY_APPROVED')
+				           and erh.exp_report_header_id = erl.exp_report_header_id) exp_rep_amount
+				  from con_sign_oa cso,
+				  		(select company_code,company_id from fnd_companies f1 where 1=(
+				  		case ${@chd_company_flag} 
+				  		when 'Y' then (select 1 from fnd_companies f2
+				  		where f2.company_id=f1.company_id  connect by prior f2.company_id=f2.parent_company_id start with f2.company_id=nvl(${@company_id},${/session/@company_id}))
+				  		else
+				  		(select 1 from fnd_companies f2 where  f2.company_id=f1.company_id and f2.company_id=nvl(${@company_id},${/session/@company_id}))
+				  		end)
+				  		) t
+				 where cso.company_code=t.company_code
+				 order by t.company_id asc) v
+				  #WHERE_CLAUSE#
+]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="sign_code" queryExpression="sign_code like &apos;%&apos;||${@sign_code}|| &apos;%&apos;"/>
+        <bm:query-field name="sign_name" queryExpression="sign_name like &apos;%&apos;||${@sign_name}|| &apos;%&apos;"/>
+        <bm:query-field name="oa_sign_applyer" queryExpression="oa_sign_applyer = ${@oa_sign_applyer}"/>
+    </bm:query-fields>
+</bm:model>

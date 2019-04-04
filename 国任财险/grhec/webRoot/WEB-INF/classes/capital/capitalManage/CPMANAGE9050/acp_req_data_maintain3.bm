@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick   
+    $Date: 2016-6-2 21:39:04 
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            select v.* from (SELECT o.*,(select ee.name from exp_employees ee,sys_user su where ee.employee_id=su.employee_id and su.user_id=o.created_by) created_by_display,(select company_short_name from fnd_companies_vl fc where fc.company_id=o.company_id) company_name
+				  FROM (select ci.id,
+				               ci.batchno,
+				               (select h.exp_report_type_id
+								  from exp_report_headers h
+								 where h.exp_report_header_id =
+								       (select c.document_id
+								          from cux_payment_doc_info c
+								         where c.interface_id = ci.id)) exp_report_type_id,
+				               (select c.document_id
+				                  from cux_payment_doc_info c
+				                 where c.interface_id = ci.id) document_id,
+				               (select c.document_category
+				                  from cux_payment_doc_info c
+				                 where c.interface_id = ci.id) document_type,
+				               DECODE((select c.document_category
+				                        from cux_payment_doc_info c
+				                       where c.interface_id = ci.id),
+				                      'EXP_REPORT',
+				                      '报销单',
+				                      'PAYMENT_REQUISITION',
+				                      '借款单',
+				                      'ACP_REQUISITION',
+				                      '付款单') document_type_cn,
+				               DECODE((select c.document_category
+				                        from cux_payment_doc_info c
+				                       where c.interface_id = ci.id),
+				                      'EXP_REPORT',
+				                      (select h.exp_report_number
+				                         from exp_report_headers h
+				                        where h.exp_report_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'PAYMENT_REQUISITION',
+				                      (select ch.requisition_number
+				                         from csh_payment_requisition_hds ch
+				                        where ch.payment_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'ACP_REQUISITION',
+				                      (select ah.requisition_number
+				                         from acp_acp_requisition_hds ah
+				                        where ah.acp_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id))) bill_number,
+				                     DECODE((select c.document_category
+				                        from cux_payment_doc_info c
+				                       where c.interface_id = ci.id),
+				                      'EXP_REPORT',
+				                      (select h.created_by
+				                         from exp_report_headers h
+				                        where h.exp_report_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'PAYMENT_REQUISITION',
+				                      (select ch.created_by
+				                         from csh_payment_requisition_hds ch
+				                        where ch.payment_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'ACP_REQUISITION',
+				                      (select ah.created_by
+				                         from acp_acp_requisition_hds ah
+				                        where ah.acp_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id))) created_by,
+				                     DECODE((select c.document_category
+				                        from cux_payment_doc_info c
+				                       where c.interface_id = ci.id),
+				                      'EXP_REPORT',
+				                      (select h.company_id
+				                         from exp_report_headers h
+				                        where h.exp_report_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'PAYMENT_REQUISITION',
+				                      (select ch.company_id
+				                         from csh_payment_requisition_hds ch
+				                        where ch.payment_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id)),
+				                      'ACP_REQUISITION',
+				                      (select ah.company_id
+				                         from acp_acp_requisition_hds ah
+				                        where ah.acp_requisition_header_id =
+				                              (select c.document_id
+				                                 from cux_payment_doc_info c
+				                                where c.interface_id = ci.id))) company_id,
+				               ci.billcode pay_doc_number,
+				               ci.amount,
+				               ci.payaccountno payment_account,
+				               ci.payaccountname payment_account_name,
+				               
+				               DECODE((select c.document_category
+                                from cux_payment_doc_info c
+                               where c.interface_id = ci.id),
+                              'EXP_REPORT',
+                              (select l.payee_id
+                                  from exp_report_pmt_schedules l
+                                 where l.payment_schedule_line_id =
+                                       (select c.document_line_id
+                                          from cux_payment_doc_info c
+                                         where c.interface_id = ci.id)
+                                ),
+                              'PAYMENT_REQUISITION',
+                              (select ch.partner_id
+                                from csh_payment_requisition_lns ch
+                               where ch.payment_requisition_line_id =
+                                     (select c.document_line_id
+                                        from cux_payment_doc_info c
+                                       where c.interface_id = ci.id)),
+                              'ACP_REQUISITION',
+                              (select l.partner_id
+                                from acp_acp_requisition_lns l
+                                 where l.acp_requisition_line_id =
+                                     (select c.document_line_id
+                                        from cux_payment_doc_info c
+                                       where c.interface_id = ci.id)
+                              )) payee_id,
+				               ci.payee_category,
+				               decode(ci.payee_category,
+				                      'EMPLOYEE',
+				                      '员工',
+				                      '供应商') payee_category_desc,
+				               ci.recaccountname gather_account_name,
+				               ci.recaccountno gather_account,
+				               (select n.belong_bank_name
+				                  from bcdl_bank_num n
+				                 where n.belong_bank_value = ci.free1
+				                 and rownum =1) gather_bank_class_desc,
+				               ci.recbankname gather_bank_name,
+				               ci.cnapsofrec gather_bank_number,
+				               ci.datastatus pay_flag,
+				               decode(ci.datastatus,
+				                      '0',
+				                      '待传资金',
+				                      '2',
+				                      '支付中',
+				                      '3',
+				                      '支付失败',
+				                      '5',
+				                      '支付成功',
+				                      '6',
+				                      '退票') pay_flag_cn,
+				               ci.refund_status,
+				               DECODE(ci.refund_status, '1', '未退票', '2', '已退票') refund_status_cn,
+				               ci.refund_info,
+				               TO_CHAR(ci.refund_date, 'yyyy-mm-dd') refund_date,
+				               nvl(ci.repay_status,'N') repay_status,
+				               DECODE(ci.repay_status, '', '否', 'N', '否', '是') repay_status_cn,
+				               ci.errdescription error_message,
+				               ci.simulate_post_gl_flag,
+				               decode(ci.simulate_post_gl_flag, 'Y', '是', '否') simulate_post_gl_flag_desc,
+				                ci.ori_detail_id,
+				               ci.transferdate creation_date,
+				               ci.free2 gather_flag,
+				               ci.paytype payment_method_code,
+				               (select m.payment_method_id
+				                  from csh_payment_methods m
+				                 where m.payment_method_code = ci.paytype) payment_method_id,
+				                 ci.check_status,
+				                 ci.pay_csh_number,
+				                 TO_CHAR(ci.payment_date, 'yyyy-mm-dd') payment_date
+				          from cux_payment_interface ci
+				          ) o
+				          ) v #WHERE_CLAUSE#
+			                ORDER BY
+                            id DESC
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <!-- <bm:query-field name="user_id" queryExpression="created_by like ${/session/@user_id}"/> -->
+        <!-- <bm:query-field name="payment_number" queryExpression="payment_number like ${@payment_number}"/> -->
+        <!-- <bm:query-field name="trade_code" queryExpression="trade_code like ${@trade_code}"/> -->
+        <bm:query-field name="batchno" queryExpression="batchno like ${@batchno}"/>
+        <bm:query-field name="bill_number" queryExpression="bill_number like ${@bill_number}"/>
+        <bm:query-field name="pay_csh_number" queryExpression="pay_csh_number like ${@pay_csh_number}"/>
+        <bm:query-field name="pay_doc_number" queryExpression="pay_doc_number like ${@pay_doc_number}"/>
+        <bm:query-field name="payee_category" queryExpression="payee_category = ${@payee_category}"/>
+        <!-- <bm:query-field name="inter_status" queryExpression="inter_status = ${@inter_status}"/> -->
+        <bm:query-field name="pay_flag" queryExpression="pay_flag = ${@pay_flag}"/>
+        <bm:query-field name="refund_status" queryExpression="refund_status = ${@refund_status}"/>
+        <bm:query-field name="payment_date_from" queryExpression="payment_date &gt;= ${@payment_date_from}"/>
+        <bm:query-field name="payment_date_to" queryExpression="payment_date &lt;= ${@payment_date_to}"/>
+        <bm:query-field name="refund_date_from" queryExpression="refund_date &gt;= ${@refund_date_from}"/>
+        <bm:query-field name="refund_date_to" queryExpression="refund_date &lt;= ${@refund_date_to}"/>
+        <bm:query-field name="amount_from" queryExpression="amount &gt;= ${@amount_from}"/>
+        <bm:query-field name="amount_to" queryExpression="amount &lt;= ${@amount_to}"/>
+        <!-- <bm:query-field name="update_flag" queryExpression="((${@update_flag} = &apos;Y&apos; AND created_by = ${/session/@user_id} AND bill_number not like &apos;ZJDB%&apos;) or ${@update_flag} = &apos;N&apos;) "/> -->
+    </bm:query-fields>
+    <bm:data-filters>
+        <bm:data-filter name="chd_company_flag" enforceOperations="query" expression="1=(case ${@chd_company_flag} when &apos;Y&apos; then (select 1 from dual where exists(select 1 from fnd_companies f where f.company_id=v.company_id connect by prior f.company_id=f.parent_company_id start with f.company_id=${/session/@company_id})) else (select 1 from dual where exists(select 1 from fnd_companies f where f.company_id=v.company_id and f.company_id=${/session/@company_id})) end)"/>
+    </bm:data-filters>
+</bm:model>

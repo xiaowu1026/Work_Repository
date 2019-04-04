@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="cux_exp_report_lines_assign_return_periods_execute_link" url="${/request/@context_path}/modules/expm/public/cux_exp_report_lines_assign_return_periods_execute.svc"/>
+        <script><![CDATA[
+            function periodback() {
+                $('cux_exp_report_lines_assign_return_periods_screen').close();
+            }
+            
+           
+            function assignperiod() {
+                var grid = $('con_contract_headers_return_period_ds');
+                records = grid.getSelected();
+            
+                if (records.length < 1) {
+                    Aurora.showWarningMessage('${l:PROMPT}', '${l:PROMPT.PLEASE_SELECT}');
+                    return;
+                } else {
+                    var data = [];
+            
+                    for (var i = 0;i < records.length;i++) {
+                        data.push(records[i].data);
+                    }
+            
+                    var formData = {};
+            
+                    formData['details'] = data;
+                    Aurora.request({
+                        url: $('cux_exp_report_lines_assign_return_periods_execute_link').getUrl(),
+                        para: formData,
+                        success: function(res) {
+                            periodback();
+                        }
+                    });
+                }
+            }]]></script>
+        <a:dataSets>
+            <a:dataSet id="con_contract_headers_return_period_ds" autoQuery="true" fetchAll="true" model="cont.con_contract_return_periods" queryUrl="${/request/@context_path}/autocrud/cont.con_contract_return_periods/query?contract_header_id=${/parameter/@contract_header_id}" selectable="true">
+                <a:fields>
+                    <a:field name="contract_header_id"/>
+                    <a:field name="contract_return_period_id"/>
+                    <a:field name="line_num"/>
+                    <a:field name="period_name"/>
+                    <a:field name="amount"/>
+                    <a:field name="release_amount"/>
+                </a:fields>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" style="margin-left:10px;">
+                <a:button click="assignperiod" text="分配"/>
+                <a:button click="periodback" text="PROMPT.RETURN"/>
+            </a:form>
+            <a:grid id="con_contract_headers_return_period_ds_grid" bindTarget="con_contract_headers_return_period_ds" height="360" style="margin-left:10px;" width="560">
+                <a:columns>
+                    <a:column name="line_num" align="center" prompt="行号" width="80"/>
+                    <a:column name="period_name" align="center" prompt="期间" width="140"/>
+                    <a:column name="amount" align="right" prompt="含税金额" renderer="Aurora.formatMoney" width="145"/>
+                    <!-- <a:column name="invoice_sales_amount" align="right" prompt="不含税金额" renderer="Aurora.formatMoney" width="145"/> -->
+                    <a:column name="release_amount" align="right" prompt="可分配金额" renderer="Aurora.formatMoney" width="145"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

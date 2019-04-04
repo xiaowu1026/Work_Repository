@@ -1,0 +1,181 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/modules/pur
+svn://10.75.42.67
+
+
+
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+PUR1110
+dir
+
+PUR1310
+dir
+
+PUR1910
+dir
+
+PUR2110
+dir
+
+PUR2455
+dir
+
+PUR2510
+dir
+
+PUR3010
+dir
+
+PUR3020
+dir
+
+PUR3030
+dir
+
+PUR3050
+dir
+
+PUR3851
+dir
+
+PUR3851_QUERY
+dir
+
+PUR5110
+dir
+
+PUR5210
+dir
+
+PUR5350
+dir
+
+PUR5410
+dir
+
+public
+dir
+
+pur_order_query_history_for_wfl.screen
+file
+
+
+
+
+2019-01-21T11:09:15.429000Z
+d263b672a97cb60bea7d66f486815a70
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+356
+
+pur_purchase_order_readonly_wfl.screen
+file
+
+
+
+
+2019-01-21T11:09:16.100000Z
+e70a38781ae83f96c66ef30232d651d6
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+18876
+
+test.screen
+file
+
+
+
+
+2019-01-21T11:09:15.429000Z
+5044918ecd5b6ce12c7f7f04bd8025af
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+207
+

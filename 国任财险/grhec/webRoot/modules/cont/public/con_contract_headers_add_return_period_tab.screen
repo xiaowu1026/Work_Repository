@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:view>
+        <a:link id="con_contract_headers_add_return_period_link" model="cont.con_contract_headers_add_return_period_execute" modelaction="batch_update"/>
+        <a:link id="allocation_link" url="${/request/@context_path}/modules/cont/CON5050/contract_period_allocation.screen"/>
+        <a:link id="batch_allocation_link" url="${/request/@context_path}/modules/cont/CON5050/contract_period_allocation_batch.screen"/>
+        <a:link id="contract_allocation_import_link" url="${/request/@context_path}/modules/cont/CON5080/con_contract_import.screen"/>
+        <!-- <a:link id="pre_extract_link" model="cont.CON5050.contract_period_allocation" modelaction="update"/> -->
+        <script><![CDATA[
+            function doperiodQuery() {
+                $('con_contract_headers_add_return_period_tab_ds').query();
+                var record = $('return_period_add_ds').getAt(0);
+                record.set('period_from_desc', '');
+                record.set('period_from', '');
+                record.set('period_to_desc', '');
+                record.set('period_to', '');
+            }
+            
+            function addperiod() {
+                if (!$('con_contract_header_ds').validate()) {
+                    return;
+                }
+                if ($('con_contract_header_ds').getAll()[0].dirty == true) {
+                    Aurora.showWarningMessage('${l:PROMPT}', '请先保存!');
+                    return;
+                }
+                var record = $('return_period_add_ds').getAt(0);
+                if (!record.get('period_from')) {
+                    Aurora.showWarningMessage('${l:PROMPT}', '请选择期间从!');
+                    return;
+                }
+                if (!record.get('period_to')) {
+                    Aurora.showWarningMessage('${l:PROMPT}', '请选择期间至!');
+                    return;
+                }
+            
+                var datas = [];
+                var data = {
+                    contract_header_id: '${/parameter/@contract_header_id}',
+                    period_from: record.get('period_from'),
+                    period_to: record.get('period_to'),
+                    _status: 'execute'
+                };
+                datas.push(data);
+                Aurora.request({
+                    url: $('con_contract_headers_add_return_period_link').getUrl(),
+                    para: datas,
+                    success: function() {
+                        doperiodQuery();
+                    },
+                    scope: this
+                });
+            
+            }
+            var period_lineNum = 0;
+            
+            function lineAddFunction(dataSet, record, index) {
+                var selectedLines = dataSet.getSelected();
+                period_lineNum += 10;
+                record.set('line_num', period_lineNum);
+            }
+            
+            
+            function allocation_import_fun(value, record, name) {
+                //分摊
+                if (record.isNew) {
+                    return '';
+                }
+                return '<a href="javascript:import_fun_win(' + record.get('contract_return_period_id') + ')">分摊导入</>';
+            
+            }
+            
+            function import_fun_win(contract_return_period_id) {
+                var contract_header_id = '${/parameter/@contract_header_id}';
+                var url = $('contract_allocation_import_link').getUrl() + '?batch_id=${/session/@session_id}&amp;contract_return_period_id=' + contract_return_period_id + '&amp;contract_header_id=' + contract_header_id;
+                Aurora.post(url);
+            
+            }
+            
+            function allocation_win(contract_return_period_id) {
+                var url = $('allocation_link').getUrl() + '?contract_return_period_id=' + contract_return_period_id;
+                new Aurora.Window({
+                    id: 'allocation_win',
+                    url: url,
+                    title: '分摊',
+                    height: 500,
+                    width: 900
+                });
+            }
+            
+            function allocation_fun(value, record, name) {
+                //分摊
+                if (record.isNew) {
+                    return '';
+                }
+                return '<a href="javascript:allocation_win(' + record.get('contract_return_period_id') + ')">分摊</>';
+            
+            }
+            
+            function batch_allocation() {
+                var records = $('con_contract_headers_add_return_period_tab_ds').getJsonData(true);
+                if (records.length == 0) {
+                    Aurora.showWarningMessage('${l:PROMPT}', '请选择合同受益期!');
+                    return;
+                }
+                var first_invoice_sales_amount = records[0].invoice_sales_amount;
+                for (var i = 1;i < records.length;i++) {
+                    if (first_invoice_sales_amount != records[i].invoice_sales_amount) {
+                        Aurora.showWarningMessage('${l:PROMPT}', '必须选择不含税金额一致的数据进行批量分摊!');
+                        return;
+                    }
+                }
+            
+                var contract_return_period_id = records[0].contract_return_period_id;
+                var url = $('batch_allocation_link').getUrl() + '?contract_return_period_id=' + contract_return_period_id;
+                new Aurora.Window({
+                    id: 'allocation_batch_win',
+                    url: url,
+                    title: '批量分摊',
+                    height: 500,
+                    width: 900
+                });
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="return_period_add_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="period_from_desc" lovGridHeight="340" lovHeight="500" lovService="cont.con_contract_return_period_combo" lovWidth="250" prompt="PROMPT.PERIOD_NAME_FROM" title="PROMPT.PERIOD_NAME_FROM">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_from_desc"/>
+                            <a:map from="period_name" to="period_from"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="period_from"/>
+                    <a:field name="period_to_desc" lovGridHeight="340" lovHeight="500" lovService="cont.con_contract_return_period_combo" lovWidth="250" prompt="PROMPT.PERIOD_NAME_TO" title="PROMPT.PERIOD_NAME_TO">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_to_desc"/>
+                            <a:map from="period_name" to="period_to"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="period_to"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="con_contract_headers_add_return_period_tab_ds" autoQuery="false" bindName="return_period" bindTarget="con_contract_header_ds" fetchAll="true" loadData="true" model="cont.con_contract_return_periods" queryUrl="${/request/@context_path}/autocrud/cont.con_contract_return_periods/query?contract_header_id=${/parameter/@contract_header_id}" selectable="true">
+                <a:fields>
+                    <a:field name="contract_header_id" defaultValue="${/parameter/@contract_header_id}"/>
+                    <a:field name="line_num" required="true"/>
+                    <a:field name="period_name" lovGridHeight="340" lovHeight="500" lovService="cont.con_contract_return_period_combo" lovWidth="250" required="true" title="期间">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                            <a:map from="period_year" to="period_year"/>
+                            <a:map from="period_num" to="period_num"/>
+                            <a:map from="quarter_num" to="quarter_num"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="amount" required="true"/>
+                </a:fields>
+                <a:events>
+                    <a:event name="add" handler="lineAddFunction"/>
+                </a:events>
+            </a:dataSet>
+        </a:dataSets>
+        <a:form column="5">
+            <a:lov name="period_from_desc" bindTarget="return_period_add_ds"/>
+            <a:lov name="period_to_desc" bindTarget="return_period_add_ds"/>
+            <a:button click="addperiod" text="添加"/>
+            <a:button click="batch_allocation" text="批量分摊"/>
+            <!-- <a:button click="pre_extract" text="预提"/> -->
+        </a:form>
+        <a:grid id="con_contract_headers_add_return_period_tab_ds_grid" bindTarget="con_contract_headers_add_return_period_tab_ds" height="400" width="1200">
+            <a:toolBar>
+                <a:button type="add"/>
+                <a:button type="save"/>
+                <a:button type="delete"/>
+            </a:toolBar>
+            <a:columns>
+                <a:column name="line_num" editor="line_num_numberField" prompt="行号"/>
+                <a:column name="period_name" editor="period_lov" prompt="期间" width="150"/>
+                <a:column name="amount" align="right" editor="numberfield" prompt="金额" renderer="Aurora.formatMoney" width="150"/>
+                <a:column name="invoice_sales_amount" align="right" editor="numberfield" prompt="不含税金额" renderer="Aurora.formatMoney" width="150"/>
+                <a:column name="contract_return_period_id" align="center" prompt="分摊" renderer="allocation_fun" width="150"/>
+                <!-- <a:column name="import" align="center" prompt="导入" renderer="allocation_import_fun" width="150"/> -->
+                <a:column name="assigned_amount" align="center" prompt="已报销金额" renderer="Aurora.formatMoney" width="150"/>
+            </a:columns>
+            <a:editors>
+                <a:lov id="period_lov"/>
+                <a:numberField id="line_num_numberField" allowDecimals="false" allowNegative="false"/>
+                <a:numberField id="numberfield" allowNegative="false" decimalPrecision="2"/>
+            </a:editors>
+        </a:grid>
+    </a:view>
+</a:screen>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:27:09  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="company_tax_number_mapping">
+    <bm:fields>
+        <bm:field name="core_company_code" databaseType="VARCHAR2" datatype="java.lang.String" prompt="核心机构代码"/>
+        <bm:field name="company_tax_number" databaseType="VARCHAR2" datatype="java.lang.String" prompt="机构税号"/>
+        <bm:field name="company_name" databaseType="VARCHAR2" datatype="java.lang.String" prompt="机构名称"/>
+        <bm:field name="creation_date" databaseType="DATE" datatype="java.util.Date" prompt="同步日期"/>
+        <bm:field name="enabled_flag" databaseType="DATE" datatype="java.util.Date" prompt="启用"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="core_company_code" queryExpression="t1.core_company_code like &apos;%&apos;|| ${@core_company_code} ||&apos;%&apos;"/>
+        <bm:query-field name="company_tax_number" queryExpression="t1.company_tax_number like &apos;%&apos;|| ${@company_tax_number} ||&apos;%&apos;"/>
+        <bm:query-field name="company_name" queryExpression="t1.company_name like &apos;%&apos;|| ${@company_name} ||&apos;%&apos;"/>
+        <bm:query-field name="creation_date" dataType="java.util.Date" queryExpression="t1.creation_date =${@creation_date} "/>
+    </bm:query-fields>
+</bm:model>

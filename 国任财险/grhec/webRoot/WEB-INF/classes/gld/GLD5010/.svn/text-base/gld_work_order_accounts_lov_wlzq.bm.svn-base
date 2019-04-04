@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                SELECT
+                    *
+                FROM
+                    (SELECT
+                        t1.account_id,
+                        t1.enabled_flag,
+                        (SELECT
+                            v.ACCOUNT_CODE
+                        FROM
+                            gld_accounts_vl v
+                        WHERE
+                            v.account_id=t1.account_id
+                        )account_code,
+                        (SELECT
+                            v.description
+                        FROM
+                            gld_accounts_vl v
+                        WHERE
+                            v.account_id=t1.account_id
+                        )account_name,
+                        (SELECT
+                            v.account_code
+                            ||'-'
+                            ||v.description
+                        FROM
+                            gld_accounts_vl v
+                        WHERE
+                            v.account_id=t1.account_id
+                        ) account_desc
+                    FROM
+                        gld_accounts t1
+                    WHERE (EXISTS
+		                 (SELECT 1
+		                    FROM gld_sob_wo_type_ref_accounts gsw
+		                   WHERE gsw.work_order_type_id = ${@work_order_type_id}
+		                     AND gsw.account_id = t1.account_id) OR NOT EXISTS
+		                 (SELECT 1
+		                    FROM gld_sob_wo_type_ref_accounts gsw
+		                   WHERE gsw.work_order_type_id = ${@work_order_type_id}))  
+                    )t #WHERE_CLAUSE#
+                 order by t.account_code
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="account_id" databaseType="NUMBER" datatype="java.lang.Long" physicalName="ACCOUNT_ID"/>
+        <bm:field name="account_code" forDisplay="true" forQuery="true" prompt="GLD_ACCOUNTS.ACCOUNT_CODE"/>
+        <bm:field name="account_desc" displayWidth="370" forDisplay="true" forQuery="true" prompt="GLD_ACCOUNTS.ACCOUNT_DESCRIPTION"/>
+        <bm:field name="account_name" displayWidth="370" forDisplay="false" forQuery="false" prompt="GLD_ACCOUNTS.account_name"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field field="account_code" queryExpression="account_code like &apos;%&apos;||${@account_code}||&apos;%&apos;"/>
+        <bm:query-field field="account_desc" queryExpression="account_desc like &apos;%&apos;||${@account_desc}||&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

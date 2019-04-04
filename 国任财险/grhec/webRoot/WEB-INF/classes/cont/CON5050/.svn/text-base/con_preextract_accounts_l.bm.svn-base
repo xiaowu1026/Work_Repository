@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-7 下午02:44:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+         	select * from (
+				SELECT l.con_preextract_accounts_l_id,
+			       l.con_preextract_accounts_h_id,
+			       l.line_number,
+			       l.period_name,
+			       l.description,
+			       to_char(l.transaction_date,'yyyy-mm-dd') transaction_date,
+			       to_char(l.accounting_date,'yyyy-mm-dd') accounting_date,
+			       l.entered_amount_dr,
+			       l.entered_amount_cr,
+			       l.segment1,
+			       l.segment2,
+			       l.segment3,
+			       l.segment4,
+			       l.segment5,
+			       l.segment6,
+			       l.segment7,
+			       l.segment8,
+			       l.segment9,
+			       l.segment10,
+			       l.segment11,
+			       l.segment12,
+			       l.segment13,
+			       l.segment14,
+			       l.segment15,
+			       l.segment16,
+			       l.segment17,
+			       l.segment18,
+			       l.segment19,
+			       l.segment20,
+			       l.segment_desc1,
+			       l.segment_desc2,
+			       l.segment_desc3,
+			       l.segment_desc4,
+			       l.segment_desc5,
+			       l.segment_desc6,
+			       l.segment_desc7,
+			       l.segment_desc8,
+			       l.segment_desc9,
+			       l.segment_desc10,
+			       l.segment_desc11,
+			       l.segment_desc12,
+			       l.segment_desc13,
+			       l.segment_desc14,
+			       l.segment_desc15,
+			       l.segment_desc16,
+			       l.segment_desc17,
+			       l.segment_desc18,
+			       l.segment_desc19,
+			       l.segment_desc20,
+			       l.creation_date,
+			       l.created_by,
+			       l.last_update_date,
+			       l.last_updated_by,
+			       l.company_id,
+			       l.account_id,
+			       l.budget_item_id,
+			       (SELECT eei.description
+			          FROM bgt_budget_items_vl eei
+			         WHERE eei.budget_item_id = l.budget_item_id) budget_item_name,
+			       h.contract_number,
+			       h.contract_return_period_ids,
+			       cux_con_contract_pkg.get_return_periods(h.contract_return_period_ids) extract_periods,
+			       h.contract_header_id,
+			       h.status,
+			       to_char(l.creation_date,'yyyy-mm-dd hh24:mi:ss') preextract_date,
+			        decode(h.status,'GENERATE','新建','REJECTED','拒绝','SUBMITTED','提交','AUDIT','审核') status_desc
+			  FROM con_preextract_accounts_l l, con_preextract_accounts_h h
+			 WHERE l.con_preextract_accounts_h_id = h.con_preextract_accounts_h_id
+ 			ORDER BY con_preextract_accounts_h_id, l.line_number
+		)  o
+ 		#WHERE_CLAUSE# 
+			   
+			   ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="con_preextract_accounts_h_id" queryExpression="o.con_preextract_accounts_h_id = ${@con_preextract_accounts_h_id}"/>
+        <bm:query-field name="contract_header_id" queryExpression="o.contract_header_id = ${@contract_header_id}"/>
+        <bm:query-field name="valid_flag" queryExpression="o.status in (&apos;SUBMITTED&apos;,&apos;AUDIT&apos;)"/>
+    </bm:query-fields>
+</bm:model>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            
+            select v.* from (
+                  SELECT u.user_id,
+			       e.name employee_name,
+			       e.employee_code employee_code,
+			       eou.unit_id,
+			       eou.unit_code unit_code,
+			       eou.description unit_name,
+			       decode (${@document_type},'EXP_REQUISITION','申请单','EXP_REPORT','报销单','PAYMENT_REQUISITION','借款单','申请单,报销单,借款单') document_type_desc,
+			       cux_operate_time_pkg.get_time_str(cux_operate_time_pkg.get_approve_sum_time(p_document_type=>${@document_type},p_user_id => u.user_id)) approve_sum_time,
+			       cux_operate_time_pkg.get_approve_times(p_document_type=>${@document_type},p_user_id => u.user_id) approve_times,
+			       cux_operate_time_pkg.get_approve_avg_time(p_document_type=>${@document_type},p_user_id => u.user_id) approve_avg_time
+			  FROM (select e.user_id
+			          from exp_document_histories e
+			         where e.operation_code in ('APPROVE', 'APPROVE_REJECTED')
+			         and e.document_type=nvl(${@document_type},e.document_type)
+			         group by user_id) u,
+			       sys_user su,
+			       exp_employees e,
+			       (select eea.*, rownum row_num from exp_employee_assigns eea) eea,
+			       exp_org_position eop,
+			       exp_org_unit_vl eou
+			 WHERE u.user_id=su.user_id(+)
+			   and su.employee_id =e.employee_id(+)
+			   and e.employee_id=eea.employee_id(+)
+			  -- and eea.row_num = 1
+			   and eea.enabled_flag = 'Y'
+			   and eea.primary_position_flag = 'Y'
+			   and eea.position_id = eop.position_id(+)
+			   and eop.unit_id = eou.unit_id(+) 
+			   ) v
+			  #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="employee_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="employee_name" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="unit_code" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="unit_name" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="approve_sum_time" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="approve_times" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="approve_avg_time" databaseType="VARCHAR2" datatype="java.lang.String"/>
+        <bm:field name="document_type_desc" databaseType="VARCHAR2" datatype="java.lang.String"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="unit_code" queryExpression="unit_code=${@unit_code}"/>
+        <bm:query-field name="employee_code" queryExpression="employee_code=${@employee_code}"/>
+        <!-- <bm:query-filed name="document_type" queryExpression="do" /> -->
+    </bm:query-fields>
+</bm:model>

@@ -1,0 +1,1798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<report xmlns="http://www.eclipse.org/birt/2005/design" version="3.2.23" id="1">
+    <property name="createdBy">Eclipse BIRT Designer Version 4.2.1.v201209101448 Build &lt;4.2.1.v20120912-1721></property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">21</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">21</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">21</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">175</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">175</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">175</property>
+        </structure>
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">99</property>
+        </structure>
+        <structure>
+            <property name="name">queryTimeOut</property>
+            <property name="id">99</property>
+        </structure>
+        <structure>
+            <property name="name">rowFetchSize</property>
+            <property name="id">99</property>
+        </structure>
+    </list-property>
+    <property name="units">in</property>
+    <property name="iconFile">/templates/blank_report.gif</property>
+    <property name="bidiLayoutOrientation">ltr</property>
+    <property name="imageDPI">96</property>
+    <parameters>
+        <scalar-parameter name="exp_report_header_id" id="80">
+            <property name="valueType">static</property>
+            <property name="dataType">string</property>
+            <property name="distinct">true</property>
+            <list-property name="selectionList"/>
+            <property name="paramType">simple</property>
+            <property name="controlType">text-box</property>
+            <structure name="format">
+                <property name="category">Unformatted</property>
+            </structure>
+        </scalar-parameter>
+    </parameters>
+    <data-sources>
+        <oda-data-source extensionID="org.eclipse.birt.report.data.oda.jdbc" name="Data Source" id="20">
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>metadataBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledMetadataBidiFormatStr</name>
+                </ex-property>
+                <ex-property>
+                    <name>contentBidiFormatStr</name>
+                    <value>ILYNN</value>
+                </ex-property>
+                <ex-property>
+                    <name>disabledContentBidiFormatStr</name>
+                </ex-property>
+            </list-property>
+            <property name="odaDriverClass">oracle.jdbc.OracleDriver</property>
+            <property name="odaURL">jdbc:oracle:thin:@10.1.2.13:1521:hecprod</property>
+            <property name="odaUser">fkdev</property>
+            <encrypted-property name="odaPassword" encryptionID="base64">ZmtkZXZwYXNzd2Q=</encrypted-property>
+        </oda-data-source>
+    </data-sources>
+    <data-sets>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="document_head" id="21">
+            <property name="locale">zh_Hans</property>
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">EXP_REQUISITION_HEADER_ID</property>
+                    <property name="analysis">measure</property>
+                    <text-property name="displayName">EXP_REQUISITION_HEADER_ID</text-property>
+                    <text-property name="heading">EXP_REQUISITION_HEADER_ID</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">EXP_REQUISITION_NUMBER</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">EXP_REQUISITION_NUMBER</text-property>
+                    <text-property name="heading">EXP_REQUISITION_NUMBER</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">EMPLOYEE_NAME</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">EMPLOYEE_NAME</text-property>
+                    <text-property name="heading">EMPLOYEE_NAME</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">STATUS_DESC</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">STATUS_DESC</text-property>
+                    <text-property name="heading">STATUS_DESC</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">REQUSITION_DATE</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">REQUSITION_DATE</text-property>
+                    <text-property name="heading">REQUSITION_DATE</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">PERIOD_NAME</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">PERIOD_NAME</text-property>
+                    <text-property name="heading">PERIOD_NAME</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">UNIT_NAME</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">UNIT_NAME</text-property>
+                    <text-property name="heading">UNIT_NAME</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">CURRENCY_NAME</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">CURRENCY_NAME</text-property>
+                    <text-property name="heading">CURRENCY_NAME</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">AMOUNT</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">AMOUNT</text-property>
+                    <text-property name="heading">AMOUNT</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">DESCRIPTION</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">DESCRIPTION</text-property>
+                    <text-property name="heading">DESCRIPTION</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters"/>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">EXP_REQUISITION_HEADER_ID</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">EXP_REQUISITION_NUMBER</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">EMPLOYEE_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">STATUS_DESC</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">REQUSITION_DATE</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">PERIOD_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">UNIT_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">CURRENCY_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">AMOUNT</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">DESCRIPTION</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <method name="beforeOpen"><![CDATA[this.queryText+=" and h.exp_requisition_header_id in ("+params["exp_report_header_id"]+")";]]></method>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">EXP_REQUISITION_HEADER_ID</property>
+                    <property name="nativeName">EXP_REQUISITION_HEADER_ID</property>
+                    <property name="dataType">decimal</property>
+                    <property name="nativeDataType">2</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">EXP_REQUISITION_NUMBER</property>
+                    <property name="nativeName">EXP_REQUISITION_NUMBER</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">EMPLOYEE_NAME</property>
+                    <property name="nativeName">EMPLOYEE_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">STATUS_DESC</property>
+                    <property name="nativeName">STATUS_DESC</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">REQUSITION_DATE</property>
+                    <property name="nativeName">REQUSITION_DATE</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">PERIOD_NAME</property>
+                    <property name="nativeName">PERIOD_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">UNIT_NAME</property>
+                    <property name="nativeName">UNIT_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">CURRENCY_NAME</property>
+                    <property name="nativeName">CURRENCY_NAME</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">AMOUNT</property>
+                    <property name="nativeName">AMOUNT</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">DESCRIPTION</property>
+                    <property name="nativeName">DESCRIPTION</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select h.exp_requisition_header_id,
+       h.exp_requisition_number,
+       (select e.name
+          from exp_employees e
+         where e.employee_id = h.employee_id) employee_name,
+       (select scv.code_value_name
+          from sys_code_values_v scv
+         where scv.code = 'EXP_EXPENSE_REPORT_STATUS'
+           and scv.code_value = h.requisition_status) status_desc,
+       to_char(h.requisition_date, 'YYYY-MM-DD') requsition_date,
+       h.period_name,
+       (select u.description
+          from exp_org_unit_vl u
+         where u.unit_id = h.unit_id) unit_name,
+       (select gc.currency_name
+          from gld_currency_vl gc
+         where gc.currency_code = h.currency_code) currency_name,
+       to_char((select sum(erl.requisition_amount)
+                 from exp_requisition_lines erl
+                where erl.exp_requisition_header_id =
+                      h.exp_requisition_header_id),
+               'FM999,999,999,990.00') amount,
+       h.description
+  from exp_requisition_headers h
+ where 1 = 1
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>EXP_REPORT_HEADER_ID</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>-127</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>EXP_REPORT_HEADER_ID</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>EXP_REPORT_HEADER_ID</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>EXP_REPORT_NUMBER</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>30</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>EXP_REPORT_NUMBER</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>EXP_REPORT_NUMBER</design:label>
+            <design:formattingHints>
+              <design:displaySize>30</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>EMPLOYEE_NAME</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>50</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>EMPLOYEE_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>EMPLOYEE_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>50</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>STATUS_DESC</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>STATUS_DESC</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>STATUS_DESC</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>REPORT_DATE</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>10</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>REPORT_DATE</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>REPORT_DATE</design:label>
+            <design:formattingHints>
+              <design:displaySize>10</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PERIOD_NAME</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>30</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>PERIOD_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>PERIOD_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>30</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>UNIT_NAME</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>UNIT_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>UNIT_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>CURRENCY_NAME</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>CURRENCY_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>CURRENCY_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>REPORT_AMOUNT</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>REPORT_AMOUNT</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>REPORT_AMOUNT</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>DESCRIPTION</design:name>
+              <design:position>11</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>DESCRIPTION</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>DESCRIPTION</design:label>
+            <design:formattingHints>
+              <design:displaySize>2000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="document_lines" id="99">
+            <property name="locale">zh_Hans</property>
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">exp_requisition_header_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">1</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">LINE_NUMBER</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">DESCRIPTION</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">EXPENSE_TYPE_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">EXPENSE_ITEM_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">PERIOD_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">PRICE</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">PRIMARY_QUANTITY</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">8</property>
+                        <property name="name">UNIT_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">COMPANY_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">RESPONSIBILITY_CENTER_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">REQUISITION_AMOUNT</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">LINE_NUMBER</property>
+                    <property name="nativeName">LINE_NUMBER</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">DESCRIPTION</property>
+                    <property name="nativeName">DESCRIPTION</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">EXPENSE_TYPE_NAME</property>
+                    <property name="nativeName">EXPENSE_TYPE_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">EXPENSE_ITEM_NAME</property>
+                    <property name="nativeName">EXPENSE_ITEM_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">PERIOD_NAME</property>
+                    <property name="nativeName">PERIOD_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">PRICE</property>
+                    <property name="nativeName">PRICE</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">PRIMARY_QUANTITY</property>
+                    <property name="nativeName">PRIMARY_QUANTITY</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">UNIT_NAME</property>
+                    <property name="nativeName">UNIT_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">COMPANY_NAME</property>
+                    <property name="nativeName">COMPANY_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">RESPONSIBILITY_CENTER_NAME</property>
+                    <property name="nativeName">RESPONSIBILITY_CENTER_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">REQUISITION_AMOUNT</property>
+                    <property name="nativeName">REQUISITION_AMOUNT</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select l.line_number,
+       l.description,
+       (select tv.description
+          from exp_expense_types_vl tv
+         where tv.expense_type_id = l.expense_type_id) expense_type_name,
+       (select iv.description
+          from exp_expense_items_vl iv
+         where iv.expense_item_id = l.exp_req_item_id) expense_item_name,
+       l.period_name,
+       l.price,
+       l.primary_quantity,
+       (select u.description
+          from exp_org_unit_vl u
+         where u.unit_id = l.unit_id) unit_name,
+       (select fc.company_short_name
+          from fnd_companies_vl fc
+         where fc.company_id = l.company_id) company_name,
+       (select fc.responsibility_center_name
+          from fnd_responsibility_centers_vl fc
+         where fc.responsibility_center_id = l.responsibility_center_id) responsibility_center_name,
+       to_char(l.requisition_amount, 'FM999,999,999,990.00') requisition_amount
+  from exp_requisition_lines l
+ where l.exp_requisition_header_id = ?
+]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>LINE_NUMBER</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>-127</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>LINE_NUMBER</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>LINE_NUMBER</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>DESCRIPTION</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>2000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>DESCRIPTION</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>DESCRIPTION</design:label>
+            <design:formattingHints>
+              <design:displaySize>2000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>EXPENSE_TYPE_NAME</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>EXPENSE_TYPE_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>EXPENSE_TYPE_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>EXPENSE_ITEM_NAME</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>EXPENSE_ITEM_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>EXPENSE_ITEM_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PERIOD_NAME</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>30</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>PERIOD_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>PERIOD_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>30</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PRICE</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>-127</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>PRICE</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>PRICE</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>PRIMARY_QUANTITY</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>-127</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>PRIMARY_QUANTITY</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>PRIMARY_QUANTITY</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>UNIT_NAME</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>UNIT_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>UNIT_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>RESPONSIBILITY_CENTER_NAME</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+            <design:precision>1000</design:precision>
+            <design:scale>0</design:scale>
+            <design:nullability>Nullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>RESPONSIBILITY_CENTER_NAME</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>RESPONSIBILITY_CENTER_NAME</design:label>
+            <design:formattingHints>
+              <design:displaySize>1000</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>REPORT_AMOUNT</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2</design:nativeDataTypeCode>
+            <design:precision>0</design:precision>
+            <design:scale>-127</design:scale>
+            <design:nullability>NotNullable</design:nullability>
+            <design:uiHints>
+              <design:displayName>REPORT_AMOUNT</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>REPORT_AMOUNT</design:label>
+            <design:formattingHints>
+              <design:displaySize>22</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+        </oda-data-set>
+        <oda-data-set extensionID="org.eclipse.birt.report.data.oda.jdbc.JdbcSelectDataSet" name="approve_records" id="175">
+            <property name="locale">zh_Hans</property>
+            <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">exp_requisition_header_id</property>
+                    <property name="dataType">integer</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="javascript">1</expression>
+                    <property name="isInput">true</property>
+                    <property name="isOutput">false</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">INSTANCE_ID</property>
+                        <property name="dataType">decimal</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">DOCUMENT_NUMBER</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">CREATION_DATE</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">USER_NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">5</property>
+                        <property name="name">ACTION_TITLE</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">6</property>
+                        <property name="name">COMMENT_TEXT</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">7</property>
+                        <property name="name">NAME</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">Data Source</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">INSTANCE_ID</property>
+                    <property name="nativeName">INSTANCE_ID</property>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">DOCUMENT_NUMBER</property>
+                    <property name="nativeName">DOCUMENT_NUMBER</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">CREATION_DATE</property>
+                    <property name="nativeName">CREATION_DATE</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">USER_NAME</property>
+                    <property name="nativeName">USER_NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">ACTION_TITLE</property>
+                    <property name="nativeName">ACTION_TITLE</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">COMMENT_TEXT</property>
+                    <property name="nativeName">COMMENT_TEXT</property>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">NAME</property>
+                    <property name="nativeName">NAME</property>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[select t.instance_id,
+       t.document_number,
+       to_char(t1.creation_date, 'YYYY-MM-DD') as creation_date,
+       t1.user_name,
+       t1.action_title,
+       t1.comment_text,
+       n.name
+  from wfl_workflow_instance t,
+       wfl_approve_record_v  t1,
+       wfl_workflow          w,
+       wfl_workflow_node_vl  n
+ where t.instance_id = t1.instance_id
+   and t1.node_id = n.node_id(+)
+   and t.instance_id =
+       (select max(i.instance_id)
+          from wfl_workflow_instance i, wfl_workflow w1
+         where i.document_number = t.document_number
+           and i.workflow_id = w1.workflow_id
+           and w1.workflow_category = 'EXP_REQUISITION')
+   and t1.workflow_id = w.workflow_id
+   and w.workflow_category = 'EXP_REQUISITION'
+   and t.instance_param = ?
+ order by creation_date
+]]></xml-property>
+        </oda-data-set>
+    </data-sets>
+    <styles>
+        <style name="report" id="4">
+            <property name="fontFamily">sans-serif</property>
+            <property name="fontSize">10pt</property>
+        </style>
+        <style name="crosstab-cell" id="5">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+        <style name="crosstab" id="6">
+            <property name="borderBottomColor">#CCCCCC</property>
+            <property name="borderBottomStyle">solid</property>
+            <property name="borderBottomWidth">1pt</property>
+            <property name="borderLeftColor">#CCCCCC</property>
+            <property name="borderLeftStyle">solid</property>
+            <property name="borderLeftWidth">1pt</property>
+            <property name="borderRightColor">#CCCCCC</property>
+            <property name="borderRightStyle">solid</property>
+            <property name="borderRightWidth">1pt</property>
+            <property name="borderTopColor">#CCCCCC</property>
+            <property name="borderTopStyle">solid</property>
+            <property name="borderTopWidth">1pt</property>
+        </style>
+    </styles>
+    <page-setup>
+        <simple-master-page name="Simple MasterPage" id="2">
+            <property name="type">a4</property>
+            <property name="topMargin">10mm</property>
+            <property name="leftMargin">10mm</property>
+            <property name="bottomMargin">10mm</property>
+            <property name="rightMargin">10mm</property>
+            <property name="headerHeight">0mm</property>
+            <property name="footerHeight">10mm</property>
+            <page-footer>
+                <grid id="292">
+                    <column id="293"/>
+                    <row id="294">
+                        <cell id="295">
+                            <property name="textAlign">right</property>
+                        </cell>
+                    </row>
+                </grid>
+            </page-footer>
+        </simple-master-page>
+    </page-setup>
+    <body>
+        <table id="7">
+            <property name="dataSet">document_head</property>
+            <list-property name="boundDataColumns">
+                <structure>
+                    <property name="name">EXP_REQUISITION_HEADER_ID</property>
+                    <text-property name="displayName">EXP_REQUISITION_HEADER_ID</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["EXP_REQUISITION_HEADER_ID"]</expression>
+                    <property name="dataType">decimal</property>
+                </structure>
+                <structure>
+                    <property name="name">EXP_REQUISITION_NUMBER</property>
+                    <text-property name="displayName">EXP_REQUISITION_NUMBER</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["EXP_REQUISITION_NUMBER"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">EMPLOYEE_NAME</property>
+                    <text-property name="displayName">EMPLOYEE_NAME</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["EMPLOYEE_NAME"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">STATUS_DESC</property>
+                    <text-property name="displayName">STATUS_DESC</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["STATUS_DESC"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">REQUSITION_DATE</property>
+                    <text-property name="displayName">REQUSITION_DATE</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["REQUSITION_DATE"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">PERIOD_NAME</property>
+                    <text-property name="displayName">PERIOD_NAME</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["PERIOD_NAME"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">UNIT_NAME</property>
+                    <text-property name="displayName">UNIT_NAME</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["UNIT_NAME"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">CURRENCY_NAME</property>
+                    <text-property name="displayName">CURRENCY_NAME</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["CURRENCY_NAME"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">AMOUNT</property>
+                    <text-property name="displayName">AMOUNT</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["AMOUNT"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">DESCRIPTION</property>
+                    <text-property name="displayName">DESCRIPTION</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["DESCRIPTION"]</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
+            <column id="14"/>
+            <group id="27">
+                <property name="groupName">group1</property>
+                <expression name="keyExpr" type="javascript">row["EXP_REQUISITION_HEADER_ID"]</expression>
+                <structure name="toc">
+                    <expression name="expressionValue" type="javascript">row["EXP_REQUISITION_HEADER_ID"]</expression>
+                </structure>
+                <property name="repeatHeader">false</property>
+                <property name="hideDetail">false</property>
+                <property name="pageBreakAfter">avoid</property>
+                <property name="pageBreakBefore">always-excluding-first</property>
+                <header>
+                    <row id="28">
+                        <cell id="29">
+                            <grid id="33">
+                                <column id="34">
+                                    <property name="width">25mm</property>
+                                </column>
+                                <column id="35"/>
+                                <column id="36">
+                                    <property name="width">25mm</property>
+                                </column>
+                                <column id="37"/>
+                                <column id="38">
+                                    <property name="width">25mm</property>
+                                </column>
+                                <column id="39"/>
+                                <row id="274">
+                                    <cell id="275">
+                                        <property name="colSpan">1</property>
+                                        <property name="rowSpan">1</property>
+                                    </cell>
+                                    <cell id="282"/>
+                                    <cell id="283">
+                                        <property name="colSpan">2</property>
+                                        <property name="rowSpan">1</property>
+                                        <property name="verticalAlign">middle</property>
+                                        <label id="287">
+                                            <property name="fontFamily">"黑体"</property>
+                                            <property name="fontSize">xx-large</property>
+                                            <property name="fontWeight">normal</property>
+                                            <property name="marginBottom">3mm</property>
+                                            <property name="textAlign">center</property>
+                                            <text-property name="text">费用申请单</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="285">
+                                        <property name="colSpan">2</property>
+                                        <property name="rowSpan">1</property>
+                                        <property name="textAlign">right</property>
+                                        <image id="288">
+                                            <property name="height">0.7266666666666667in</property>
+                                            <property name="width">50mm</property>
+                                            <property name="source">url</property>
+                                            <expression name="uri" type="javascript">"http://10.1.2.32:18580/fkdev/genbc?msg=" + row["EXP_REQUISITION_NUMBER"] + "&amp;hrsize=3mm&amp;fmt=png"</expression>
+                                        </image>
+                                    </cell>
+                                </row>
+                                <row id="40">
+                                    <property name="borderTopColor">#000000</property>
+                                    <property name="borderTopStyle">solid</property>
+                                    <property name="borderTopWidth">medium</property>
+                                    <cell id="41">
+                                        <label id="305">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">申请单编号：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="42">
+                                        <data id="296">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">EXP_REQUISITION_NUMBER</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="43">
+                                        <label id="306">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">申请人：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="44">
+                                        <data id="297">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">EMPLOYEE_NAME</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="45">
+                                        <label id="307">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">状态：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="46">
+                                        <data id="298">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">STATUS_DESC</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                                <row id="47">
+                                    <cell id="48">
+                                        <label id="308">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">申请日期：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="49">
+                                        <data id="299">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">REQUSITION_DATE</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="50">
+                                        <label id="309">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">期间：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="51">
+                                        <data id="300">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">PERIOD_NAME</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="52">
+                                        <label id="310">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">部门：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="53">
+                                        <data id="301">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">UNIT_NAME</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                                <row id="54">
+                                    <cell id="55">
+                                        <label id="311">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">币种：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="56">
+                                        <data id="302">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">CURRENCY_NAME</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="57">
+                                        <label id="312">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">金额：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="58">
+                                        <data id="303">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">AMOUNT</property>
+                                        </data>
+                                    </cell>
+                                    <cell id="59"/>
+                                    <cell id="60"/>
+                                </row>
+                                <row id="257">
+                                    <cell id="258">
+                                        <label id="313">
+                                            <property name="fontFamily">"华文中宋"</property>
+                                            <text-property name="text">描述：</text-property>
+                                        </label>
+                                    </cell>
+                                    <cell id="259">
+                                        <property name="colSpan">5</property>
+                                        <property name="rowSpan">1</property>
+                                        <data id="304">
+                                            <property name="fontFamily">"华文楷体"</property>
+                                            <property name="resultSetColumn">DESCRIPTION</property>
+                                        </data>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </header>
+                <footer>
+                    <row id="30">
+                        <property name="pageBreakBefore">avoid</property>
+                        <property name="pageBreakInside">auto</property>
+                        <cell id="31">
+                            <grid id="91">
+                                <property name="pageBreakBefore">auto</property>
+                                <column id="92"/>
+                                <row id="264">
+                                    <property name="pageBreakBefore">avoid</property>
+                                    <cell id="265">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
+                                        <text id="267">
+                                            <property name="marginTop">5mm</property>
+                                            <property name="marginBottom">0pt</property>
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[<span style="color:black;font-family:华文新魏;padding:2px;border-top:3px solid #000000;">费用事项</span>]]></text-property>
+                                        </text>
+                                    </cell>
+                                </row>
+                                <row id="93">
+                                    <cell id="94">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
+                                        <table id="100">
+                                            <property name="pageBreakBefore">avoid</property>
+                                            <property name="dataSet">document_lines</property>
+                                            <list-property name="paramBindings">
+                                                <structure>
+                                                    <property name="paramName">exp_requisition_header_id</property>
+                                                    <simple-property-list name="expression">
+                                                        <value type="javascript">row["EXP_REQUISITION_HEADER_ID"]</value>
+                                                    </simple-property-list>
+                                                </structure>
+                                            </list-property>
+                                            <list-property name="boundDataColumns">
+                                                <structure>
+                                                    <property name="name">LINE_NUMBER</property>
+                                                    <text-property name="displayName">LINE_NUMBER</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["LINE_NUMBER"]</expression>
+                                                    <property name="dataType">decimal</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">DESCRIPTION</property>
+                                                    <text-property name="displayName">DESCRIPTION</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["DESCRIPTION"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">EXPENSE_TYPE_NAME</property>
+                                                    <text-property name="displayName">EXPENSE_TYPE_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["EXPENSE_TYPE_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">EXPENSE_ITEM_NAME</property>
+                                                    <text-property name="displayName">EXPENSE_ITEM_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["EXPENSE_ITEM_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">PERIOD_NAME</property>
+                                                    <text-property name="displayName">PERIOD_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["PERIOD_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">PRICE</property>
+                                                    <text-property name="displayName">PRICE</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["PRICE"]</expression>
+                                                    <property name="dataType">decimal</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">PRIMARY_QUANTITY</property>
+                                                    <text-property name="displayName">PRIMARY_QUANTITY</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["PRIMARY_QUANTITY"]</expression>
+                                                    <property name="dataType">decimal</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">UNIT_NAME</property>
+                                                    <text-property name="displayName">UNIT_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["UNIT_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">COMPANY_NAME</property>
+                                                    <text-property name="displayName">COMPANY_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["COMPANY_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">RESPONSIBILITY_CENTER_NAME</property>
+                                                    <text-property name="displayName">RESPONSIBILITY_CENTER_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["RESPONSIBILITY_CENTER_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">REQUISITION_AMOUNT</property>
+                                                    <text-property name="displayName">REQUISITION_AMOUNT</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["REQUISITION_AMOUNT"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                            </list-property>
+                                            <column id="134">
+                                                <property name="width">10mm</property>
+                                            </column>
+                                            <column id="135"/>
+                                            <column id="136"/>
+                                            <column id="137"/>
+                                            <column id="138">
+                                                <property name="width">15mm</property>
+                                            </column>
+                                            <column id="171"/>
+                                            <column id="141"/>
+                                            <column id="143">
+                                                <property name="width">20mm</property>
+                                            </column>
+                                            <header>
+                                                <row id="101">
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <property name="borderTopColor">#000000</property>
+                                                    <property name="borderTopStyle">solid</property>
+                                                    <property name="borderTopWidth">medium</property>
+                                                    <cell id="102">
+                                                        <label id="144">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">行号</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="103">
+                                                        <label id="146">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">描述</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="104">
+                                                        <label id="148">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">报销类型</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="105">
+                                                        <label id="150">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">申请项目</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="106">
+                                                        <label id="152">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">期间</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="168">
+                                                        <label id="172">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">公司</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="109">
+                                                        <label id="158">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">部门</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="111">
+                                                        <label id="162">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <property name="textAlign">right</property>
+                                                            <text-property name="text">金额</text-property>
+                                                        </label>
+                                                    </cell>
+                                                </row>
+                                            </header>
+                                            <detail>
+                                                <row id="112">
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <cell id="113">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="314">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">LINE_NUMBER</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="114">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="315">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">DESCRIPTION</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="115">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="316">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">EXPENSE_TYPE_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="116">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="317">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">EXPENSE_ITEM_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="117">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="318">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">PERIOD_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="169">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="319">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">COMPANY_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="120">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="320">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">RESPONSIBILITY_CENTER_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="122">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="322">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">right</property>
+                                                            <property name="resultSetColumn">REQUISITION_AMOUNT</property>
+                                                        </data>
+                                                    </cell>
+                                                </row>
+                                            </detail>
+                                            <footer>
+                                                <row id="123">
+                                                    <cell id="124"/>
+                                                    <cell id="125"/>
+                                                    <cell id="126"/>
+                                                    <cell id="127"/>
+                                                    <cell id="128"/>
+                                                    <cell id="170"/>
+                                                    <cell id="131"/>
+                                                    <cell id="133"/>
+                                                </row>
+                                            </footer>
+                                        </table>
+                                    </cell>
+                                </row>
+                                <row id="268">
+                                    <cell id="269">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
+                                        <text id="270">
+                                            <property name="marginTop">5mm</property>
+                                            <property name="contentType">html</property>
+                                            <text-property name="content"><![CDATA[<span style="color:black;font-family:华文新魏;padding:2px;border-top:3px solid #000000;">审批流程</span>]]></text-property>
+                                        </text>
+                                    </cell>
+                                </row>
+                                <row id="95">
+                                    <cell id="96">
+                                        <property name="paddingTop">0pt</property>
+                                        <property name="paddingLeft">0pt</property>
+                                        <property name="paddingBottom">0pt</property>
+                                        <property name="paddingRight">0pt</property>
+                                        <table id="176">
+                                            <property name="dataSet">approve_records</property>
+                                            <list-property name="paramBindings">
+                                                <structure>
+                                                    <property name="paramName">exp_requisition_header_id</property>
+                                                    <simple-property-list name="expression">
+                                                        <value type="javascript">row["EXP_REQUISITION_HEADER_ID"]</value>
+                                                    </simple-property-list>
+                                                </structure>
+                                            </list-property>
+                                            <list-property name="boundDataColumns">
+                                                <structure>
+                                                    <property name="name">INSTANCE_ID</property>
+                                                    <text-property name="displayName">INSTANCE_ID</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["INSTANCE_ID"]</expression>
+                                                    <property name="dataType">decimal</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">DOCUMENT_NUMBER</property>
+                                                    <text-property name="displayName">DOCUMENT_NUMBER</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["DOCUMENT_NUMBER"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">CREATION_DATE</property>
+                                                    <text-property name="displayName">CREATION_DATE</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["CREATION_DATE"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">USER_NAME</property>
+                                                    <text-property name="displayName">USER_NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["USER_NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">ACTION_TITLE</property>
+                                                    <text-property name="displayName">ACTION_TITLE</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["ACTION_TITLE"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">COMMENT_TEXT</property>
+                                                    <text-property name="displayName">COMMENT_TEXT</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["COMMENT_TEXT"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                                <structure>
+                                                    <property name="name">NAME</property>
+                                                    <text-property name="displayName">NAME</text-property>
+                                                    <expression name="expression" type="javascript">dataSetRow["NAME"]</expression>
+                                                    <property name="dataType">string</property>
+                                                </structure>
+                                            </list-property>
+                                            <column id="195"/>
+                                            <column id="196"/>
+                                            <column id="197"/>
+                                            <column id="198"/>
+                                            <column id="199"/>
+                                            <header>
+                                                <row id="177">
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <property name="borderTopColor">#000000</property>
+                                                    <property name="borderTopStyle">solid</property>
+                                                    <property name="borderTopWidth">medium</property>
+                                                    <cell id="178">
+                                                        <label id="200">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">审批时间</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="179">
+                                                        <label id="202">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">审批节点</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="180">
+                                                        <label id="204">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">处理人</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="181">
+                                                        <label id="206">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">审批意见</text-property>
+                                                        </label>
+                                                    </cell>
+                                                    <cell id="182">
+                                                        <label id="208">
+                                                            <property name="fontFamily">"华文中宋"</property>
+                                                            <text-property name="text">备注</text-property>
+                                                        </label>
+                                                    </cell>
+                                                </row>
+                                            </header>
+                                            <detail>
+                                                <row id="183">
+                                                    <property name="borderBottomColor">#000000</property>
+                                                    <property name="borderBottomStyle">solid</property>
+                                                    <property name="borderBottomWidth">thin</property>
+                                                    <cell id="184">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="201">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">CREATION_DATE</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="185">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="203">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="186">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="205">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">USER_NAME</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="187">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="207">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">ACTION_TITLE</property>
+                                                        </data>
+                                                    </cell>
+                                                    <cell id="188">
+                                                        <property name="verticalAlign">middle</property>
+                                                        <data id="209">
+                                                            <property name="fontFamily">"华文楷体"</property>
+                                                            <property name="textAlign">center</property>
+                                                            <property name="resultSetColumn">COMMENT_TEXT</property>
+                                                        </data>
+                                                    </cell>
+                                                </row>
+                                            </detail>
+                                            <footer>
+                                                <row id="189">
+                                                    <cell id="190"/>
+                                                    <cell id="191"/>
+                                                    <cell id="192"/>
+                                                    <cell id="193"/>
+                                                    <cell id="194"/>
+                                                </row>
+                                            </footer>
+                                        </table>
+                                    </cell>
+                                </row>
+                            </grid>
+                        </cell>
+                    </row>
+                </footer>
+            </group>
+            <detail>
+                <row id="10">
+                    <property name="pageBreakAfter">avoid</property>
+                    <cell id="11"/>
+                </row>
+            </detail>
+        </table>
+    </body>
+</report>

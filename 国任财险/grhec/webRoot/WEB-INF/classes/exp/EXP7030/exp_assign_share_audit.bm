@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: hp  
+    $Date: 2013-8-12 下午12:29:20  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm" xmlns:f="aurora.database.features">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select *
+				  from (select h.exp_report_header_id,
+				               l.exp_report_line_id,
+				               h.exp_report_number,
+				               (select e.description
+				                  from exp_expense_report_types_vl e
+				                 where e.expense_report_type_id = h.exp_report_type_id) exp_report_type_desc,
+				               to_char(h.report_date, 'yyyy/mm/dd') report_date,
+				               (select es.name
+				                  from exp_employees es
+				                 where es.employee_id = h.employee_id) employee_name,
+				               l.line_number,
+				               l.company_id,
+				               (select f.company_short_name
+				                  from fnd_companies_vl f
+				                 where f.company_id = l.company_id) company_name,
+				               l.unit_id,
+				               (select ev.DESCRIPTION
+				                  from exp_org_unit_vl ev
+				                 where ev.UNIT_ID = l.unit_id) unit_name,
+				               l.responsibility_center_id,
+				               (select fv.responsibility_center_name
+				                  from fnd_responsibility_centers_vl fv
+				                 where fv.responsibility_center_id =
+				                       l.responsibility_center_id) responsibility_center_name,
+				               (select el.description
+				                  from exp_expense_types_vl el
+				                 where el.expense_type_id = l.expense_type_id) report_type_desc,
+				               (select evl.description
+				                  from exp_expense_items_vl evl
+				                 where evl.expense_item_id = l.expense_item_id) expense_items_desc,
+				               l.report_amount,
+				               l.assign_share_status,
+				               decode(l.assign_share_status,
+					                      '',
+					                      '未下发',
+					                      'ASSIGN',
+					                      '下发',
+					                      'MODIFTY',
+					                      '待提交',
+					                      'SUBMIT',
+					                      '提交',
+					                      'REJECT',
+					                      '拒绝',
+					                      'CONFIRM',
+					                      '确认') assign_share_desc
+				          from exp_report_lines l, exp_report_headers h
+				         where l.exp_report_header_id = h.exp_report_header_id
+				         and l.assign_share_status = 'SUBMIT') t
+				         #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+                begin
+                  exp_report_assign_pkg.confirm_exp_report_line(p_exp_report_header_id     => ${@exp_report_header_id},
+							                                    p_exp_report_line_id       => ${@exp_report_line_id},
+							                                    p_created_by               => ${/session/@user_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+                begin
+	                exp_report_assign_pkg.reject_exp_report_line(p_exp_report_header_id => ${@exp_report_header_id},
+	                                                             p_exp_report_line_id   => ${@exp_report_line_id},
+	                                                             p_created_by           => ${/session/@user_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+        <!-- <bm:operation name="delete">
+            <bm:update-sql><![CDATA[ 
+	            begin
+		           bgt_check_pkg.check_exp_report_line(p_document_id      => ${@exp_report_header_id},
+							                           p_exp_report_line  => ${@exp_report_line_id},
+							                           p_user_id          => ${/session/@user_id},
+							                           p_error_level_code => ${@error_level_code},
+							                           p_message_code     => ${@message_code});
+	            end;
+            ]]></bm:update-sql>
+            <bm:parameters>
+                <bm:parameter name="error_level_code" input="false" output="true" outputPath="@error_level_code"/>
+                <bm:parameter name="message_code" input="false" output="true" outputPath="@message_code"/>
+            </bm:parameters>
+        </bm:operation> -->
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="exp_report_number" queryExpression="t.exp_report_number=${@exp_report_number}"/>
+    </bm:query-fields>
+    <bm:data-filters>
+        <bm:data-filter enforceOperations="query" expression="t.company_id=${/session/@company_id}"/>
+    </bm:data-filters>
+</bm:model>

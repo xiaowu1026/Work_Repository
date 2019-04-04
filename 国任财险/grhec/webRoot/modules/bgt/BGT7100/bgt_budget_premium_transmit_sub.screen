@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Robin  
+    $Date: 2011-6-16 下午02:03:02  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application" trace="true">
+    <a:init-procedure>
+        <a:model-query model="bgt.BGT7100.bgt_premium_tem_s" rootPath="init_data"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="bgt_assign_temp_link" model="bgt.BGT7100.bgt_budget_premium_transmit_sub" modelaction="batch_update"/>
+        <a:link id="bgt_premium_assign_link" url="${/request/@context_path}/modules/bgt/BGT7100/bgt_budget_premium_assign.screen"/>
+        <a:link id="bgt_create_link" model="bgt.BGT7100.bgt_budget_premium_transmit_sub" modelaction="execute"/>
+        <script><![CDATA[
+				
+			function reset(){
+				$('bgt_query_ds').reset();
+			}
+			
+			function queryPeriod(){
+				if(!$('bgt_query_ds').validate()){
+					return ;
+				}
+				$('bgt_result_ds').query();
+			}
+            
+            function assignFunction(){
+                var jsonData = $('bgt_result_ds').getJsonData(true);
+                if(jsonData.length == 0){
+                    Aurora.showMessage('提示','请选择需分配的保费预算数据！');
+                    return;
+                }
+                var records = $('bgt_result_ds').getSelected();
+                for(var i=0;i<records.length;i++){
+                    var assign_status = records[i].get('assign_status');
+                    if(assign_status == 'Y'){
+                        Aurora.showMessage('提示', '勾选存在已分配的预算数据！');
+                        return;
+                    }
+                }
+                
+                for(var i=0;i<jsonData.length;i++){
+                    jsonData[i].session_id = '${/model/init_data/record/@session_id}';
+                    jsonData[i]._status = 'update'; 
+                }
+                var session_id = '${/model/init_data/record/@session_id}';
+                Aurora.request({
+                    url: $('bgt_assign_temp_link').getUrl(),
+                    para: jsonData,
+                    lockMessage: '正在分配,请耐心等待',
+                    success: function() {
+                        new Aurora.Window({
+		                    id: 'bgt_premium_assign',
+		                    url: $('bgt_premium_assign_link').getUrl() + '?session_id=' + session_id,
+		                    title: '预算分配',
+		                    fullScreen: true
+		                });
+		                
+                        // Aurora.showMessage('提示', '下达成功！');
+                        // $('bgt_query_ds').query();
+                        // return;
+                    },
+                    scope: this
+                });
+            }
+            
+            function create_bgt_function(){
+                var records = $('bgt_result_ds').getSelected();
+                if(records.length == 0){
+                    Aurora.showMessage('提示','请选择需生成预算日记账的预算数据！');
+                    return;
+                }
+                
+                for(var i=0;i<records.length;i++){
+                    var budget_journal_number = records[i].get('budget_journal_number');
+                    if(budget_journal_number == '' || budget_journal_number == undefined){
+                    }else{
+                        Aurora.showMessage('提示', '勾选存在已生成预算日记账的预算数据！');
+                        return;
+                    }
+                }
+                
+                var session_id = 0;
+                for(var i=0;i<records.length;i++){
+                    var assign_status = records[i].get('assign_status');
+                    if(assign_status == '' || assign_status == undefined || assign_status == 'N'){
+                        Aurora.showMessage('提示', '勾选存在未分配的预算数据！');
+                        return;
+                    }
+                    session_id = records[i].get('session_id');
+                }
+                
+                Aurora.request({
+                    url: $('bgt_create_link').getUrl(),
+                    para: {session_id:session_id},
+                    lockMessage: '正在生成预算日记账,请耐心等待',
+                    success: function() {
+                        Aurora.showMessage('提示', '生成预算日记账成功！');
+                        $('bgt_result_ds').query();
+                        return;
+                    },
+                    scope: this
+                });
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <!--公司comboBox-->
+            <a:dataSet id="company_combo_ds" fetchAll="true" loadData="true" model="bgt.BGT3010.bgt_budget_balance_query_company"/>
+            <a:dataSet id="assign_status_ds">
+                <a:datas>
+                    <a:record code_value="Y" code_value_name="已分配"/>
+                    <a:record code_value="N" code_value_name="未分配"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="bgt_query_ds">
+                <a:fields>
+                    <a:field name="company_name" displayField="company_short_name" options="company_combo_ds" prompt="BGT_BUDGET_ITEM_MAPPING.COMPANY_ID" returnField="company_id" valueField="company_id">
+                        <a:mapping>
+                            <a:map from="company_code" to="company_code"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="company_code"/>
+                    <a:field name="company_id"/>
+                    <a:field name="period_name" autoComplete="true" autoCompleteField="period_name" lovGridHeight="300" lovHeight="420" lovService="expm.EXP5400.bgt_period_detail_lov" lovWidth="500" title="EXP_REQ.PERIOD_NAME">
+                        <a:mapping>
+                            <a:map from="period_name" to="period_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="premium_date_from"/>
+                    <a:field name="premium_date_to"/>
+                    <a:field name="assign_status_desc" displayField="code_value_name" options="assign_status_ds" returnField="assign_status" valueField="code_value"/>
+                    <a:field name="assign_status"/>
+                    <a:field name="transmit_bgt_amount"/>
+                    <a:field name="budget_journal_number"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="bgt_result_ds" autoQuery="false" model="bgt.BGT7100.bgt_budget_premium_transmit_sub" queryDataSet="bgt_query_ds" selectable="true">
+                <!-- <a:events>
+                    <a:event name="update" handler="updateFunction"/>
+                </a:events> --><![CDATA[
+                
+                
+                
+                
+                
+                
+                
+            ]]></a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="5" labelWidth="100" title="分公司分配预算数">
+                <!-- <a:lov name="period_name" bindTarget="bgt_query_ds" prompt="期间"/> -->
+                <a:datePicker name="premium_date_from" bindTarget="bgt_query_ds" prompt="日期从"/>
+                <a:datePicker name="premium_date_to" bindTarget="bgt_query_ds" prompt="日期到"/>
+                <a:comboBox name="company_name" bindTarget="bgt_query_ds" prompt="机构"/>
+                <a:textField name="budget_journal_number" bindTarget="bgt_query_ds" prompt="预算日记账编号"/>
+                <a:comboBox name="assign_status_desc" bindTarget="bgt_query_ds" prompt="状态"/>
+            </a:form>
+            <a:hBox>
+                <a:button click="queryPeriod" text="HAP_QUERY"/>
+                <a:button click="reset" text="HAP_RESET"/>
+                <a:button click="assignFunction" text="分配"/>
+                <a:button click="create_bgt_function" text="生成预算日记账"/>
+            </a:hBox>
+            <a:grid bindTarget="bgt_result_ds" height="350" navBar="true" width="800">
+                <a:toolBar>
+                    <a:button type="excel"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="premium_date" align="center" prompt="日期" width="80"/>
+                    <a:column name="company_name" align="center" prompt="机构" width="150"/>
+                    <a:column name="transmit_bgt_amount" align="right" prompt="日常费用预算额" width="100"/>
+                    <a:column name="assign_status_desc" align="center" prompt="状态" width="80"/>
+                    <a:column name="budget_journal_number" align="center" prompt="预算日记账编号" width="150"/>
+                </a:columns>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

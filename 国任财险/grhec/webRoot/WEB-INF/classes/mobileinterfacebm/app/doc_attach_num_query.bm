@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+			select count(1) attach_num
+			  from fnd_atm_attachment_multi m
+			 where 1 = (case ${/parameter/@table_name}
+			         when 'EXP_REPORT_HEADERS' then
+			          (select 1
+			             from fnd_atm_attachment_multi f
+			            where f.attachment_id = m.attachment_id
+			              and f.table_name like 'EXP_REPORT_HEADERS' || '%')
+			         else
+			          (select 1
+			             from fnd_atm_attachment_multi f
+			            where f.attachment_id = m.attachment_id
+			              and f.table_name = ${/parameter/@table_name})
+			       end)
+			   and m.table_pk_value = ${/parameter/@head_id}
+			]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

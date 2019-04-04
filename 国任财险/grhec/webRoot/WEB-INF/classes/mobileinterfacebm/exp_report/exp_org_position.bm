@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+               select op.position_id, op.position_code, f.description_text as position_name, op.unit_id
+				  from exp_org_position op, fnd_descriptions f
+				 where exists (select 1
+				          from exp_employee_assigns eea
+				         where eea.position_id = op.position_id
+				           and eea.enabled_flag = 'Y'
+				           and eea.employee_id = ${@employee_id}
+				           and eea.company_id = ${@company_id})
+				   and op.company_id = ${@company_id}
+				   and op.description_id = f.description_id
+				   and f.language = 'ZHS'
+				   #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="position_id"/>
+        <bm:field name="position_code"/>
+        <bm:field name="position_name"/>
+        <bm:field name="unit_id"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="position_code" queryExpression="position_code like &apos;%&apos;||${@position_code}||&apos;%&apos;"/>
+        <bm:query-field name="position_name" queryExpression="position_name like &apos;%&apos;||${@position_name}||&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

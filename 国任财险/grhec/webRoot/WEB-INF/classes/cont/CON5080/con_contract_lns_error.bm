@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: cjm  
+    $Date: 2016-10-2 10:27:58 
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            select * from(SELECT t.contract_period_allocation_id,
+					       t.contract_return_period_id,
+					       t.line_number,
+					       t.company_code,
+					       t.company_name,
+					       t.unit_code,
+					       t.unit_name,
+					       t.responsibility_center_code,
+					       t.responsibility_center_name,
+					       t.expense_item_code,
+					       t.expense_item_desc,
+					       t.amount,
+					       t.batch_id,
+					       e.error_message
+					  FROM con_allocation_error e, con_allocation_tmp t
+					 WHERE e.contract_return_period_id = t.contract_return_period_id
+					   AND e.contract_period_allocation_id = t.contract_period_allocation_id
+				)o
+			  #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="insert">
+            <bm:query-sql><![CDATA[
+            begin
+            con_allocation_import_pkg.insert_interface(p_header_id =>${@header_id},
+            										p_contract_return_period_id =>${@contract_return_period_id},
+                                                           p_batch_id  =>${@batch_id},
+                                                           p_user_id   =>${/session/@user_id});
+            end;]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="contract_return_period_id" queryExpression="o.contract_return_period_id = ${@contract_return_period_id}"/>
+    </bm:query-fields>
+</bm:model>

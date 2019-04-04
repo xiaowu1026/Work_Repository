@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 查询自己做的授权单或者别人授权给自己的单
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:f="aurora.database.features" xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select *
+		 			from (select cso.sign_id,
+				               cso.sign_code,
+				               cso.sign_name,
+				               cso.sign_url,
+				               cso.company_code,
+				               fcv.company_short_name company_name,
+				               cso.unit_code,
+				               eouv.DESCRIPTION       unit_name,
+				               cso.oa_sign_applyer,
+				               t.can_grant_flag
+				          from con_sign_oa cso, fnd_companies_vl fcv, exp_org_unit_vl eouv, 
+				          (select distinct osa.sign_id,decode(emp.employee_id,osa.employee_id,'Y','N') can_grant_flag 
+				          from oa_sign_authorities osa,(select employee_id
+				          from sys_user su where su.user_id=${/session/@user_id}) emp 
+				          where (osa.granted_employee_id=emp.employee_id 
+				          and osa.company_id=${/session/@company_id} 
+				          and osa.enabled_flag='Y') or osa.employee_id=emp.employee_id) t
+				         where eouv.UNIT_CODE = cso.unit_code
+				           and fcv.company_code = cso.company_code
+				           and eouv.company_id = fcv.company_id
+				           and cso.sign_id=t.sign_id )v
+				#WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="sign_code" queryExpression="sign_code like &apos;%&apos;||${@sign_code}||&apos;%&apos;"/>
+        <bm:query-field name="sign_name" queryExpression="sign_name like &apos;%&apos;||${@sign_name}||&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

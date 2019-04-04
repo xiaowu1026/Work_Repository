@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2017-12-21 15:23:33 
+    $Revision: 1.0  
+    $Purpose: oa授权页面
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure>
+        <a:model-query autoCount="false" fetchAll="true" model="expm.exp_document_self" queryOrderBy="code" rootPath="emp_info"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="cux_oa_exp_ref_detail_win_link" url="${/request/@context_path}/modules/expm/public/gr/cux_oa_exp_detail.screen"/>
+        <a:link id="oa_user_lov_link" url="${/request/@context_path}/modules/expm/public/gr/oa_users_lov.screen"/>
+        <a:link id="oa_sign_authorities_link" model="expm.gr.oa_authorities" modelaction="batch_update"/>
+        <script><![CDATA[
+        
+            function framework_ag_back_fun() {
+                $('oa_sign_authorities_screen').close();
+            }
+           
+            function cellclick(grid, row, name, record) {
+                if ('granted_employee_code' == name) {
+            
+                  //  record.getField(name).setLovPara('p_current_granted_pos_id', record.get('granted_position_id'));
+                }
+               
+                if (name == 'granted_employee_code') {
+                    var re = record.getMeta();
+                    var f2 = re.getField('granted_employee_code');
+                    var url = $('oa_user_lov_link').getUrl();
+                     f2.setLovUrl(url);
+                }
+            }
+            
+            // function saveDocument(){
+                // var records = $('oa_sign_authorities_result_ds').getJsonData(true);
+                // if (records == 0){
+                    // Aurora.showMessage('提示','请选择需授权数据！');
+                    // return;
+                // }
+                // Aurora.request({
+	                // url: $('oa_sign_authorities_link').getUrl(),
+	                // para: records,
+	                // success: function() {
+	                    // $('oa_sign_authorities_result_ds').query();
+	                // },
+	                // scope: this
+	            // });
+            // }
+            
+            function editorFunc(record,name,value){
+                var oa_sign_authority_id = record.get('oa_sign_authority_id');
+                if(oa_sign_authority_id){
+                    return '';
+                }else{
+                    return 'granted_employee_code_lov';
+                }
+            }
+            
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="oa_sign_authorities_head_ds" autoCreate="true">
+                <a:fields>
+                    <a:field name="sign_id" defaultValue="${/parameter/@sign_id}"/>
+                    <a:field name="employee_id" defaultValue="${/model/emp_info/record/@id}"/>
+                    <a:field name="employee_name" defaultValue="${/model/emp_info/record/@code}" prompt="授权人" readOnly="true"/>
+                    <a:field name="sign_code" defaultValue="${/parameter/@sign_code}" prompt="签报编号" readOnly="true"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="oa_sign_authorities_result_ds" autoQuery="true" fetchAll="false" model="expm.gr.oa_authorities" queryDataSet="oa_sign_authorities_head_ds" selectable="true">
+                <a:fields>
+                    <a:field name="sign_id" defaultValue="${/parameter/@sign_id}"/>
+                    <a:field name="employee_id" defaultValue="${/model/emp_info/record/@id}"/>
+                    <a:field name="company_name"/>
+                    <a:field name="company_id"/>
+                    <a:field name="unit_id"/>
+                    <a:field name="position_id"/>
+                    <a:field name="granted_employee_code" autoComplete="true" autoCompleteField="granted_employee_name" editable="false" lovHeight="470" lovWidth="1100" required="true" title="被授权人">
+                        <a:mapping>
+                            <a:map from="employee_code" to="granted_employee_code"/>
+                            <a:map from="employee_name" to="granted_employee_name"/>
+                            <a:map from="employee_id" to="granted_employee_id"/>
+                            <a:map from="company_short_name" to="company_name"/>
+                            <a:map from="company_id" to="company_id"/>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="position_id" to="position_id"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="enabled_flag" checkedValue="Y" defaultValue="Y" uncheckedValue="N"/>
+                    <a:field name="granted_employee_name"/>
+                    <a:field name="granted_employee_id"/>
+                </a:fields>
+                <!-- <a:events>
+                    <a:event name="update" handler="onPositionUpdate"/>
+                </a:events> -->
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:form column="4" style="width:99%;margin-left:5px;margin-top:5px;" title="OA签报授权信息">
+                <a:hBox>
+                    <a:textField name="employee_name" bindTarget="oa_sign_authorities_head_ds" prompt="授权人"/>
+                    <a:textField name="sign_code" bindTarget="oa_sign_authorities_head_ds" prompt="签报编号"/>
+                </a:hBox>
+            </a:form>
+            <!--  <a:hBox>
+                <a:toolbarButton click="queryDocumentAuthorities" text="HAP_QUERY"/>
+                <a:toolbarButton click="resetDocumentAuthorities" text="HAP_RESET"/>
+            </a:hBox> -->
+            <a:hBox style="margin-top:5px;margin-left:5px">
+                <a:button click="framework_ag_back_fun" text="HAP_BACK"/>
+            </a:hBox>
+            <a:grid bindTarget="oa_sign_authorities_result_ds" height="350" marginWidth="35" navBar="true">
+                <a:toolBar>
+                    <a:button type="add"/>
+                    <a:button type="clear"/>
+                    <a:button type="save"/>
+                    <!-- <a:button type="delete"/> -->
+                    <!-- <a:button click="saveDocument" icon="${/request/@context_path}/images/save.gif" text="HAP_SAVE"/> -->
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="granted_employee_name" Prompt="被授权人" align="center" width="160"/>
+                    <a:column name="granted_employee_code" Prompt="工号" align="center" editorFunction="editorFunc" width="120"/>
+                    <a:column name="company_name" align="center" prompt="公司" width="290"/>
+                    <a:column name="enabled_flag" align="center" editor="osa_enabled_chb" prompt="启用" width="80"/>
+                </a:columns>
+                <a:editors>
+                    <a:lov id="granted_employee_code_lov"/>
+                    <a:checkBox id="osa_enabled_chb"/>
+                </a:editors>
+                <a:events>
+                    <a:event name="cellclick" handler="cellclick"/>
+                </a:events>
+                <!-- -->
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

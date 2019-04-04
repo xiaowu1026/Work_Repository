@@ -1,0 +1,525 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/modules/csh
+svn://10.75.42.67
+
+
+
+2019-01-17T09:59:21.954467Z
+1654
+pengqishi
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+CSH1015
+dir
+
+CSH1020
+dir
+
+CSH1035
+dir
+
+CSH1050
+dir
+
+CSH1051
+dir
+
+CSH1052
+dir
+
+CSH1070
+dir
+
+CSH1075
+dir
+
+CSH1080
+dir
+
+CSH1100
+dir
+
+CSH1110
+dir
+
+CSH1120
+dir
+
+CSH1130
+dir
+
+CSH1140
+dir
+
+CSH1150
+dir
+
+CSH1160
+dir
+
+CSH1170
+dir
+
+CSH1180
+dir
+
+CSH1190
+dir
+
+CSH1210
+dir
+
+CSH2010
+dir
+
+CSH2011
+dir
+
+CSH2040
+dir
+
+CSH2510
+dir
+
+CSH2520
+dir
+
+CSH2530
+dir
+
+CSH2540
+dir
+
+CSH3040
+dir
+
+CSH3050
+dir
+
+CSH3060
+dir
+
+CSH3100
+dir
+
+CSH3110
+dir
+
+CSH3120
+dir
+
+CSH3200
+dir
+
+CSH3201
+dir
+
+CSH3210
+dir
+
+CSH3300
+dir
+
+CSH3400
+dir
+
+CSH4060
+dir
+
+CSH5010
+dir
+
+CSH5015
+dir
+
+CSH5020
+dir
+
+CSH5030
+dir
+
+CSH5040
+dir
+
+CSH5050
+dir
+
+CSH5060
+dir
+
+CSH5070
+dir
+
+CSH5080
+dir
+
+CSH5090
+dir
+
+CSH5210
+dir
+
+CSH5220
+dir
+
+CSH5221
+dir
+
+CSH5230
+dir
+
+CSH5240
+dir
+
+CSH5250
+dir
+
+CSH5315
+dir
+
+CSH5330
+dir
+
+CSH5415
+dir
+
+CSH5425
+dir
+
+CSH5515
+dir
+
+CSH5520
+dir
+
+CSH5525
+dir
+
+CSH6010
+dir
+
+CSH6110
+dir
+
+CSH7010
+dir
+
+CSH7020
+dir
+
+CSH7030
+dir
+
+CSH7040
+dir
+
+CSH7050
+dir
+
+CSH7060
+dir
+
+CSH7070
+dir
+
+CSH8010
+dir
+
+CSH8020
+dir
+
+CSH8030
+dir
+
+csh_banks_hct.screen
+file
+
+
+
+
+2019-01-21T11:09:10.505000Z
+eb4a31caa1fdbeeea6cec4a2eb9e15f8
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2518
+
+csh_cash_plan_structure_company_batch.screen
+file
+
+
+
+
+2019-01-21T11:09:10.505000Z
+5051616c8d06c36f1b18a00eea89abd2
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3202
+
+csh_cash_plan_structure_company_control.svc
+file
+
+
+
+
+2019-01-21T11:09:08.365000Z
+5ea22fec8a47ed10aee9550a10e86a9f
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+813
+
+csh_pay_req_query_detail_for_finance.screen
+file
+
+
+
+
+2019-01-21T11:09:09.583000Z
+a7747df7113ead9dd8b9b82564829a53
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+542
+
+csh_pay_req_query_detail_for_wfl.screen
+file
+
+
+
+
+2019-01-21T11:09:09.583000Z
+affd2f2aeeab9b40cd0a35978a3fc92e
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+522
+
+csh_payment_req_audit_journal_adjust_for_wbc.screen
+file
+
+
+
+
+2019-01-21T11:09:08.630000Z
+46041f598797d6d3d260b303a2b35f83
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+33064
+
+csh_payment_req_review_for_wbc.screen
+file
+
+
+
+
+2019-01-21T11:09:08.240000Z
+38863fcaa360b1b11da1eaba79997ca5
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+24806
+
+csh_payment_transaction_writeoff_posted_detail.screen
+file
+
+
+
+
+2019-01-21T11:09:09.583000Z
+e1cbd84598de0dfa12cf7de8426e913b
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11052
+
+public
+dir
+

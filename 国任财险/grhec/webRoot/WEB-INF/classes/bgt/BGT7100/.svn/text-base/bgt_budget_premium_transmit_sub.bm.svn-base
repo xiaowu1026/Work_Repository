@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+                select *
+				  from (select b.transmit_id,
+						       b.company_code,
+						       (select f.company_short_name
+						          from fnd_companies_vl f
+						         where f.company_code = b.company_code) company_name,
+						       (select f.company_id
+						          from fnd_companies_vl f
+						         where f.company_code = b.company_code) company_id,
+						       to_char(b.premium_date, 'yyyy-mm-dd') premium_date,
+						       to_char(b.premium_date, 'yyyy-mm') period_name,
+						       b.transmit_bgt_amount,
+						       b.assign_status,
+						       decode(b.assign_status, 'Y', '已分配', 'N', '未分配') assign_status_desc,
+						       b.budget_journal_number,
+						       b.session_id
+						  from bgt_budget_premium_transmit b
+						  where b.transmit_status = 'Y') v
+                      #WHERE_CLAUSE#
+            ]]></bm:query-sql>
+        </bm:operation>
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+               begin
+                 bgt_budget_premium_pkg.assign_bgt_premium_temp(p_session_id          => ${@session_id},
+							                                    p_transmit_id         => ${@transmit_id},
+							                                    p_company_code        => ${@company_code},
+							                                    p_transmit_bgt_amount => ${@transmit_bgt_amount},
+							                                    p_user_id             => ${/session/@user_id});
+               end;
+            ]]></bm:update-sql>
+        </bm:operation>
+        <bm:operation name="execute">
+            <bm:update-sql><![CDATA[
+                begin
+                  bgt_budget_premium_pkg.create_bgt_budget(p_session_id => ${@session_id}, p_user_id => ${/session/@user_id});
+                end;
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:query-fields>
+        <bm:query-field name="company_code" queryExpression="v.company_code=${@company_code}"/>
+        <bm:query-field name="period_name" queryExpression="v.period_name=${@period_name}"/>
+        <bm:query-field name="premium_date_from" queryExpression="v.premium_date&gt;=${@premium_date_from}"/>
+        <bm:query-field name="premium_date_to" queryExpression="v.premium_date&lt;=${@premium_date_to}"/>
+        <bm:query-field name="assign_status" queryExpression="v.assign_status=${@assign_status}"/>
+        <bm:query-field name="transmit_bgt_amount" queryExpression="v.transmit_bgt_amount=${@transmit_bgt_amount}"/>
+        <bm:query-field name="budget_journal_number" queryExpression="v.budget_journal_number=${@budget_journal_number}"/>
+    </bm:query-fields>
+    <bm:data-filters>
+        <bm:data-filter enforceOperations="query" expression="v.company_id IN (SELECT fc.company_id FROM fnd_companies fc START WITH fc.company_id = ${/session/@company_id} CONNECT BY fc.parent_company_id = prior fc.company_id)"/>
+    </bm:data-filters>
+</bm:model>

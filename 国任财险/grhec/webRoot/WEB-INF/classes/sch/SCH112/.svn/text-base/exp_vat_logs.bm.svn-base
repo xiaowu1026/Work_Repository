@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+            select * from (
+		            select 
+		            to_char(l.creation_date, 'yyyy-mm-dd') submit_day,
+						       l.ref_table as operation,
+						       l.document_number as document_num,
+						       l.log_desc as error_messages,
+						       l.log_id
+						  from exp_vat_logs l
+						  order by l.creation_date desc) v
+			        #WHERE_CLAUSE#
+        ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="submit_day"/>
+        <bm:field name="operation"/>
+        <bm:field name="document_num"/>
+        <bm:field name="error_messages"/>
+        <bm:field name="log_id"/>
+    </bm:fields>
+    <bm:query-fields>
+        <bm:query-field name="document_num" queryExpression="v.document_num=${@document_num}"/>
+        <bm:query-field name="submit_day" queryExpression="v.submit_day=${@submit_day}"/>
+        <bm:query-field name="error_messages" queryExpression="v.error_messages like &apos;%&apos;${@error_messages}&apos;%&apos;"/>
+    </bm:query-fields>
+</bm:model>

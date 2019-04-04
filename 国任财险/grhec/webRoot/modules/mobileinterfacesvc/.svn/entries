@@ -1,0 +1,77 @@
+9
+
+dir
+1689
+svn://10.75.42.67/11%E4%BB%A3%E7%A0%81/dev1/grhec/webRoot/modules/mobileinterfacesvc
+svn://10.75.42.67
+
+
+
+2018-12-29T02:45:01.024056Z
+1534
+luqiang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+f13f8d52-7e2a-49c4-8a8c-3602c8f396bd
+
+approval
+dir
+
+atm_delete.svc
+file
+
+
+
+
+2019-01-21T11:09:13.476000Z
+123e741304f7a1d1d9036b6e5491ec4b
+2018-09-13T07:42:04.630457Z
+34
+pengqishi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+445
+
+exp_report
+dir
+
+exp_requisition
+dir
+
+login
+dir
+
+sys
+dir
+

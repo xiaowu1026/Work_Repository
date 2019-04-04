@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Administrator  
+    $Date: 2017-5-11 上午9:30:45  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure/>
+    <a:view>
+        <script><![CDATA[
+			function query_cux_org_unit_inter_result_ds(){
+				$('cux_org_unit_inter_result_ds').query();
+			}
+			function resetFunction(){
+				$('cux_org_unit_inter_query_ds').reset();
+			}
+			
+			function hrResetFunction(){
+				$('hr_unit_info_query_ds').reset();
+			}
+		]]></script>
+        <a:dataSets>
+            <a:dataSet id="process_status_ds">
+                <a:datas>
+                    <a:record process_status="Y" process_status_desc="已入正式表"/>
+                    <a:record process_status="N" process_status_desc="未处理"/>
+                    <a:record process_status="E" process_status_desc="同步出错"/>
+                </a:datas>
+            </a:dataSet>
+            <a:dataSet id="cux_org_unit_inter_query_ds">
+                <a:fields>
+                    <a:field name="deptcode" prompt="HR部门代码"/>
+                    <a:field name="deptname" prompt="HR部门名称"/>
+                    <a:field name="fatherdeptcode" prompt="上级HR部门代码"/>
+                    <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/>
+                    <a:field name="process_status"/>
+                    <a:field name="orgsapcode"/>
+                    <a:field name="costcode"/>
+                    <a:field name="orgcode"/>
+                    <a:field name="systemdate"/>
+                    <a:field name="orgname"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="cux_org_unit_inter_result_ds" autoQuery="true" model="cux.CUX1030.cux_org_unit_inter" pageSize="15" queryDataSet="cux_org_unit_inter_query_ds"><![CDATA[
+            ]]></a:dataSet>
+            <a:dataSet id="hr_unit_info_query_ds">
+                <a:fields>
+                    <a:field name="deptcode" prompt="HR部门代码"/>
+                    <a:field name="deptname" prompt="HR部门名称"/>
+                    <a:field name="fatherdeptcode" prompt="上级HR部门代码"/>
+                    <!-- <a:field name="process_status_desc" displayField="process_status_desc" options="process_status_ds" prompt="同步状态" returnField="process_status" valueField="process_status"/> -->
+                    <!-- <a:field name="process_status"/> -->
+                    <a:field name="orgsapcode"/>
+                    <a:field name="orgcode"/>
+                    <a:field name="costcode"/>
+                    <a:field name="systemdate"/>
+                    <a:field name="orgname"/>
+                </a:fields>
+            </a:dataSet>
+            <a:dataSet id="hr_unit_info_result_ds" autoQuery="true" model="cux.CUX1030.hr_unit_info" pageSize="15" queryDataSet="hr_unit_info_query_ds"><![CDATA[
+            ]]></a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:tabPanel id="line_tab" marginWidth="10">
+                <a:tabs>
+                    <a:tab prompt="HR部门同步" width="150">
+                        <a:screenTopToolbar style="margin-top:1px;">
+                            <a:toolbarButton click="resetFunction" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="cux_org_unit_inter_query_ds" resultTarget="cux_org_unit_inter_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="orgsapcode" bindTarget="cux_org_unit_inter_query_ds" prompt="SAP机构代码"/>
+                                <a:textField name="orgcode" bindTarget="cux_org_unit_inter_query_ds" prompt="HR机构代码"/>
+                                <a:textField name="deptcode" bindTarget="cux_org_unit_inter_query_ds" prompt="HR部门代码"/>
+                                <a:textField name="costcode" bindTarget="cux_org_unit_inter_query_ds" prompt="成本中心代码"/>
+                                <!-- <a:textField name="fatherdeptcode" bindTarget="cux_org_unit_inter_query_ds" prompt="上级部门代码"/> -->
+                                <a:comboBox name="process_status_desc" bindTarget="cux_org_unit_inter_query_ds" prompt="处理状态"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <a:hBox labelWidth="100">
+                                    <a:textField name="orgname" bindTarget="cux_org_unit_inter_query_ds" prompt="HR机构名称"/>
+                                    <a:textField name="deptname" bindTarget="cux_org_unit_inter_query_ds" prompt="部门名称"/>
+                                    <a:datePicker name="systemdate" bindTarget="cux_org_unit_inter_query_ds" prompt="系统同步日期"/>
+                                </a:hBox>
+                            </a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid" bindTarget="cux_org_unit_inter_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="orgsapcode" prompt="SAP机构代码" width="100"/>
+                                <a:column name="orgname" prompt="SAP机构名称" width="100"/>
+                                <a:column name="orgcode" prompt="HR机构代码" width="100"/>
+                                <a:column name="deptcode" prompt="HR部门代码" width="100"/>
+                                <a:column name="fatherdeptcode" prompt="HR上级部门代码" width="100"/>
+                                <a:column name="fatherdeptname" prompt="HR上级部门名称" width="100"/>
+                                <a:column name="deptname" prompt="HR部门名称" width="100"/>
+                                <a:column name="costcode" prompt="成本中心代码" width="100"/>
+                                <a:column name="disablestate" prompt="部门启用状态" width="100"/>
+                                <a:column name="modifiedtime" prompt="部门更新时间" width="100"/>
+                                <!-- <a:column name="principalcode" prompt="部门负责人编码" width="100"/> -->
+                                <!-- <a:column name="chargeleader" prompt="部门主管人编码" width="100"/> -->
+                                <!-- <a:column name="showorder" align="center" prompt="展示顺序" width="100"/> -->
+                                <a:column name="systemdate" align="center" prompt="系统同步时间" renderer="Aurora.formatDate" width="100"/>
+                                <a:column name="process_status_desc" prompt="同步状态" width="100"/>
+                                <a:column name="message" prompt="错误信息" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                    <a:tab prompt="HR同步信息新表" width="150">
+                        <a:screenTopToolbar style="margin-top:1px;">
+                            <a:toolbarButton click="hrResetFunction" text="HAP_RESET" width="80"/>
+                            <a:gridButton bind="grid1" type="excel" width="80"/>
+                        </a:screenTopToolbar>
+                        <a:queryForm bindTarget="hr_unit_info_query_ds" resultTarget="hr_unit_info_result_ds" style="width:100%;border:none">
+                            <a:formToolBar>
+                                <a:textField name="orgsapcode" bindTarget="hr_unit_info_query_ds" prompt="SAP机构代码"/>
+                                <a:textField name="orgcode" bindTarget="hr_unit_info_query_ds" prompt="HR机构代码"/>
+                                <a:textField name="deptcode" bindTarget="hr_unit_info_query_ds" prompt="部门代码"/>
+                                <a:textField name="costcode" bindTarget="hr_unit_info_query_ds" prompt="成本中心代码"/>
+                                <a:textField name="deptname" bindTarget="hr_unit_info_query_ds" prompt="部门名称"/>
+                            </a:formToolBar>
+                            <a:formBody>
+                                <a:hBox labelWidth="100">
+                                    <a:datePicker name="systemdate" bindTarget="hr_unit_info_query_ds" prompt="系统同步日期"/>
+                                </a:hBox>
+                            </a:formBody>
+                        </a:queryForm>
+                        <a:grid id="grid1" bindTarget="hr_unit_info_result_ds" height="380" marginWidth="10" navBar="true" style="margin-top:5px;">
+                            <a:columns>
+                                <a:column name="orgsapcode" prompt="SAP机构代码" width="100"/>
+                                <a:column name="orgname" prompt="SAP机构名称" width="100"/>
+                                <a:column name="orgcode" prompt="HR机构代码" width="100"/>
+                                <a:column name="deptcode" prompt="HR部门代码" width="100"/>
+                                <a:column name="fatherdeptcode" prompt="HR上级部门代码" width="100"/>
+                                <a:column name="fatherdeptname" prompt="HR上级部门名称" width="100"/>
+                                <a:column name="deptname" prompt="HR部门名称" width="100"/>
+                                <a:column name="costcode" prompt="成本中心代码" width="100"/>
+                                <a:column name="modifiedtime" prompt="部门更新时间" width="100"/>
+                                <!-- <a:column name="principalcode" prompt="部门负责人编码" width="100"/> -->
+                                <!-- <a:column name="chargeleader" prompt="部门主管人编码" width="100"/> -->
+                                <!-- <a:column name="showorder" align="center" prompt="展示顺序" width="100"/> -->
+                                <a:column name="systemdate" align="center" prompt="系统同步时间" renderer="Aurora.formatDate" width="100"/>
+                            </a:columns>
+                        </a:grid>
+                    </a:tab>
+                </a:tabs>
+            </a:tabPanel>
+            <a:hBox/>
+        </a:screenBody>
+        <!-- <script><![CDATA[
+            function InitSize() {
+                //描述宽度
+                var labelWidth = 75;
+                //标签宽度,5 = 3padding + 2border-spacing
+                var tagWidth = 150 + 5;
+                //页面宽度、高度
+                var vw = $A.getViewportWidth();
+                var vh = $A.getViewportHeight();
+                //留白宽度
+                var marginWidth = 35;
+                //自适应宽度
+                var autoWidth = vw - marginWidth;
+                //Form内部宽度，-2border
+                var formInnerWidth = autoWidth - 2;
+                //所占列数
+                var colSpan = 4;
+                //设置组件的自适应宽度
+                $('grid').setWidth(autoWidth);
+                $('grid1').setWidth(autoWidth);
+                //设置TextArea的自适应宽度,别问我最后那个6是哪里来的，试出来的
+            }
+            //Ext.fly(window).on('resize', CSH3060_InitSize);
+            InitSize();
+        ]]></script> -->
+    </a:view>
+</a:screen>

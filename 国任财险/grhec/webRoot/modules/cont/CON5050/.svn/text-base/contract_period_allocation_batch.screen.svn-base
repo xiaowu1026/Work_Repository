@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: Rick  
+    $Date: 2018-9-13 17:21:27  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<a:screen xmlns:a="http://www.aurora-framework.org/application">
+    <a:init-procedure>
+        <a:model-query autoCount="false" fetchAll="true" model="cont.con_contract_return_periods" rootPath="default_info"/>
+    </a:init-procedure>
+    <a:view>
+        <a:link id="allocation_batch_link" url="${/request/@context_path}/modules/cont/CON5050/contract_period_allocation_batch_save.svc"/>
+        <script><![CDATA[
+            function allocation_batch_back_fun() {
+                $('allocation_batch_win').close();
+            }
+            
+            
+            
+            function cellClickBatchFunction(grid, row, name, record) {
+                //=================行点击==========================
+                if (name == 'unit_name') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('unit_name');
+                    f1.setLovPara('company_id', record.get('company_id'));
+                    f1.setLovService('exp.exp_org_unit');
+                } else if (name == 'responsibility_center_name') {
+                    var r = record.getMeta();
+                    var f1 = r.getField('responsibility_center_name');
+                    f1.setLovPara('company_id', record.get('company_id'));
+                }
+            }
+            
+            
+            function lineBatchUpdateFunction(dataSet, record, name, value, oldValue) {
+                //=================行更新==========================
+                if (name == 'company_name') {
+                    record.set('unit_id', '');
+                    record.set('unit_name', '');
+                    record.set('responsibility_center_name', '');
+                    record.set('responsibility_center_id', '');
+                }
+            }
+            
+            
+            function sum_renderer(datas, name) {
+                var sum = 0;
+                for (var i = 0;i < datas.length;i++) {
+                    var r = datas[i];
+                    var d = r.get(name);
+                    var x = parseFloat(d).toFixed(2);
+                    var n = parseFloat(x);
+                    if (!isNaN(n)) {
+                        sum += n;
+                    }
+                }
+                var total = (typeof(sum) == 'undefined' ? '' : parseFloat(sum).toFixed(2));
+                return '<font color="red">' + Aurora.formatNumber(total) + '</font>';
+            }
+            
+            
+            function allocation_batch_confirm_fun() {
+                var detail1 = $('con_contract_headers_add_return_period_tab_ds').getJsonData(true);
+                var detail2 = $('contract_period_allocation_result_batch_ds').getJsonData();
+                for (var i = 0;i < detail1.length;i++) {
+                    detail1[i].detail2 = detail2;
+                }
+                var param = {};
+                param.detail1 = detail1;
+                Aurora.request({
+                    url: $('allocation_batch_link').getUrl(),
+                    para: param,
+                    success: function() {
+                        allocation_batch_back_fun();
+                    },
+                    scope: this
+                });
+            }
+            
+            function onBatchAllocationLineLoad(ds) {
+                if (ds.getAll().length == 0) {
+                    var record = ds.create();
+                    record.set('invoice_sales_amount', '${/model/default_info/record/@invoice_sales_amount}');
+                    record.set('company_id', '${/model/default_info/record/@head_company_id}');
+                    record.set('company_name', '${/model/default_info/record/@head_company_name}');
+                    record.set('unit_id', '${/model/default_info/record/@head_unit_id}');
+                    record.set('unit_name', '${/model/default_info/record/@head_unit_name}');
+                }
+            }
+        ]]></script>
+        <a:dataSets>
+            <a:dataSet id="contract_period_allocation_result_batch_ds" autoQuery="true" queryUrl="${/request/@context_path}/autocrud/cont.con_contract_return_periods/query?contract_return_period_id=-1" selectable="true">
+                <a:fields>
+                    <a:field name="contract_return_period_id" defaultValue="${/parameter/@contract_return_period_id}"/>
+                    <a:field name="company_name" lovGridHeight="320" lovHeight="450" lovService="expm.exp_company_accross_company" lovWidth="600" required="true" title="公司">
+                        <a:mapping>
+                            <a:map from="company_id" to="company_id"/>
+                            <a:map from="company_code" to="company_code"/>
+                            <a:map from="code_name" to="company_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="unit_name" lovGridHeight="320" lovHeight="450" required="true" title="部门">
+                        <a:mapping>
+                            <a:map from="unit_id" to="unit_id"/>
+                            <a:map from="unit_code_name" to="unit_name"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="invoice_sales_amount" required="true"/>
+                    <a:field name="expense_item_name" lovGridHeight="320" lovHeight="450" lovService="expm.exp_expense_item?enabled_flag=Y" lovWidth="500" required="true">
+                        <a:mapping>
+                            <a:map from="expense_item_description" to="expense_item_name"/>
+                            <a:map from="expense_item_id" to="expense_item_id"/>
+                        </a:mapping>
+                    </a:field>
+                    <a:field name="responsibility_center_name" lovGridHeight="320" lovHeight="480" lovLabelWidth="150" lovWidth="520" lovservice="expm.fnd_company_responsibility_centers_lov" required="true" title="EXP_REPORT_LINES.RESPONSIBILITY_CENTER_ID">
+                        <a:mapping>
+                            <a:map from="responsibility_center_name" to="responsibility_center_name"/>
+                            <a:map from="responsibility_center_id" to="responsibility_center_id"/>
+                        </a:mapping>
+                    </a:field>
+                </a:fields>
+                <a:events>
+                    <a:event name="update" handler="lineBatchUpdateFunction"/>
+                    <a:event name="load" handler="onBatchAllocationLineLoad"/>
+                </a:events>
+            </a:dataSet>
+        </a:dataSets>
+        <a:screenBody>
+            <a:hBox>
+                <a:button click="allocation_batch_back_fun" text="HAP_BACK"/>
+                <a:button click="allocation_batch_confirm_fun" text="确认"/>
+            </a:hBox>
+            <a:grid name="" bindTarget="contract_period_allocation_result_batch_ds" height="400" navBar="true" showRowNumber="true" width="800">
+                <a:toolBar>
+                    <a:button type="add"/>
+                    <a:button type="delete"/>
+                </a:toolBar>
+                <a:columns>
+                    <a:column name="company_name" align="center" editor="allocation_lov_editor" prompt="公司" width="120"/>
+                    <a:column name="unit_name" align="center" editor="allocation_lov_editor" prompt="部门" width="120"/>
+                    <a:column name="responsibility_center_name" align="center" editor="allocation_lov_editor" prompt="责任中心" width="120"/>
+                    <a:column name="expense_item_name" align="center" editor="allocation_lov_editor" prompt="费用项目" width="180"/>
+                    <a:column name="invoice_sales_amount" align="center" editor="allocation_num_editor" footerRenderer="sum_renderer" prompt="不含税金额" width="150"/>
+                </a:columns>
+                <a:editors>
+                    <a:lov id="allocation_lov_editor"/>
+                    <a:numberField id="allocation_num_editor" allowDecimals="true"/>
+                </a:editors>
+                <a:events>
+                    <a:event name="cellclick" handler="cellClickBatchFunction"/>
+                </a:events>
+            </a:grid>
+        </a:screenBody>
+    </a:view>
+</a:screen>

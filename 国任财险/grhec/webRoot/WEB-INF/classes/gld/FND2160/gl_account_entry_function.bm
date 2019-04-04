@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bm:model xmlns:f="aurora.database.features" xmlns:bm="http://www.aurora-framework.org/schema/bm" alias="t1" baseTable="GL_ACCOUNT_ENTRY_FUNCTION">
+    <bm:fields>
+        <bm:field name="function_id" databaseType="NUMBER" datatype="java.lang.Long" insertExpression="GL_ACCOUNT_ENTRY_FUNCTION_S.Nextval" physicalName="FUNCTION_ID" prompt="GL_ACCOUNT_ENTRY_FUNCTION.FUNCTION_ID"/>
+        <bm:field name="commit_items_code" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="COMMIT_ITEMS_CODE" prompt="GL_ACCOUNT_ENTRY_FUNCTION.COMMIT_ITEMS_CODE"/>
+        <bm:field name="commit_items_desc" databaseType="VARCHAR" datatype="java.lang.String" expression="(select fdv.description from fnd_dimensions fd, fnd_dimension_values_vl fdv where fd.dimension_id = fdv.dimension_id and fd.dimension_code = &apos;GTCX_COA_DEFDOC&apos; and fdv.dimension_value_code = t1.commit_items_code)" forInsert="false" forUpdate="false"/>
+        <bm:field name="account_code" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="ACCOUNT_CODE" prompt="GL_ACCOUNT_ENTRY_FUNCTION.ACCOUNT_CODE"/>
+        <bm:field name="account_code_desc" databaseType="VARCHAR" datatype="java.lang.String" expression="(select g.DESCRIPTION from gld_accounts_vl g where g.ACCOUNT_CODE = t1.account_code)" forInsert="false" forUpdate="false"/>
+        <bm:field name="function_envelop" databaseType="VARCHAR2" datatype="java.lang.String" physicalName="FUNCTION_ENVELOP" prompt="GL_ACCOUNT_ENTRY_FUNCTION.FUNCTION_ENVELOP"/>
+    </bm:fields>
+    <bm:features>
+        <f:standard-who/>
+    </bm:features>
+    <bm:primary-key>
+        <bm:pk-field name="function_id"/>
+    </bm:primary-key>
+    <bm:query-fields>
+        <bm:query-field name="account_code" queryExpression="t1.account_code=${@account_code}"/>
+        <bm:query-field name="commit_items_code" queryExpression="t1.commit_items_code=${@commit_items_code}"/>
+    </bm:query-fields>
+</bm:model>

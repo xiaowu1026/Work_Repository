@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: luqiang  
+    $Date: 2018-09-28 下午15:17:33  
+    $Revision: 1.0  
+    $Purpose: 公司级影像类型表
+-->
+<bm:model xmlns:o="aurora.database.local.oracle" xmlns:f="aurora.database.features" xmlns:bm="http://www.aurora-framework.org/schema/bm" baseTable="EXP_IMAGE_TYPES">
+    <bm:fields>
+        <bm:field name="exp_image_type_id" databaseType="NUMBER" datatype="java.lang.Long"/>
+        <bm:field name="expense_type_id"/>
+        <bm:field name="image_type_id"/>
+        <bm:field name="enabled_flag"/>
+        <bm:field name="image_type_code" expression="(select i.image_type_code from image_types i where i.image_type_id=t1.image_type_id)"/>
+        <bm:field name="image_type_description" expression="(select i.image_type_description from image_types i where i.image_type_id=t1.image_type_id)"/>
+    </bm:fields>
+    <bm:features>
+        <f:standard-who/>
+        <o:sequence-pk/>
+    </bm:features>
+    <bm:primary-key>
+        <bm:pk-field name="exp_image_type_id"/>
+    </bm:primary-key>
+    <bm:query-fields>
+        <bm:query-field name="expense_type_id" queryExpression="expense_type_id=${@expense_type_id}"/>
+    </bm:query-fields>
+    <!-- add by wyd 2012-12-23-->
+    <bm:operations>
+        <bm:operation name="insert">
+            <bm:update-sql><![CDATA[
+                begin
+	                exp_expense_types_pkg.insert_exp_image_types(      p_expense_type_id =>${@expense_type_id},
+	                												   p_image_type_id =>${@image_type_id},
+								                                       p_enabled_flag      =>${@enabled_flag},
+								                                       p_user_id           =>${/session/@user_id});
+                end; 
+            ]]></bm:update-sql>
+        </bm:operation>
+        <!-- add by sqh 2013-01-22  帐套级报销类型定义 费用项目和申请项目失效后 删除对应公司级的关联关系，启用的时候添加关联关系-->
+        <bm:operation name="update">
+            <bm:update-sql><![CDATA[
+                begin
+                    exp_expense_types_pkg.update_exp_image_types(      p_exp_image_type_id =>${@exp_image_type_id},
+                    												   p_image_type_id =>${@image_type_id},
+                                                                       p_enabled_flag      =>${@enabled_flag},
+                                                                       p_user_id           =>${/session/@user_id});
+                end; 
+            ]]></bm:update-sql>
+        </bm:operation>
+    </bm:operations>
+</bm:model>

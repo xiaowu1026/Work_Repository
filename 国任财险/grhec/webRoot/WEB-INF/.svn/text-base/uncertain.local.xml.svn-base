@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<uncertain-engine defaultLogLevel="INFO">
+	<path-config logPath="D:\u01\logs\grhec" uiPackageBasePath="D:\workspace-aurora\grhec\AuroraUI\src"/>  
+</uncertain-engine>

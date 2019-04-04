@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    $Author: lenovo  
+    $Date: 2018-10-15 下午3:32:00  
+    $Revision: 1.0  
+    $Purpose: 
+-->
+<bm:model xmlns:bm="http://www.aurora-framework.org/schema/bm">
+    <bm:operations>
+        <bm:operation name="query">
+            <bm:query-sql><![CDATA[
+               select  cso.sign_code,
+				       cso.sign_name,
+				       cso.sign_url,
+				       (
+				        select sum(erl.report_amount)
+				        from CUX_OA_EXP_REF cr,exp_report_headers erh,exp_report_lines erl
+				        where erh.exp_report_header_id = cr.exp_report_header_id
+				        and cr.sign_code = cso.sign_code
+				        and erh.report_status in ('SUBMITTED','COMPLETELY_APPROVED')
+				        and erh.exp_report_header_id = erl.exp_report_header_id
+				        
+				       ) exp_rep_amount,
+				       cr.cux_oa_exp_ref_id,
+				       cr.exp_report_header_id
+				from CUX_OA_EXP_REF cr,con_sign_oa cso
+				where cr.sign_code = cso.sign_code
+				and cr.exp_report_header_id = ${@exp_report_header_id}
+            ]]></bm:query-sql>
+        </bm:operation>
+    </bm:operations>
+    <bm:fields>
+        <bm:field name="sign_code"/>
+        <bm:field name="sign_name"/>
+        <bm:field name="sign_url"/>
+        <bm:field name="exp_rep_amount"/>
+        <bm:field name="cux_oa_exp_ref_id"/>
+        <bm:field name="exp_report_header_id"/>
+    </bm:fields>
+    <!-- <bm:query-fields>
+        <bm:query-field name="exp_report_header_id" queryOperator="="/>
+    </bm:query-fields> -->
+</bm:model>
